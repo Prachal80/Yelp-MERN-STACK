@@ -1,0 +1,5 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Login render after setting localstorage 1`] = `ShallowWrapper {}`;
+
+exports[`Login should Login 1`] = `ShallowWrapper {}`;

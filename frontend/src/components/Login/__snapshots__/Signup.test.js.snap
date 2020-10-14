@@ -1,0 +1,5 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Signup render after setting localstorage 1`] = `ShallowWrapper {}`;
+
+exports[`Signup should Signup 1`] = `ShallowWrapper {}`;
