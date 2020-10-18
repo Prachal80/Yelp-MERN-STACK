@@ -1,4 +1,5 @@
 //import the require dependencies
+const { mongoDB} = require("./config");
 var express = require("express");
 var cors = require("cors");
 var app = express();
@@ -49,57 +50,94 @@ app.use(function (req, res, next) {
 });
 
 // Establish mysql connection
-const db = mysql.createConnection({
-  // connectionLimit: 100,
-  host: process.env.DATABASE_HOST,
-  user: process.env.DATABASE_USER,
-  password: process.env.DATABASE_PASSWORD,
-  database: process.env.DATABASE,
+// const db = mysql.createConnection({
+//   // connectionLimit: 100,
+//   host: process.env.DATABASE_HOST,
+//   user: process.env.DATABASE_USER,
+//   password: process.env.DATABASE_PASSWORD,
+//   database: process.env.DATABASE,
+// });
+
+// db.connect((error) => {
+//   if (error) {
+//     console.log(error);
+//   } else {
+//     console.log("Connected to Mysql");
+//   }
+// });
+
+const mongoose = require('mongoose');
+
+var options = {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    poolSize: 500,
+    bufferMaxEntries: 0
+};
+
+mongoose.connect(mongoDB, options, (err) => {
+    if (err) {
+        console.log(err);
+        console.log(`MongoDB Connection Failed`);
+    } else {
+        console.log(`MongoDB Connected`);
+    }
+});
+var collections = mongoose.connections[0].collections;
+// var names = [];
+
+Object.keys(collections).forEach(function (k) {
+    names.push(k);
 });
 
-db.connect((error) => {
-  if (error) {
-    console.log(error);
-  } else {
-    console.log("Connected to Mysql");
-  }
-});
+// var loginBasePath = require("./src/routes/login/account");
+// app.use("/login", loginBasePath);
 
-var loginBasePath = require("./src/routes/login/account");
-app.use("/login", loginBasePath);
+//var signUpPath = require("./src/routes/signup/signup");
+// app.use("/signup", signUpPath);
 
-var signUpPath = require("./src/routes/signup/signup");
+// var cusotmerProfile = require("./src/routes/profile/customerProfileUpdate");
+// app.use("/customerProfile", cusotmerProfile);
+
+// var restaurantProfile = require("./src/routes/profile/restaurantProfileUpdate");
+// app.use("/restaurantProfile", restaurantProfile);
+
+// var restaurantDishes = require("./src/routes/dishes/restaurantDishes");
+// app.use("/restaurantDishes", restaurantDishes);
+
+// var customerDishes = require("./src/routes/dishes/customerDishes");
+// app.use("/customerDishes", customerDishes);
+
+// var restaurantOrders = require("./src/routes/orders/restaurantOrders");
+// app.use("/restaurantOrders", restaurantOrders);
+
+// var customerOrders = require("./src/routes/orders/customerOrders");
+// app.use("/customerOrders", customerOrders);
+
+// var reviews = require("./src/routes/reviews/reviews");
+// app.use("/reviews", reviews);
+
+// var customerEvents = require("./src/routes/events/customerEvents");
+// app.use("/customerEvents", customerEvents);
+
+// var restaurantEvents = require("./src/routes/events/restaurantEvents");
+// app.use("/restaurantEvents", restaurantEvents);
+
+
+
+//Mongo Routes
+var signUpPath = require("./src/services/signup/signup")
 app.use("/signup", signUpPath);
 
-var cusotmerProfile = require("./src/routes/profile/customerProfileUpdate");
-app.use("/customerProfile", cusotmerProfile);
+var loginBasePath = require("./src/services/login/login")
+app.use("/login", loginBasePath);
 
-var restaurantProfile = require("./src/routes/profile/restaurantProfileUpdate");
-app.use("/restaurantProfile", restaurantProfile);
+// var cusotmerProfile = require("./src/services/");
+// app.use("/customerProfile", cusotmerProfile);
 
-var restaurantDishes = require("./src/routes/dishes/restaurantDishes");
-app.use("/restaurantDishes", restaurantDishes);
-
-var customerDishes = require("./src/routes/dishes/customerDishes");
-app.use("/customerDishes", customerDishes);
-
-var restaurantOrders = require("./src/routes/orders/restaurantOrders");
-app.use("/restaurantOrders", restaurantOrders);
-
-var customerOrders = require("./src/routes/orders/customerOrders");
-app.use("/customerOrders", customerOrders);
-
-var reviews = require("./src/routes/reviews/reviews");
-app.use("/reviews", reviews);
-
-var customerEvents = require("./src/routes/events/customerEvents");
-app.use("/customerEvents", customerEvents);
-
-var restaurantEvents = require("./src/routes/events/restaurantEvents");
-app.use("/restaurantEvents", restaurantEvents);
-
-exports.db = db;
+// exports.db = db;
 app.listen(3001);
 console.log("Server Listening on port 3001");
 
 console.log(process.env.ip);
+

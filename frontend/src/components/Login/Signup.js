@@ -82,9 +82,9 @@ class Signup extends Component {
   };
   //submit Login handler to send a request to the node backend
   submitSignup = (e) => {
-    var headers = new Headers();
+    //var headers = new Headers();
     //prevent page from refresh
-    //e.preventDefault();
+    e.preventDefault();
     const data = {
       name: this.state.name,
       email: this.state.email,
@@ -117,20 +117,28 @@ class Signup extends Component {
           )
           .then((response) => {
             console.log("Status Code : ", response.status);
-            console.log("response, ", response.data.success);
+            console.log("response, ", response);
             if (response.data.success) {
-            //   window.location.assign("/login");
+            // window.location.assign("/login");
               M.toast({
                 html: "Signup success",
                 classes: "green darken-1",
               });
             }
+           
           })
-          .catch((response) => {
-            this.setState({
-              authFlag: false,
-              ErrorMessage: "Please provide all the details",
-            });
+          .catch((error) => {
+            console.log("response ", error.response.data.message);
+            if(error.response.data.message !== ""){
+              this.setState({
+                ErrorMessage: error.response.data.message,
+              });
+            }else{
+              this.setState({
+                ErrorMessage: "Please provide all the details",
+              });
+            }
+            
           });
       }
     } else {
@@ -277,7 +285,18 @@ class Signup extends Component {
             >
               Sign Up
             </button>
+            <br/>
+            <br/>
+            <p  style={{
+                width: "100%",
+                color: "#ffffff",
+                textAlign:"center",
+                fontWeight: "bold",
+                borderRadius: "2%",
+                backgroundColor: "#D32323",
+              }}>{this.state.ErrorMessage}</p>
           </form>
+           
           <img
             className="image-work"
             src={logo}

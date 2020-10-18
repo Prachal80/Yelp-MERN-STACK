@@ -428,7 +428,7 @@ class RestaurantDashboard extends Component {
               class="btn btn-primary"
               onClick={() => this.setState({ showForm: true })}
               style={{
-                marginLeft: "30%",
+                marginLeft: "20%",
                 background: "#D32323",
                 color: "#ffffff",
                 fontWeight: "bold",
@@ -461,7 +461,7 @@ class RestaurantDashboard extends Component {
                 }}
                 class="col-4"
               >
-                <h3 style={{ textAlign: "center" }}>Reviews Received</h3>
+                <h3 style={{ marginLeft: "10%" }}>Reviews Received</h3>
                 <br />
 
                 {CustomerReview}

@@ -113,7 +113,7 @@ export class CustomerEvents extends Component {
           &nbsp;
           <div className="form-group ">
             <input
-              style={{ marginLeft: "43%" }}
+              style={{ marginLeft: "45%" }}
               type="text"
               placeholder="Search Events"
               onChange={this.eventSearch}
@@ -127,7 +127,7 @@ export class CustomerEvents extends Component {
           <div style={{ paddingLeft: "10%" }} class="col-6">
             <h2
               style={{
-                marginLeft: "23%",
+                marginLeft: "15%",
               }}
             >
               Upcoming Events
@@ -143,7 +143,7 @@ export class CustomerEvents extends Component {
             </div>
           </div>
           <div style={{ paddingLeft: "4%" }} class="col-6">
-            <h2 style={{ paddingLeft: "19%" }}>Registered Events</h2>
+            <h2 style={{ paddingLeft: "28%" }}>Registered Events</h2>
             <div
               style={{
                 marginLeft: "13%",

@@ -61,7 +61,7 @@ class Login extends Component {
       password: this.state.password,
       userType: this.state.userType,
     };
-    console.log(data);
+    //console.log(data);
 
     //set the with credentials to true
     axios.defaults.withCredentials = true;
@@ -81,9 +81,9 @@ class Login extends Component {
             console.log("response, ", response.data);
             if (response.data.success && data.userType === "customer") {
               localStorage.setItem("user", "customer");
-              localStorage.setItem("CID", response.data.res[0].id);
-              localStorage.setItem("Cname", response.data.res[0].name);
-              localStorage.setItem("Cemail", response.data.res[0].email);
+              localStorage.setItem("CID", response.data.res._id);
+              localStorage.setItem("Cname", response.data.res.name);
+              localStorage.setItem("Cemail", response.data.res.email);
               window.location.assign("/customer/dashboard");
               M.toast({
                 html: "Signup success",
@@ -94,9 +94,9 @@ class Login extends Component {
               data.userType === "restaurant"
             ) {
               localStorage.setItem("user", "restaurant");
-              localStorage.setItem("RID", response.data.res[0].id);
-              localStorage.setItem("Rname", response.data.res[0].name);
-              localStorage.setItem("Remail", response.data.res[0].email);
+              localStorage.setItem("RID", response.data.res._id);
+              localStorage.setItem("Rname", response.data.res.name);
+              localStorage.setItem("Remail", response.data.res.email);
               window.location.assign("/restaurant/dashboard");
               M.toast({
                 html: "Signup success",
@@ -104,7 +104,7 @@ class Login extends Component {
               });
             }
           })
-          .catch((response) => {
+          .catch((error) => {
             this.setState({
               authFlag: false,
               ErrorMessage: "Invalid Login Credentials",
