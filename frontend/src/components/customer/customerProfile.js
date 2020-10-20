@@ -37,10 +37,12 @@ class CustomerProfile extends Component {
   componentDidMount() {
     axios.defaults.withCredentials = true;
     //make a get request for the user data
+    console.log("inside compo did mount");
     let data = {
       CID: localStorage.getItem("CID"),
     };
-    return axios({
+    console.log("cid ", data);
+    axios({
       url:
         "http://" +
         process.env.REACT_APP_IP +
@@ -49,9 +51,9 @@ class CustomerProfile extends Component {
       method: "GET",
       params: data,
     }).then((response) => {
-      // console.log("profile details", response.data.profileData[0]);
 
-      let customerData = response.data.profileData[0];
+      let customerData = response.data.profileData;
+      console.log("Customer Data", customerData);
       this.setState({
         name: customerData.name,
         dob: customerData.birthdate,
@@ -63,12 +65,15 @@ class CustomerProfile extends Component {
         phone: customerData.phone,
         emailid: customerData.email,
         blog: customerData.blog,
-        yelpingSince: customerData.yelpingsince,
-        thingsIlove: customerData.thingsilove,
-        findMeIn: customerData.findmein,
-        imagePath: customerData.profilepic,
+        yelpingSince: customerData.yelpingSince,
+        thingsIlove: customerData.thingsIlove,
+        findMeIn: customerData.findMeIn,
+        imagePath: customerData.profilePic,
       });
+    }).catch((error)=>{
+      console.log(error);
     });
+  
   }
   // change handlers to update state variable with the text entered by the user
   ChangeHandler = (e) => {
@@ -80,7 +85,7 @@ class CustomerProfile extends Component {
   //submit Login handler to send a request to the node backend
   submitUpdate = (e) => {
     //prevent page from refresh
-    e.preventDefault();
+    //e.preventDefault();
     const data = {
       name: this.state.name,
       dob: this.state.dob,
@@ -114,8 +119,8 @@ class CustomerProfile extends Component {
           console.log("Status Code : ", response.status);
           console.log("response, ", response.data.success);
           if (
-            response.data.success &&
-            localStorage.getItem("user") === "customer"
+            response.data.success 
+             && localStorage.getItem("user") === "customer"
           ) {
             window.location.assign("/customer/profile");
           }
@@ -123,7 +128,7 @@ class CustomerProfile extends Component {
         .catch((response) => {
           this.setState({
             authFlag: false,
-            ErrorMessage: "Invalid Login Credentials",
+            ErrorMessage: "Something went wrong",
           });
         });
     }
@@ -212,7 +217,7 @@ class CustomerProfile extends Component {
               <input
                 type="text"
                 name="CID"
-                value={JSON.parse(localStorage.getItem("CID"))}
+                value={localStorage.getItem("CID")}
                 style={{ display: "none", width: "10px" }}
               />
               <input type="file" name="profilePic" />
@@ -369,7 +374,7 @@ class CustomerProfile extends Component {
                     <Col xs={3}>
                       <input
                         type="text"
-                        name="things I Love"
+                        name="thingsIlove"
                         class="form-control"
                         id="thingsILove"
                         placeholder="Things I love"

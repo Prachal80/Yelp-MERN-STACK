@@ -30,6 +30,7 @@ class RestaurantDashboard extends Component {
       ratings: "",
       ErrorMessage: "",
       restaurantdescription: "",
+      restaurantProfilePic: "",
       showForm: false,
       dishes: [],
       reviews: [],
@@ -58,7 +59,7 @@ class RestaurantDashboard extends Component {
     }).then((response) => {
       // console.log("profile details", response.data.profileData[0]);
 
-      let restaurantData = response.data.restaurantProfileData[0];
+      let restaurantData = response.data.restaurantProfileData;
       this.setState({
         name: restaurantData.name,
         location: restaurantData.location,
@@ -66,12 +67,13 @@ class RestaurantDashboard extends Component {
         state: restaurantData.state,
         country: restaurantData.country,
         restaurantdescription: restaurantData.description,
-
         timings: restaurantData.timings,
         email: restaurantData.email,
         contact: restaurantData.contact,
-        restaurantprofilepic: restaurantData.restaurantprofilepic,
         ratings: restaurantData.ratings,
+        method: restaurantData.method,
+        cuisine: restaurantData.cuisine,
+        restaurantProfilePic: restaurantData.restaurantProfilePic,
       });
     });
     //Get All dishes
@@ -93,35 +95,36 @@ class RestaurantDashboard extends Component {
         this.setState({
           dishes: this.state.dishes.concat(response.data.restaurantDishGet),
         });
+        //console.log("Dishes: ", this.state.dishes);
       });
 
     //Get all reviews to restaurant
-    axios
-      .get(
-        "http://" +
-          process.env.REACT_APP_IP +
-          ":3001" +
-          "/reviews/getRestaurantReviews",
-        {
-          params: {
-            RID: localStorage.getItem("RID"),
-          },
-        }
-      )
-      .then((response) => {
-        console.log("Received All reviews");
+    // axios
+    //   .get(
+    //     "http://" +
+    //       process.env.REACT_APP_IP +
+    //       ":3001" +
+    //       "/reviews/getRestaurantReviews",
+    //     {
+    //       params: {
+    //         RID: localStorage.getItem("RID"),
+    //       },
+    //     }
+    //   )
+    //   .then((response) => {
+    //     console.log("Received All reviews");
 
-        this.setState({
-          reviews: this.state.reviews.concat(response.data.restaurantReviews),
-        });
-        console.log(this.state.reviews);
-      })
-      .catch((response) => {
-        console.log("********** Catch", response);
-        this.setState({
-          ErrorMessage: "Something went wrong while getting all the reviews",
-        });
-      });
+    //     this.setState({
+    //       reviews: this.state.reviews.concat(response.data.restaurantReviews),
+    //     });
+    //     console.log(this.state.reviews);
+    //   })
+    //   .catch((response) => {
+    //     console.log("********** Catch", response);
+    //     this.setState({
+    //       ErrorMessage: "Something went wrong while getting all the reviews",
+    //     });
+    //   });
   }
 
   submitUpdate = (e) => {
@@ -163,7 +166,7 @@ class RestaurantDashboard extends Component {
           console.log("Status Code : ", response.status);
           console.log("response, ", response.data.success);
           if (response.data.success) {
-            window.location.assign("/restaurant/dashboard");
+            window.location.reload(true);
           }
         })
         .catch((response) => {
@@ -383,7 +386,7 @@ class RestaurantDashboard extends Component {
                   "http://" +
                   process.env.REACT_APP_IP +
                   ":3001/" +
-                  this.state.restaurantprofilepic
+                  this.state.restaurantProfilePic
                 }
                 alt="Profile Pic"
                 style={{

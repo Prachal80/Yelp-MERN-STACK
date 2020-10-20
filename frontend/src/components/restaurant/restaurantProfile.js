@@ -25,6 +25,7 @@ class RestaurantProfile extends Component {
       ratings: "",
       method: "",
       cuisine: "",
+      restaurantProfilePic: "",
       ErrorMessage: "",
     };
 
@@ -47,9 +48,13 @@ class RestaurantProfile extends Component {
       method: "GET",
       params: data,
     }).then((response) => {
-      // console.log("profile details", response.data.profileData[0]);
+      
 
-      let restaurantData = response.data.restaurantProfileData[0];
+      let restaurantData = response.data.restaurantProfileData;
+
+
+      console.log("profile details", restaurantData);
+
       this.setState({
         name: restaurantData.name,
         location: restaurantData.location,
@@ -63,7 +68,7 @@ class RestaurantProfile extends Component {
         ratings: restaurantData.ratings,
         method: restaurantData.method,
         cuisine: restaurantData.cuisine,
-        restaurantprofilepic: restaurantData.restaurantprofilepic,
+        restaurantProfilePic: restaurantData.restaurantProfilePic,
       });
     });
   }
@@ -77,7 +82,7 @@ class RestaurantProfile extends Component {
   //submit Login handler to send a request to the node backend
   submitUpdate = (e) => {
     //prevent page from refresh
-    e.preventDefault();
+    //e.preventDefault();
     const data = {
       name: this.state.name,
       location: this.state.location,
@@ -89,7 +94,7 @@ class RestaurantProfile extends Component {
       email: this.state.email,
       contact: this.state.contact,
       method: this.state.method,
-      restaurantprofilepic: this.state.restaurantprofilepic,
+      restaurantProfilePic: this.state.restaurantProfilePic,
       cuisine: this.state.cuisine,
       RID: localStorage.getItem("RID"),
     };
@@ -184,7 +189,7 @@ class RestaurantProfile extends Component {
                   "http://" +
                   process.env.REACT_APP_IP +
                   ":3001/" +
-                  this.state.restaurantprofilepic
+                  this.state.restaurantProfilePic
                 }
                 alt="Profile Pic"
                 style={{
@@ -240,7 +245,7 @@ class RestaurantProfile extends Component {
                 <input
                   type="text"
                   name="RID"
-                  value={JSON.parse(localStorage.getItem("RID"))}
+                  value={localStorage.getItem("RID")}
                   style={{ display: "none", width: "10px" }}
                 />
                 <input type="file" name="restaurantprofilePic" />
@@ -362,7 +367,7 @@ class RestaurantProfile extends Component {
                       <Col xs={3}>
                         <input
                           type="email"
-                          name="emailid"
+                          name="email"
                           class="form-control"
                           placeholder="Email"
                           onChange={this.ChangeHandler}

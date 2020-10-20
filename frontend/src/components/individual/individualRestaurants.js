@@ -57,7 +57,7 @@ export default class individualRestaurant extends Component {
                         "http://" +
                         process.env.REACT_APP_IP +
                         ":3001/" +
-                        this.props.data.restaurantprofilepic
+                        this.props.data.restaurantProfilePic
                       }
                       alt="Dish Image"
                       style={{

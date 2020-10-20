@@ -15,7 +15,7 @@ var customerSchema = new Schema({
     phone: String,
     blog: String,
     yelpingSince: String,
-    thingsILove: String,
+    thingsIlove: String,
     profilePic: String,
     findMeIn: String,
 },

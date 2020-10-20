@@ -23,7 +23,7 @@ export default class individualRestaurantOrders extends Component {
       status: "",
       orderid: "",
       time: "",
-      optiontype: "",
+      option: "",
       ErrorMessage: "",
     };
     this.ChangeHandler = this.ChangeHandler.bind(this);
@@ -79,7 +79,23 @@ export default class individualRestaurantOrders extends Component {
   };
 
   showOptions = () => {
-    if (this.props.data.optiontype === "Delivery") {
+    if(this.props.data.status==="Cancelled") {
+      return (
+        <select
+          id="satus"
+          name="status"
+          class="form-control"
+         
+          value="Cancelled"
+          
+        >
+          <option value="select" selected disabled>
+            Cancelled order
+          </option>
+        </select>
+      );
+    }
+    else if (this.props.data.option === "Delivery") {
       return (
         <select
           id="satus"
@@ -98,7 +114,7 @@ export default class individualRestaurantOrders extends Component {
           <option value="Delivered">Delivered</option>
         </select>
       );
-    } else if (this.props.data.optiontype === "Pickup") {
+    } else if (this.props.data.option === "Pickup") {
       return (
         <select
           id="satus"
@@ -118,6 +134,7 @@ export default class individualRestaurantOrders extends Component {
         </select>
       );
     }
+
   };
 
   render() {
@@ -160,7 +177,7 @@ export default class individualRestaurantOrders extends Component {
                       Price : {this.props.data.price}
                     </p>
                     <p style={{ marginBottom: "0px" }}>
-                      Order type: : {this.props.data.optiontype}
+                      Order type: {this.props.data.option}
                     </p>
                     <p style={{ marginBottom: "0px" }}>
                       Category : {this.props.data.category}

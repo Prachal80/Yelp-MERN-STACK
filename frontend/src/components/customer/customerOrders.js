@@ -44,11 +44,12 @@ export class customerOrders extends Component {
         }
       )
       .then((response) => {
-        console.log("Received all Orders");
+        console.log("Received all Orders",response.data.CustomerGetOrder);
 
         this.setState({
           orders: this.state.orders.concat(response.data.CustomerGetOrder),
         });
+        console.log("orders", this.state.orders);
       });
   }
 
@@ -183,15 +184,6 @@ export class customerOrders extends Component {
             >
               Clear
             </button>
-            {/* <div> */}
-            {/* <SearchField
-              color="black"
-              placeholder="Search Restaurants, Dishes and more"
-              //   onChange={onChange}
-              searchText=""
-              classNames="test-class"
-            /> */}
-            {/* </div> */}
           </div>
           <br />
           <hr />

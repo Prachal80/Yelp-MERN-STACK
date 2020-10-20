@@ -69,10 +69,11 @@ class CustomerDashboard extends Component {
         }
       )
       .then((response) => {
-        console.log("Received Dishes");
+        console.log("Received Dishes", response.data.customerDishGet);
         this.setState({
-          dishes: this.state.dishes.concat(response.data.customerDishGet),
+          dishes: this.state.dishes.concat(response.data.customerDishGet.dishes),
         });
+        console.log("State Dishes", this.state.dishes);
       });
 
     axios

@@ -37,7 +37,7 @@ export default class individualPlacedOrder extends Component {
     //prevent page from refresh
     e.preventDefault();
     const data = {
-      orderid: this.props.data.orderid,
+      orderid: this.props.data._id,
     };
 
     //set the with credentials to true
@@ -107,7 +107,7 @@ export default class individualPlacedOrder extends Component {
                       Price : {this.props.data.price}
                     </p>
                     <p style={{ marginBottom: "0px" }}>
-                      Order type: : {this.props.data.optiontype}
+                      Order type: : {this.props.data.option}
                     </p>
 
                     <p style={{ marginBottom: "0px" }}>

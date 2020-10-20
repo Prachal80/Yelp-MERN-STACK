@@ -11,13 +11,13 @@ var restaurantSchema = new Schema({
     state: String,
     country: String,
     description: String,
-    headline: String,
     timings: String,
     contact: String,
     retings: String,
     method: String,
     cuisine: String,
-    dishes: [{ dishname : String , ingredients: String , image: String , price: String , description: String  , category: String , restaurantid: String ,restaurantname: String}],
+    restaurantProfilePic: String,
+    dishes: [{  dishname : String , ingredients: String , image: String , price: String , description: String  , category: String, restaurantname: String , restaurantid: String }],
 },
     {
         versionKey: false

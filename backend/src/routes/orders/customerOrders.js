@@ -34,13 +34,15 @@ router.post(
     // console.log("**********", query);
     // console.log(args);
 
-    executeQuery(query, args, (flag, result) => {
-      if (!flag) console.log("err", flag);
-      else {
-        res.send({ success: true, CustomerMakeOrder: result });
-        // res.redirect("http://"+process.env.ip+":300"+"/customer/orders");
-      }
-    });
+    // executeQuery(query, args, (flag, result) => {
+    //   if (!flag) console.log("err", flag);
+    //   else {
+    //     res.send({ success: true, CustomerMakeOrder: result });
+    //     // res.redirect("http://"+process.env.ip+":300"+"/customer/orders");
+    //   }
+    // });
+
+    
   }
 );
 
