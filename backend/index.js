@@ -150,8 +150,8 @@ app.use("/restaurantOrders", restaurantOrders);
 var customerOrders = require("./src/services/orders/customerOrders");
 app.use("/customerOrders", customerOrders);
 
-// var reviews = require("./src/routes/reviews/reviews");
-// app.use("/reviews", reviews);
+var reviews = require("./src/services/reviews/reviews");
+app.use("/reviews", reviews);
 
 // var customerEvents = require("./src/routes/events/customerEvents");
 // app.use("/customerEvents", customerEvents);

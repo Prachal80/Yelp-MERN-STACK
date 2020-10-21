@@ -357,5 +357,5 @@ class customerRestaurantView extends Component {
 }
 
 export default GoogleApiWrapper({
-  apiKey: "process.env.API_KEY",
+  apiKey: "AIzaSyBIRmVN1sk9HHlXxIAg-3_H5oRb2j-TyC4",
 })(customerRestaurantView);

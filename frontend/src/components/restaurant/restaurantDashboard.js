@@ -98,33 +98,33 @@ class RestaurantDashboard extends Component {
         //console.log("Dishes: ", this.state.dishes);
       });
 
-    //Get all reviews to restaurant
-    // axios
-    //   .get(
-    //     "http://" +
-    //       process.env.REACT_APP_IP +
-    //       ":3001" +
-    //       "/reviews/getRestaurantReviews",
-    //     {
-    //       params: {
-    //         RID: localStorage.getItem("RID"),
-    //       },
-    //     }
-    //   )
-    //   .then((response) => {
-    //     console.log("Received All reviews");
+    //Get all reviews given to restaurant
+    axios
+      .get(
+        "http://" +
+          process.env.REACT_APP_IP +
+          ":3001" +
+          "/reviews/getRestaurantReviews",
+        {
+          params: {
+            RID: localStorage.getItem("RID"),
+          },
+        }
+      )
+      .then((response) => {
+        console.log("Received All reviews");
 
-    //     this.setState({
-    //       reviews: this.state.reviews.concat(response.data.restaurantReviews),
-    //     });
-    //     console.log(this.state.reviews);
-    //   })
-    //   .catch((response) => {
-    //     console.log("********** Catch", response);
-    //     this.setState({
-    //       ErrorMessage: "Something went wrong while getting all the reviews",
-    //     });
-    //   });
+        this.setState({
+          reviews: this.state.reviews.concat(response.data.restaurantReviews),
+        });
+        console.log(this.state.reviews);
+      })
+      .catch((response) => {
+        console.log("********** Catch", response);
+        this.setState({
+          ErrorMessage: "Something went wrong while getting all the reviews",
+        });
+      });
   }
 
   submitUpdate = (e) => {

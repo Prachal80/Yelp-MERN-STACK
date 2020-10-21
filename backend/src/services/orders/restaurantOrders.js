@@ -44,20 +44,8 @@ router.post("/changeOrderStatusRestaurant", (req, res) => {
             status:status
         }
     })
-    // var query = "update orders set status= ? where orderid=?";
-    // var args = [status, orderid];
-    // console.log(query, "%%%%%%%%%%%", args);
+   
   }
-
-//   executeQuery(query, args, (flag, result) => {
-//     if (!flag) {
-//       console.log("-------No orders found-------");
-//       res.status(404).send({ success: false, RestaurantUpdateOrder: null });
-//     } else {
-//       console.log("result ", result);
-//       res.status(200).send({ success: true, RestaurantUpdateOrder: result });
-//     }
-//   });
 });
 
 module.exports = router;
