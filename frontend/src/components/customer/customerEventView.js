@@ -87,19 +87,20 @@ class customerEventView extends Component {
       method: "GET",
       params: data,
     }).then((response) => {
-      // console.log("profile details", response.data.profileData[0]);
+       console.log("Customer event details", response.data.customerEventDetails[0]);
       let EventData = response.data.customerEventDetails[0];
       this.setState({
-        eventid: EventData.eventid,
+        eventid: EventData._id,
         eventname: EventData.eventname,
         eventdescription: EventData.eventdescription,
         eventtime: EventData.eventtime,
-        eventdate: EventData.eventdate.slice(0, 10).replace("T", " "),
+        eventdate: EventData.eventdate,
         eventlocation: EventData.eventlocation,
         hashtags: EventData.hashtags,
         restaurantname: EventData.restaurantname,
         restaurantid: EventData.restaurantid,
       });
+      console.log("Event id", this.state.eventid);
     });
 
     //make a get request for the customer event registration data
@@ -118,9 +119,9 @@ class customerEventView extends Component {
       params: data1,
     }).then((response) => {
       // console.log("profile details", response.data.profileData[0]);
-      let EventCustomer = response.data.getRegisteredCustomer[0];
+      //let EventCustomer = response.data.getRegisteredCustomer[0];
 
-      if (EventCustomer) {
+      if (response.data.success) {
         console.log("Has registered");
         this.setState({
           registered: true,
@@ -156,7 +157,7 @@ class customerEventView extends Component {
                       </p>
                       <p style={{ marginBottom: "0px" }}>
                         Date:{" "}
-                        {this.state.eventdate.slice(0, 10).replace("T", " ")}
+                        {this.state.eventdate}
                       </p>
                       <p style={{ marginBottom: "0px" }}>
                         Time: {this.state.eventtime}

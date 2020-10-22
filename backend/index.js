@@ -153,12 +153,11 @@ app.use("/customerOrders", customerOrders);
 var reviews = require("./src/services/reviews/reviews");
 app.use("/reviews", reviews);
 
-// var customerEvents = require("./src/routes/events/customerEvents");
-// app.use("/customerEvents", customerEvents);
+var customerEvents = require("./src/services/events/customerEvents");
+app.use("/customerEvents", customerEvents);
 
-// var restaurantEvents = require("./src/routes/events/restaurantEvents");
-// app.use("/restaurantEvents", restaurantEvents);
-
+var restaurantEvents = require("./src/services/events/restaurantEvents");
+app.use("/restaurantEvents", restaurantEvents);
 
 
 // exports.db = db;

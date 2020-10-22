@@ -35,7 +35,7 @@ export default class individualEvents extends Component {
                     </p>
                     <p style={{ marginBottom: "0px" }}>
                       Date:{" "}
-                      {this.props.data.eventdate.slice(0, 10).replace("T", " ")}
+                      {this.props.data.eventdate}
                     </p>
                     <p style={{ marginBottom: "0px" }}>
                       Orgaized by: {this.props.data.restaurantname}
@@ -56,7 +56,7 @@ export default class individualEvents extends Component {
                     to={{
                       pathname: "/customer/customereventview",
                       state: {
-                        eventid: this.props.data.eventid,
+                        eventid: this.props.data._id,
                         path: "/customer/events",
                       },
                     }}
@@ -87,7 +87,7 @@ export default class individualEvents extends Component {
                     </p>
                     <p style={{ marginBottom: "0px" }}>
                       Date:{" "}
-                      {this.props.data.eventdate.slice(0, 10).replace("T", " ")}
+                      {this.props.data.eventdate}
                     </p>
                     <p style={{ marginBottom: "0px" }}>
                       Time: {this.props.data.eventtime}

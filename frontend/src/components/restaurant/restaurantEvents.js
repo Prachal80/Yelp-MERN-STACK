@@ -42,7 +42,7 @@ export class restaurantEvents extends Component {
       eventname: this.state.eventname,
       eventdescription: this.state.eventdescription,
       eventtime: this.state.eventtime,
-      eventdate: this.state.eventdate.slice(0, 10).replace("T", " "),
+      eventdate: this.state.eventdate,
       eventlocation: this.state.eventlocation,
       hashtags: this.state.hashtags,
       restaurantname: localStorage.getItem("Rname"),
@@ -90,7 +90,7 @@ export class restaurantEvents extends Component {
         }
       )
       .then((response) => {
-        console.log("Received all restaurant Events");
+        console.log("Received all restaurant Events",response.data.restaurantEventsGet);
 
         this.setState({
           events: this.state.events.concat(response.data.restaurantEventsGet),

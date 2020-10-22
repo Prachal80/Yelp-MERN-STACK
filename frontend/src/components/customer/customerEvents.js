@@ -43,12 +43,12 @@ export class CustomerEvents extends Component {
           "/customerEvents/getAllEvents",
         {
           params: {
-            CID: localStorage.getItem("CID"),
+           
           },
         }
       )
       .then((response) => {
-        console.log("Received all unregistered Events");
+        console.log("Received all unregistered Events", response.data.customerEventsGet);
 
         this.setState({
           events: this.state.events.concat(response.data.customerEventsGet),

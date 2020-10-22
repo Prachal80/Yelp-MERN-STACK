@@ -87,7 +87,7 @@ class CustomerDashboard extends Component {
         }
       )
       .then((response) => {
-        console.log("Received All restaurants");
+        console.log("Received All restaurants", response.data.allRestaurants);
         this.setState({
           restaurants: this.state.restaurants.concat(
             response.data.allRestaurants
@@ -221,7 +221,7 @@ class CustomerDashboard extends Component {
 
         <hr />
         <div class="row">
-          <div class="overflow-auto" style={{}} className="col-4">
+          <div class="overflow-auto" style={{}} className="col-8">
             <h2 style={{ textAlign: "center" }}>Restaurants</h2>
             <div
               class="DishInfo"
@@ -230,7 +230,7 @@ class CustomerDashboard extends Component {
               {allRestaurants}
             </div>
           </div>
-          <div class="overflow-auto" style={{}} className="col-4">
+          {/* <div class="overflow-auto" style={{}} className="col-4">
             <h2 style={{ textAlign: "center" }}>Dishes</h2>
             <div
               class="DishInfo"
@@ -238,7 +238,7 @@ class CustomerDashboard extends Component {
             >
               {dishAll}
             </div>
-          </div>
+          </div> */}
           <div className="col-4">
             <h2 style={{ textAlign: "center" }}>Map</h2>
 

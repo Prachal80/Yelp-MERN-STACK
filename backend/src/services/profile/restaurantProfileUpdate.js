@@ -40,8 +40,8 @@ router.post("/updateRestaurantProfilePic", upload.single("restaurantprofilePic")
         {
             restaurantProfilePic: imagepath
         })
-        .then(customer => {
-            if (customer) {
+        .then(restaurant => {
+            if (restaurant) {
                 console.log('profilePicURL: ', restaurant.restaurantProfilePic);
                 res.redirect(
                     "http://" + process.env.ip + ":3000" + "/restaurant/profile");

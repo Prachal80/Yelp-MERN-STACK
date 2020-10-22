@@ -19,17 +19,17 @@ class customerRestaurantView extends Component {
     this.state = {
       restaurantid: this.props.location.state.restaurantid,
       path: this.props.location.state.path,
-      name: "",
-      location: "",
-      address: "",
-      state: "",
-      country: "",
-      description: "",
-      timings: "",
-      email: "",
-      contact: "",
-      ratings: "",
-      restaurantprofilepic: "",
+      name: this.props.location.state.name,
+      location: this.props.location.state.location,
+      address: this.props.location.state.address,
+      state: this.props.location.state.state,
+      country: this.props.location.state.country,
+      description: this.props.location.state.description,
+      timings: this.props.location.state.timings,
+      email: this.props.location.state.email,
+      contact: this.props.location.state.contact,
+      ratings: this.props.location.state.ratings,
+      restaurantprofilepic: this.props.location.state.restaurantProfilePic,
       dishes: [],
       reviews: [],
       //Review form
@@ -52,7 +52,27 @@ class customerRestaurantView extends Component {
   componentDidMount() {
     console.log("RID", this.state.restaurantid);
    
-    return axios
+      //Get All dishes
+      axios
+      .get(
+        "http://" +
+          process.env.REACT_APP_IP +
+          ":3001" +
+          "/customerDishes/getAllDishes",
+        {
+          params: {},
+        }
+      )
+      .then((response) => {
+        console.log("Received Dishes", response.data.customerDishGet);
+        this.setState({
+          dishes: this.state.dishes.concat(response.data.customerDishGet.dishes),
+        });
+        console.log("State Dishes", this.state.dishes);
+      });
+
+      //Get customer reviews
+    axios
       .get(
         "http://" +
           process.env.REACT_APP_IP +
@@ -79,6 +99,9 @@ class customerRestaurantView extends Component {
           ErrorMessage: "Something went wrong while getting all the reviews",
         });
       });
+
+
+  
   }
 
   //Post the review

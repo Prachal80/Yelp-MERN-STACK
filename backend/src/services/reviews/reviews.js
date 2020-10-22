@@ -63,9 +63,6 @@ router.post(
             res.status(200).send({ success: true});
           }
     });
-
-    console.log("**********", query);
-    console.log(args);
   }
 );
 

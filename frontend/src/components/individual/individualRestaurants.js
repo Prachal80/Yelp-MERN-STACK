@@ -104,7 +104,17 @@ export default class individualRestaurant extends Component {
                       to={{
                         pathname: "/customer/customerrestaurantview",
                         state: {
-                          restaurantid: this.props.data.id,
+                          restaurantid: this.props.data._id,
+                          name : this.props.data.name,
+                          contact : this.props.data.contact,
+                          timings:this.props.data.timings,
+                          address:this.props.data.address,
+                          state:this.props.data.state,
+                          country:this.props.data.country,
+                          ratings:this.props.data.ratings,
+                          restaurantProfilePic: this.props.data.restaurantProfilePic,
+                          email:this.props.data.email,
+                          location:this.props.data.location,
                           path: "/customer/dashboard",
                         },
                       }}
