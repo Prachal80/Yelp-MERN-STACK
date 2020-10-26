@@ -1,0 +1,18 @@
+import { CUSTOMER_PROFILE_GET } from "../constants/action-types";
+
+const initialState = {
+  ProfileGet: null,
+};
+
+export default function getProfileReducer(state = initialState, action) {
+  switch (action.type) {
+    case CUSTOMER_PROFILE_GET:
+      console.log("inside Customer Profile GET", action.payload);
+      return Object.assign({}, state, {
+        ProfileGet: action.payload,
+      });
+
+    default:
+      return state;
+  }
+}

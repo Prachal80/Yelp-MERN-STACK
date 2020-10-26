@@ -53,19 +53,19 @@ router.get("/getAllEvents", (req, res) => {
  
 });
 
-// //Get Registered Customers
-// router.get("/getRegisteredCustomers", (req, res) => {
-//   console.log("req data ", req.query);
+//Get Registered Customers
+router.get("/getRegisteredCustomers", (req, res) => {
+  console.log("req data ", req.query);
 
 
-//   Registrations.find({restaurantid:req.query.RID})
-//   .then(events=>{
-//     console.log("Registered Events found: ", events);
-//     res.status(200).send({success: true, getRegisteredCustomers: events[0]});
-//   })
-//   .catch(error=>{
-//     console.log(error);
-//   });
-// });
+  Registrations.find({restaurantid:req.query.RID})
+  .then(events=>{
+    console.log("Registered Events found: ", events);
+    res.status(200).send({success: true, getRegisteredCustomers: events});
+  })
+  .catch(error=>{
+    console.log(error);
+  });
+});
 
 module.exports = router;

@@ -2,21 +2,24 @@ var express = require("express");
 var app = express();
 const router = express.Router();
 var path = require("path");
-var executeQuery = require("../../database/mysql");
+const Orders = require("../../../models/orders")
 
 //Get All orders
 router.get("/getAllOrdersRestaurant", (req, res) => {
-  console.log("req data ", req.query);
-  let query = "select * from orders where restaurantid = ? order by time desc";
-  let args = [req.query.RID];
+console.log("req data ", req.query);
 
-  executeQuery(query, args, (flag, result) => {
-    if (!flag) console.log("-------No orders found-------");
-    else {
-      console.log("result ", result);
-      res.send({ success: true, RestaurantGetOrder: result });
+Orders.find({restaurantid: req.query.RID})
+.then(orders=>{
+    if(orders){
+      console.log("orders in restaurant", orders);
+      res.status(200).send({success: true, RestaurantGetOrder : orders});
     }
-  });
+    else{
+      console.log("order make error", orders);
+      res.status(400).send({success: false, RestaurantGetOrder : orders});
+    }
+})
+
 });
 
 //Change Order status
@@ -35,20 +38,14 @@ router.post("/changeOrderStatusRestaurant", (req, res) => {
     status === "Ready for Pickup" ||
     status === "Picked up"
   ) {
-    var query = "update orders set status= ? where orderid=?";
-    var args = [status, orderid];
-    console.log(query, "%%%%%%%%%%%", args);
-  }
 
-  executeQuery(query, args, (flag, result) => {
-    if (!flag) {
-      console.log("-------No orders found-------");
-      res.status(404).send({ success: false, RestaurantUpdateOrder: null });
-    } else {
-      console.log("result ", result);
-      res.status(200).send({ success: true, RestaurantUpdateOrder: result });
-    }
-  });
+    Orders.findByIdAndUpdate({_id:orderid},{
+        $set:{
+            status:status
+        }
+    })
+   
+  }
 });
 
 module.exports = router;

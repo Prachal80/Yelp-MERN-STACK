@@ -68,9 +68,9 @@ router.get("/getRegisteredEvents", (req, res) => {
 router.get("/getRegisteredCustomer", (req, res) => {
   console.log("req data ", req.query);
 
-  Registrations.find({customerid : req.query.CID, restaurantid:req.query.restaurantid})
+  Registrations.find({customerid : req.query.CID, eventid:req.query.eventid})
   .then(event => {
-    if(event){
+    if(event.length){
         console.log("Registered Events: ", event)
         res.status(200).send({success: true, getRegisteredCustomer: event});
     }

@@ -68,7 +68,6 @@ export default class individualRegisteredEvents extends Component {
                           color: "#ffffff",
                           fontWeight: "bold",
                           borderBlockColor: "white",
-                          fontWeight: "bold",
                           border: "1px #D32323",
                         }}
                         to={{

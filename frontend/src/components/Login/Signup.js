@@ -1,7 +1,9 @@
 import React, { Component } from "react";
 import "../../App.css";
-import axios from "axios";
-import M from "materialize-css";
+import { signupAction } from "../../redux/actions/signupAction";
+import { connect } from "react-redux";
+// import axios from "axios";
+// import M from "materialize-css";
 
 import logo from "../../img/signup_illustration.png";
 import { Redirect } from "react-router";
@@ -92,61 +94,8 @@ class Signup extends Component {
       userType: this.state.userType,
       location: this.state.location,
     };
-    console.log(data);
-
-    if (
-      data.email !== "" &&
-      data.username !== "" &&
-      data.password !== "" &&
-      data.userType !== ""
-    ) {
-      if (
-        !/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(
-          data.email
-        )
-      ) {
-        M.toast({ html: "Invalid email", classes: "#fc2837 red darken-3" });
-      } else {
-        //set the with credentials to true
-        axios.defaults.withCredentials = true;
-        //make a post request with the user data
-        return axios
-          .post(
-            "http://" + process.env.REACT_APP_IP + ":3001" + "/signup",
-            data
-          )
-          .then((response) => {
-            console.log("Status Code : ", response.status);
-            console.log("response, ", response);
-            if (response.data.success) {
-            // window.location.assign("/login");
-              M.toast({
-                html: "Signup success",
-                classes: "green darken-1",
-              });
-            }
-           
-          })
-          .catch((error) => {
-            console.log("response ", error.response.data.message);
-            if(error.response.data.message !== ""){
-              this.setState({
-                ErrorMessage: error.response.data.message,
-              });
-            }else{
-              this.setState({
-                ErrorMessage: "Please provide all the details",
-              });
-            }
-            
-          });
-      }
-    } else {
-      M.toast({
-        html: "Please Provide all the details",
-        classes: "red darken-1",
-      });
-    }
+    console.log(data);    
+    this.props.signupAction(data);
   };
 
   UserRestaurant = () => {
@@ -169,7 +118,19 @@ class Signup extends Component {
     } else {
     //   console.log("In else");
     }
+  
   };
+
+  componentDidUpdate() {
+    let redirectVar = null;
+    console.log("Is singed in: ", this.props.isSignedup);
+    // if (this.props.isSignedup) {
+    //   console.log("Is Sign up Action called: ", this.props.isSignedup);
+    //   redirectVar = <Redirect to="/login" />;
+
+    // window.location.assign("/login");
+    // }
+  }
 
   render() {
     let redirectVar = null;
@@ -309,4 +270,9 @@ class Signup extends Component {
   }
 }
 
-export default Signup;
+
+const mapStateToProps = (state) => ({
+  isSignedup: state.Signup.isSignedup,
+});
+
+export default connect(mapStateToProps, { signupAction })(Signup);

@@ -119,11 +119,13 @@ class CustomerDashboard extends Component {
             ></EachRestaurant>
           );
         }
-      } else if (this.state.pattern !== "") {
+      } else if (this.state.pattern !== "" && this.state.pattern !== null) {
+        let criteria = this.state.searchCriteria;
+        console.log("Each Restaurant", eachRestaurant[criteria]);
+        console.log("criteria", criteria);
+  
         if (
-          eachRestaurant[this.state.searchCriteria]
-            .toLowerCase()
-            .includes(this.state.pattern.toLowerCase())
+          JSON.stringify(eachRestaurant[this.state.searchCriteria]).toLowerCase().includes(this.state.pattern.toLowerCase())
         ) {
           return (
             <EachRestaurant
@@ -132,7 +134,8 @@ class CustomerDashboard extends Component {
             ></EachRestaurant>
           );
         }
-      } else {
+     } 
+      else {
         return (
           <EachRestaurant
             // key={Math.random}
@@ -213,6 +216,7 @@ class CustomerDashboard extends Component {
                   placeholder="Search Restaurants, Dishes and more"
                   onChange={this.restaurantSearch}
                   classNames="test-class"
+                  //value={this.state.pattern}
                 />
               </div>
             </div>

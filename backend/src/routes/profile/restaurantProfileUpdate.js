@@ -3,7 +3,8 @@ var express = require("express");
 var app = express();
 const router = express.Router();
 var path = require("path");
-var executeQuery = require("../../database/mysql");
+const Restaurant = require('../../../models/restaurant');
+
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -19,76 +20,100 @@ const storage = multer.diskStorage({
 
 var upload = multer({ storage: storage });
 
-router.post(
-  "/updateRestaurantProfilePic",
-  upload.single("restaurantprofilePic"),
-  function (req, res) {
+router.post("/updateRestaurantProfilePic", upload.single("restaurantprofilePic"), function (
+    req,
+    res
+  ) {
+    console.log("Restaurant side Request", req.body);
     console.log("Inside update Restaurant profile picture");
-    var host = req.hostname;
-    console.log("Hostname", host);
-    console.log("File", req.file);
-    console.log("req.file.path", req.file.path);
-    console.log("RID", req.body.RID);
-    console.log("protocol ", req.protocol);
-    var imagepath = req.file.path;
-    console.log("imagepath ", imagepath);
-
-    let query = "update restaurant set restaurantprofilepic = ? where id = ?";
-    let args = [imagepath, req.body.RID];
-    console.log("**********", query);
-    console.log(args);
-
-    executeQuery(query, args, (flag, result) => {
-      if (!flag) console.log("err", flag);
-      else {
-        res.redirect(
-          "http://" + process.env.ip + ":3000" + "/restaurant/profile"
-        );
+  
+    if (req.file != "") {
+    //   var host = req.hostname;
+    //   console.log("Hostname", host);
+    //   console.log("File", req.file);
+    //   console.log("req.file.path", req.file.path);
+    //   console.log("CID", req.body.CID);
+    //   console.log("protocol ", req.protocol);
+      var imagepath = req.file.path;
+      console.log("imagepath ", imagepath);
+      Restaurant.findByIdAndUpdate({_id:req.body.RID}, 
+        {
+            restaurantProfilePic: imagepath
+        })
+        .then(restaurant => {
+            if (restaurant) {
+                console.log('profilePicURL: ', restaurant.restaurantProfilePic);
+                res.redirect(
+                    "http://" + process.env.ip + ":3000" + "/restaurant/profile");
+            }
+            else {
+                console.log('wrong restaurant id')
+                res.status(401).end("wrong restaurant id")
+            }
+        })
+        .catch(error => {
+            console.log('update restaurant profile picture error', error)
+        })
       }
-    });
-  }
-);
-
-router.get("/getRestaurantProfile", (req, res) => {
-  console.log("req data ", req.query);
-  let query = "select * from restaurant where id = ?";
-  let args = [req.query.RID];
-
-  executeQuery(query, args, (flag, result) => {
-    if (!flag) console.log("user not found");
-    else {
-      console.log("result ", result);
-      res.send({ success: true, restaurantProfileData: result });
     }
+  );
+
+
+
+//Get Restaurant Profile
+router.get("/getRestaurantProfile", (req, res) => {
+    console.log("req data for get restaurant ", req.query);
+
+    Restaurant.findById(req.query.RID)
+    .then(restaurant=>{
+        if (restaurant) {
+            console.log("Restaurant Found", restaurant);
+            res.status(200).send({success: true, restaurantProfileData: restaurant});
+        }
+        else{
+            res.status(401).send({success: false, restaurantProfileData: restaurant});
+        }
+        
+    })
+    
   });
-});
 
 router.post("/updateRestaurantProfile", (req, res) => {
-  console.log("update profile req data ", req.body);
-  let query =
-    "update restaurant set name = ? , location = ? , address = ? , state = ? , country = ?, description = ? , timings = ? , email = ? , contact = ? , method = ?, cuisine = ? where id = ?";
-  let args = [
-    req.body.name,
-    req.body.location,
-    req.body.address,
-    req.body.state,
-    req.body.country,
-    req.body.description,
-    req.body.timings,
-    req.body.email,
-    req.body.contact,
-    req.body.method,
-    req.body.cuisine,
-    req.body.RID,
-  ];
+    console.log("update profile req data ", req.body);
 
-  executeQuery(query, args, (flag, result) => {
-    if (!flag) console.log("user not found");
-    else {
-      console.log("result ", result);
-      res.send({ success: true, restaurantProfileData: result });
-    }
-  });
-});
+    Restaurant.findByIdAndUpdate({_id:req.body.RID}, 
+        {
+            name : req.body.name,
+            email: req.body.email,
+            location: req.body.location,
+            state: req.body.state,
+            country: req.body.country,
+            address: req.body.address,
+            description: req.body.description,
+            contact: req.body.contact,
+            timings: req.body.timings,
+            ratings: req.body.ratings,
+            method: req.body.method,
+            cuisine: req.body.cuisine,
+            
+        })
+        .then(restaurant => {
+            if (restaurant) {
+                console.log('All the details of restaurant: ', restaurant);
+                // res.redirect(
+                //     "http://" + process.env.ip + ":3000" + "/customer/profile");
+            }
+            else {
+                console.log('wrong restaurant id')
+                res.status(401).end("wrong restaurant id")
+            }
+        })
+        .catch(error => {
+            console.log('update customer profile error', error)
+        })
+  
+  }); 
+  module.exports = router;
+
 
 module.exports = router;

@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 import "../../App.css";
 import axios from "axios";
+import { connect } from "react-redux";
+import { loginAction } from "../../redux/actions/loginAction";
 import { Redirect } from "react-router";
 import logo from "../../img/signup_illustration.png";
 import M from "materialize-css";
@@ -61,67 +63,21 @@ class Login extends Component {
       password: this.state.password,
       userType: this.state.userType,
     };
-    //console.log(data);
+    console.log(data);
+    this.props.loginAction(data);
 
-    //set the with credentials to true
-    axios.defaults.withCredentials = true;
-    //make a post request with the user data
-    if (data.username !== "" && data.password !== "" && data.userType !== "") {
-      if (
-        !/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(
-          data.username
-        )
-      ) {
-        M.toast({ html: "Invalid email", classes: "#fc2837 red darken-3" });
-      } else {
-         return axios
-          .post("http://" + process.env.REACT_APP_IP + ":3001" + "/login", data)
-          .then((response) => {
-            console.log("Status Code : ", response.status);
-            console.log("response, ", response.data);
-            if (response.data.success && data.userType === "customer") {
-              localStorage.setItem("user", "customer");
-              localStorage.setItem("CID", response.data.res._id);
-              localStorage.setItem("Cname", response.data.res.name);
-              localStorage.setItem("Cemail", response.data.res.email);
-              window.location.assign("/customer/dashboard");
-              M.toast({
-                html: "Signup success",
-                classes: "green darken-1",
-              });
-            } else if (
-              response.data.success &&
-              data.userType === "restaurant"
-            ) {
-              localStorage.setItem("user", "restaurant");
-              localStorage.setItem("RID", response.data.res._id);
-              localStorage.setItem("Rname", response.data.res.name);
-              localStorage.setItem("Remail", response.data.res.email);
-              window.location.assign("/restaurant/dashboard");
-              M.toast({
-                html: "Signup success",
-                classes: "green darken-1",
-              });
-            }
-          })
-          .catch((error) => {
-            this.setState({
-              authFlag: false,
-              ErrorMessage: "Invalid Login Credentials",
-            });
-          });
-      }
-    } else {
-      this.setState({
-        authFlag: false,
-        ErrorMessage: "Please Provide all the details",
-      });
-      M.toast({
-        html: "Please Provide all the details",
-        classes: "red darken-1",
-      });
-    }
   };
+
+  componentDidUpdate() {
+    if (this.props.isLoggedIn) {
+      console.log("Is Logged in Action called: ", this.props.isLoggedIn);
+    }
+    else{
+      console.log("ErrorMessage: ", this.props.ErrorMessage);
+      }
+     
+    }
+  
 
   render() {
     // redirect based on successful login
@@ -238,7 +194,7 @@ class Login extends Component {
                 borderRadius: "4%",
               }}
             >
-              {this.state.ErrorMessage}
+              {this.props.ErrorMessage}
             </p>
           </form>
           <img
@@ -252,5 +208,10 @@ class Login extends Component {
     );
   }
 }
+
+const mapStateToProps = (state) => ({
+  isLoggedIn: state.Login.isLoggedIn,
+});
 //export Login Component
-export default Login;
+
+export default connect(mapStateToProps, { loginAction })(Login);

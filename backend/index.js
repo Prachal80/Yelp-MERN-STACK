@@ -90,74 +90,80 @@ Object.keys(collections).forEach(function (k) {
     names.push(k);
 });
 
-// var loginBasePath = require("./src/routes/login/account");
-// app.use("/login", loginBasePath);
 
-//var signUpPath = require("./src/routes/signup/signup");
-// app.use("/signup", signUpPath);
 
-// var cusotmerProfile = require("./src/routes/profile/customerProfileUpdate");
-// app.use("/customerProfile", cusotmerProfile);
+//Mongo Routes
 
-// var restaurantProfile = require("./src/routes/profile/restaurantProfileUpdate");
-// app.use("/restaurantProfile", restaurantProfile);
+var loginBasePath = require("./src/routes/login/login");
+app.use("/login", loginBasePath);
 
-// var restaurantDishes = require("./src/routes/dishes/restaurantDishes");
-// app.use("/restaurantDishes", restaurantDishes);
+var signUpPath = require("./src/routes/signup/signup");
+app.use("/signup", signUpPath);
 
-// var customerDishes = require("./src/routes/dishes/customerDishes");
-// app.use("/customerDishes", customerDishes);
+var cusotmerProfile = require("./src/routes/profile/customerProfileUpdate");
+app.use("/customerProfile", cusotmerProfile);
 
-// var restaurantOrders = require("./src/routes/orders/restaurantOrders");
-// app.use("/restaurantOrders", restaurantOrders);
+var restaurantProfile = require("./src/routes/profile/restaurantProfileUpdate");
+app.use("/restaurantProfile", restaurantProfile);
 
-// var customerOrders = require("./src/routes/orders/customerOrders");
-// app.use("/customerOrders", customerOrders);
+var restaurantDishes = require("./src/routes/dishes/restaurantDishes");
+app.use("/restaurantDishes", restaurantDishes);
 
-// var reviews = require("./src/routes/reviews/reviews");
-// app.use("/reviews", reviews);
+var customerDishes = require("./src/routes/dishes/customerDishes");
+app.use("/customerDishes", customerDishes);
 
-// var customerEvents = require("./src/routes/events/customerEvents");
-// app.use("/customerEvents", customerEvents);
+var restaurantOrders = require("./src/routes/orders/restaurantOrders");
+app.use("/restaurantOrders", restaurantOrders);
 
-// var restaurantEvents = require("./src/routes/events/restaurantEvents");
-// app.use("/restaurantEvents", restaurantEvents);
+var customerOrders = require("./src/routes/orders/customerOrders");
+app.use("/customerOrders", customerOrders);
+
+var reviews = require("./src/routes/reviews/reviews");
+app.use("/reviews", reviews);
+
+var customerEvents = require("./src/routes/events/customerEvents");
+app.use("/customerEvents", customerEvents);
+
+var restaurantEvents = require("./src/routes/events/restaurantEvents");
+app.use("/restaurantEvents", restaurantEvents);
 
 
 
 //Mongo Routes
-var signUpPath = require("./src/services/signup/signup")
-app.use("/signup", signUpPath);
 
-var loginBasePath = require("./src/services/login/login")
-app.use("/login", loginBasePath);
 
-var cusotmerProfile = require("./src/services/profile/customerProfileUpdate");
-app.use("/customerProfile", cusotmerProfile);
+// var signUpPath = require("./src/services/signup/signup")
+// app.use("/signup", signUpPath);
 
-var restaurantProfile = require("./src/services/profile/restaurantProfileUpdate");
-app.use("/restaurantProfile", restaurantProfile);
+// var loginBasePath = require("./src/services/login/login")
+// app.use("/login", loginBasePath);
 
-var restaurantDishes = require("./src/services/dishes/restaurantDishes");
-app.use("/restaurantDishes", restaurantDishes);
+// var cusotmerProfile = require("./src/services/profile/customerProfileUpdate");
+// app.use("/customerProfile", cusotmerProfile);
 
-var customerDishes = require("./src/services/dishes/customerDishes");
-app.use("/customerDishes", customerDishes);
+// var restaurantProfile = require("./src/services/profile/restaurantProfileUpdate");
+// app.use("/restaurantProfile", restaurantProfile);
 
-var restaurantOrders = require("./src/services/orders/restaurantOrders");
-app.use("/restaurantOrders", restaurantOrders);
+// var restaurantDishes = require("./src/services/dishes/restaurantDishes");
+// app.use("/restaurantDishes", restaurantDishes);
 
-var customerOrders = require("./src/services/orders/customerOrders");
-app.use("/customerOrders", customerOrders);
+// var customerDishes = require("./src/services/dishes/customerDishes");
+// app.use("/customerDishes", customerDishes);
 
-var reviews = require("./src/services/reviews/reviews");
-app.use("/reviews", reviews);
+// var restaurantOrders = require("./src/services/orders/restaurantOrders");
+// app.use("/restaurantOrders", restaurantOrders);
 
-var customerEvents = require("./src/services/events/customerEvents");
-app.use("/customerEvents", customerEvents);
+// var customerOrders = require("./src/services/orders/customerOrders");
+// app.use("/customerOrders", customerOrders);
 
-var restaurantEvents = require("./src/services/events/restaurantEvents");
-app.use("/restaurantEvents", restaurantEvents);
+// var reviews = require("./src/services/reviews/reviews");
+// app.use("/reviews", reviews);
+
+// var customerEvents = require("./src/services/events/customerEvents");
+// app.use("/customerEvents", customerEvents);
+
+// var restaurantEvents = require("./src/services/events/restaurantEvents");
+// app.use("/restaurantEvents", restaurantEvents);
 
 
 // exports.db = db;

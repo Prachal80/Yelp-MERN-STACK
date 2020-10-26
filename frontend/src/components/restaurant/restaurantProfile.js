@@ -7,6 +7,11 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import { Map, InfoWindow, Marker, GoogleApiWrapper } from "google-maps-react";
 import { BsStarFill } from "react-icons/all";
+import { connect } from "react-redux";
+import { getRestaurantProfileAction } from "../../redux/actions/getRestaurantProfileAction";
+import { updateRestaurantProfileAction } from "../../redux/actions/updateRestaurantProfileAction";
+
+
 
 class RestaurantProfile extends Component {
   constructor(props) {
@@ -34,44 +39,33 @@ class RestaurantProfile extends Component {
     this.submitUpdate = this.submitUpdate.bind(this);
   }
   componentDidMount() {
-    axios.defaults.withCredentials = true;
-    //make a post request with the user data
+
     let data = {
       RID: localStorage.getItem("RID"),
     };
-    axios({
-      url:
-        "http://" +
-        process.env.REACT_APP_IP +
-        ":3001" +
-        "/restaurantProfile/getRestaurantProfile",
-      method: "GET",
-      params: data,
-    }).then((response) => {
-      
-
-      let restaurantData = response.data.restaurantProfileData;
-
-
-      console.log("profile details", restaurantData);
-
-      this.setState({
-        name: restaurantData.name,
-        location: restaurantData.location,
-        address: restaurantData.address,
-        state: restaurantData.state,
-        country: restaurantData.country,
-        description: restaurantData.description,
-        timings: restaurantData.timings,
-        email: restaurantData.email,
-        contact: restaurantData.contact,
-        ratings: restaurantData.ratings,
-        method: restaurantData.method,
-        cuisine: restaurantData.cuisine,
-        restaurantProfilePic: restaurantData.restaurantProfilePic,
-      });
+    console.log("RID ", data);
+    this.props.getRestaurantProfileAction(data);
+    }
+  
+ componentWillReceiveProps(nextProps) {
+    console.log("In will recieve props Restaurant for details", nextProps.ProfileGet);
+    this.setState({
+      name: nextProps.ProfileGet.name,
+      location: nextProps.ProfileGet.location,
+      address: nextProps.ProfileGet.address,
+      state: nextProps.ProfileGet.state,
+      country: nextProps.ProfileGet.country,
+      description: nextProps.ProfileGet.description,
+      timings: nextProps.ProfileGet.timings,
+      email: nextProps.ProfileGet.email,
+      contact: nextProps.ProfileGet.contact,
+      ratings: nextProps.ProfileGet.ratings,
+      method: nextProps.ProfileGet.method,
+      cuisine: nextProps.ProfileGet.cuisine,
+      restaurantProfilePic: nextProps.ProfileGet.restaurantProfilePic,
     });
   }
+
   // change handlers to update state variable with the text entered by the user
   ChangeHandler = (e) => {
     this.setState({
@@ -425,6 +419,27 @@ class RestaurantProfile extends Component {
     );
   }
 }
-export default GoogleApiWrapper({
-  apiKey: "AIzaSyBIRmVN1sk9HHlXxIAg-3_H5oRb2j-TyC4",
-})(RestaurantProfile);
+
+const mapStateToProps = (state) => {
+  return {
+    isProfileUpdated: state.RestaurantProfileUpdate.isProfileUpdated,
+    ProfileGet: state.RestaurantProfileGet.ProfileGet,
+  };
+};
+
+// export default GoogleApiWrapper({
+//   apiKey: "AIzaSyBIRmVN1sk9HHlXxIAg-3_H5oRb2j-TyC4",
+// });
+
+const WrappedContainer = GoogleApiWrapper({
+    apiKey: "AIzaSyBIRmVN1sk9HHlXxIAg-3_H5oRb2j-TyC4",
+  })(RestaurantProfile);
+
+
+export default  
+  connect(mapStateToProps, {
+    updateRestaurantProfileAction,
+    getRestaurantProfileAction,
+    
+  })(WrappedContainer, RestaurantProfile);
+

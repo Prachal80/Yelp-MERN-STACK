@@ -4,6 +4,11 @@ import { Redirect } from "react-router";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
+import { connect } from "react-redux";
+import { getCustomerProfileAction } from "../../redux/actions/getCustomerProfileAction";
+import { updateCustomerProfileAction } from "../../redux/actions/updateCustomerProfileAction";
+
+
 var dotenv = require("dotenv").config({
   path: "../.env",
 });
@@ -35,53 +40,42 @@ class CustomerProfile extends Component {
     this.submitUpdate = this.submitUpdate.bind(this);
   }
   componentDidMount() {
-    axios.defaults.withCredentials = true;
+    
     //make a get request for the user data
     console.log("inside compo did mount");
     let data = {
       CID: localStorage.getItem("CID"),
     };
     console.log("cid ", data);
-    axios({
-      url:
-        "http://" +
-        process.env.REACT_APP_IP +
-        ":3001" +
-        "/customerProfile/getCustomerProfile",
-      method: "GET",
-      params: data,
-    }).then((response) => {
-
-      let customerData = response.data.profileData;
-      console.log("Customer Data", customerData);
-      this.setState({
-        name: customerData.name,
-        dob: customerData.birthdate,
-        city: customerData.city,
-        state: customerData.state,
-        country: customerData.country,
-        nickname: customerData.nickname,
-        headline: customerData.headline,
-        phone: customerData.phone,
-        emailid: customerData.email,
-        blog: customerData.blog,
-        yelpingSince: customerData.yelpingSince,
-        thingsIlove: customerData.thingsIlove,
-        findMeIn: customerData.findMeIn,
-        imagePath: customerData.profilePic,
-      });
-    }).catch((error)=>{
-      console.log(error);
-    });
-  
+    this.props.getCustomerProfileAction(data);
   }
-  // change handlers to update state variable with the text entered by the user
-  ChangeHandler = (e) => {
-    this.setState({
-      [e.target.name]: e.target.value,
-    });
-  };
 
+  componentWillReceiveProps(nextProps) {
+    console.log("in customer will recieve props for details", nextProps.ProfileGet);
+    this.setState({
+      name: nextProps.ProfileGet.name,
+      dob: nextProps.ProfileGet.birthdate,
+      city: nextProps.ProfileGet.city,
+      state: nextProps.ProfileGet.state,
+      country: nextProps.ProfileGet.country,
+      nickname: nextProps.ProfileGet.nickname,
+      headline: nextProps.ProfileGet.headline,
+      phone: nextProps.ProfileGet.phone,
+      emailid: nextProps.ProfileGet.email,
+      blog: nextProps.ProfileGet.blog,
+      yelpingSince: nextProps.ProfileGet.yelpingSince,
+      thingsIlove: nextProps.ProfileGet.thingsIlove,
+      findMeIn: nextProps.ProfileGet.findMeIn,
+      imagePath: nextProps.ProfileGet.profilePic,
+    });
+  }
+
+ // change handlers to update state variable with the text entered by the user
+ ChangeHandler = (e) => {
+  this.setState({
+    [e.target.name]: e.target.value,
+  });
+};
   //submit Login handler to send a request to the node backend
   submitUpdate = (e) => {
     //prevent page from refresh
@@ -103,35 +97,8 @@ class CustomerProfile extends Component {
       CID: localStorage.getItem("CID"),
     };
     console.log(data);
-    //set the with credentials to true
-    axios.defaults.withCredentials = true;
-    //make a post request with the user data
-    if (data) {
-      axios
-        .post(
-          "http://" +
-            process.env.REACT_APP_IP +
-            ":3001" +
-            "/customerProfile/updateCustomerProfile",
-          data
-        )
-        .then((response) => {
-          console.log("Status Code : ", response.status);
-          console.log("response, ", response.data.success);
-          if (
-            response.data.success 
-             && localStorage.getItem("user") === "customer"
-          ) {
-            window.location.assign("/customer/profile");
-          }
-        })
-        .catch((response) => {
-          this.setState({
-            authFlag: false,
-            ErrorMessage: "Something went wrong",
-          });
-        });
-    }
+    this.props.updateCustomerProfileAction(data);
+  
   };
 
   render() {
@@ -451,4 +418,17 @@ class CustomerProfile extends Component {
   }
 }
 
-export default CustomerProfile;
+const mapStateToProps = (state) => {
+  return {
+    isProfileUpdated: state.CustomerProfileUpdate.isProfileUpdated,
+    ProfileGet: state.CustomerProfileGet.ProfileGet,
+  };
+};
+
+//export Login Component
+
+export default connect(mapStateToProps, {
+  updateCustomerProfileAction,
+  getCustomerProfileAction,
+})(CustomerProfile);
+

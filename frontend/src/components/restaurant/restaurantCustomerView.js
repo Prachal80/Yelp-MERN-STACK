@@ -42,9 +42,9 @@ class restaurantCustomerView extends Component {
       method: "GET",
       params: data,
     }).then((response) => {
-      // console.log("profile details", response.data.profileData[0]);
+       console.log("profile details", response.data.profileData);
 
-      let customerData = response.data.profileData[0];
+      let customerData = response.data.profileData;
       this.setState({
         name: customerData.name,
         dob: customerData.birthdate,
@@ -56,11 +56,12 @@ class restaurantCustomerView extends Component {
         phone: customerData.phone,
         emailid: customerData.email,
         blog: customerData.blog,
-        yelpingSince: customerData.yelpingsince,
-        thingsIlove: customerData.thingsilove,
-        findMeIn: customerData.findmein,
-        imagePath: customerData.profilepic,
+        yelpingSince: customerData.yelpingSince,
+        thingsIlove: customerData.thingsIlove,
+        findMeIn: customerData.findMeIn,
+        imagePath: customerData.profilePic,
       });
+      console.log("Profile ", this.state.imagePath);
     });
   }
 
@@ -89,32 +90,48 @@ class restaurantCustomerView extends Component {
                 margin: "2% 0 2% 3%",
               }}
             ></img>
+            
             <div
+            className="col-4"
               class="topHeadline"
               style={{
                 position: "absolute",
-                width: "60%",
-                height: "20%",
                 left: "20%",
                 top: "15%",
                 fontWeight: "bold",
                 borderBlockColor: "white",
-                border: "1px #D32323",
-                textAlign: "center",
+                textAlign: "justified-center",
+                
               }}
-            >
-              <p>
+            >  
+            <p>DOB: {this.state.dob}</p>
+            <p>Name: {this.state.name}</p>
+            <p>Email: {this.state.emailid}</p>
+            <p>Phone: {this.state.phone}</p>
+              
+            </div>
+            <div className="col-4"
+              class="topHeadline"
+              style={{
+                position: "absolute",
+                left: "45%",
+                top: "15%",
+                fontWeight: "bold",
+                borderBlockColor: "white",
+                textAlign: "justified-center"}}>
+                <p>
                 {this.state.city}, {this.state.state}, {this.state.country}
               </p>
               <p>{this.state.headline}</p>
+            
             </div>
             <div
-              class="card"
+              className="col-4"
               style={{
                 position: "absolute",
                 width: "20%",
                 height: "20%",
-                right: "0%",
+                right: "15%",
                 top: "15%",
                 fontWeight: "bold",
                 borderBlockColor: "white",

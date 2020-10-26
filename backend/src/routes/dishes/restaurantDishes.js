@@ -3,7 +3,9 @@ var express = require("express");
 var app = express();
 const router = express.Router();
 var path = require("path");
-var executeQuery = require("../../database/mysql");
+const Restaurant = require('../../../models/restaurant');
+const mongoose = require('mongoose');
+const { EROFS } = require("constants");
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -25,132 +27,101 @@ router.post(
   upload.single("restaurantDishImage"),
   function (req, res) {
     console.log("Inside update Restaurant Upload Dish");
-    var host = req.hostname;
-    console.log("Hostname", host);
-    console.log("Dish Image File", req.file);
-    console.log("Dish File Path req.file.path", req.file.path);
-    console.log("RID", req.body.RID);
-    console.log("Restaurant Name", req.body.Rname);
-    console.log("protocol ", req.protocol);
-    console.log("%%%%%%%", req.body);
     var imagepath = req.file.path;
     console.log("imagepath ", imagepath);
-    let query = `insert into dishes (dishname, ingredients,image,price,description,category,restaurantid,restaurantname) values (?,?,?,?,?,?,?,?)`;
 
-    let args = [
-      req.body.dishname,
-      req.body.ingredients,
-      imagepath,
-      req.body.price,
-      req.body.description,
-      req.body.category,
-      req.body.RID,
-      req.body.Rname,
-    ];
-    console.log("**********", query);
-    console.log(args);
-
-    executeQuery(query, args, (flag, result) => {
-      if (!flag) console.log("err", flag);
-      else {
-        // res.redirect("http://"+process.env.ip+":3001"+"/restaurant/dashboard");
-        res.send({ success: true, restaurantDishAdd: result });
-      }
-    });
+    Restaurant.findByIdAndUpdate({_id:req.body.RID},
+        {$push:
+            { 
+                dishes:{   
+                dishname:req.body.dishname,
+                ingredients:req.body.ingredients,
+                image:imagepath,
+                price: req.body.price,
+                description: req.body.description,
+                category:req.body.category,
+                restaurantname: req.body.Rname,
+                restaurantid: req.body.RID,   
+                }
+                }        
+    }).then(dish => {
+        if(dish){
+            console.log('Dish added: ', dish.dishes);
+                res.redirect(
+                    "http://" + process.env.ip + ":3000" + "/restaurant/dashboard");
+        }
+        else {
+            console.log('Error while adding dish')
+            res.status(401).end("Error while adding dish")
+        }
+    }).catch(error => {console.log('Add dish error', error)
+})
   }
 );
+
+
 
 //Update Dishes
 router.post(
   "/updateRestaurantDishes",
   upload.single("restaurantDishImage"),
   function (req, res) {
-    console.log("Inside update Restaurant Upload Dish");
-    var host = req.hostname;
-    console.log("Hostname", host);
-    console.log("Dish Image File", req.file);
-    console.log("Dish File Path req.file.path", req.file.path);
-    console.log("RID", req.body.RID);
-    console.log("Restaurant Name", req.body.Rname);
-    console.log("protocol ", req.protocol);
+    console.log("Inside update Restaurant update Dish");
     console.log("%%%%%%%", req.body);
     var imagepath = req.file.path;
     console.log("imagepath ", imagepath);
-    let query =
-      "update dishes set dishname = ?, ingredients=?,image=?,price=?,description=?,category=? where id = ?";
 
-    let args = [
-      req.body.dishname,
-      req.body.ingredients,
-      imagepath,
-      req.body.price,
-      req.body.description,
-      req.body.category,
-      req.body.id,
-    ];
-    console.log("**********", query);
-    console.log(args);
+    Restaurant.findByIdAndUpdate({_id:req.body.RID},
+        {$set:
+            { 
+                dishes:{
 
-    executeQuery(query, args, (flag, result) => {
-      if (!flag) console.log("err", flag);
-      else {
-        // res.redirect("http://"+process.env.ip+":300"+"/restaurant/dashboard");
-        res.send({ success: true, restaurantDishUpdate: result });
-      }
-    });
-  }
+                dishname:req.body.dishname,
+                ingredients:req.body.ingredients,
+                image:imagepath,
+                price: req.body.price,
+                description: req.body.description,
+                category:req.body.category,   
+
+                }        
+    }
+        
+    }).then(dish => {
+        if(dish){
+            console.log('Dish Updated: ', dish);
+                // res.redirect(
+                //     "http://" + process.env.ip + ":3000" + "/restaurant/dashboard");
+                res.status(200).send({success: true});
+        }
+        else {
+            console.log('wrong dish details')
+            res.status(401).end("wrong dish details")
+        }
+    }).catch(error => {console.log('update dish error', error)
+})
+ }
 );
 
 //Get All Dishes
 router.get("/getAllDishes", (req, res) => {
-  console.log("req data ", req.query);
-  let query = "select * from dishes where restaurantid = ?";
-  let args = [req.query.RID];
+  console.log("Get all dishes data ", req.query);
 
-  executeQuery(query, args, (flag, result) => {
-    if (!flag) console.log("-------Dishes or Restaurant not found-------");
-    else {
-      console.log("result ", result);
-      res.send({ success: true, restaurantDishGet: result });
-    }
-  });
+  Restaurant.findById(req.query.RID)
+  .then(restaurant=>{
+      if (restaurant) {
+          console.log("dishes Found", restaurant.dishes);
+          res.status(200).send({success: true, restaurantDishGet : restaurant.dishes});
+        //   res.redirect(
+        //     "http://" + process.env.ip + ":3000" + "/restaurant/dashboard");
+      }
+      else{
+          res.status(401).send({success: false, restaurantDishGet: restaurant.dishes});
+        //   res.redirect(
+        //     "http://" + process.env.ip + ":3000" + "/restaurant/dashboard");
+      }
+      
+  })
+
 });
-
-//Update Dishes
-router.post("/updateDishe", (req, res) => {
-  console.log("update profile req data ", req.body);
-  console.log("Inside update Restaurant Upload Dish");
-  var host = req.hostname;
-  console.log("Hostname", host);
-  console.log("Dish Image File", req.file);
-  console.log("Dish File Path req.file.path", req.file.path);
-  console.log("RID", req.body.RID);
-  console.log("protocol ", req.protocol);
-  console.log("%%%%%%%", req.body);
-  var imagepath = req.file.path;
-  console.log("imagepath ", imagepath);
-
-  let query =
-    "update dishes set dishname = ?, ingredients = ? ,image = ? ,price = ? ,description = ?,category = ? ,restaurantid = ? where restaurantid = ?";
-  let args = [
-    req.body.dishname,
-    req.body.ingredients,
-    imagepath,
-    req.body.price,
-    req.body.description,
-    req.body.category,
-    req.body.RID,
-  ];
-
-  executeQuery(query, args, (flag, result) => {
-    if (!flag) console.log("user not found");
-    else {
-      console.log("result ", result);
-      res.send({ success: true, restaurantDishUpdated: result });
-    }
-  });
-});
-
-router.get("/get");
 
 module.exports = router;

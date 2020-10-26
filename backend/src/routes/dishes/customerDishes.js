@@ -1,39 +1,49 @@
 var express = require("express");
 var app = express();
 const router = express.Router();
+const Restaurant = require('../../../models/restaurant');
 
-var executeQuery = require("../../database/mysql");
 
 //Get All Dishes from dish table
 router.get("/getAllDishes", (req, res) => {
   console.log("req data ", req.query);
-  let query = "select * from dishes";
-  let args = [];
-
-  executeQuery(query, args, (flag, result) => {
-    if (!flag) console.log("-------Dishes not found-------");
-    else {
-      console.log("result ", result);
-      res.send({ success: true, customerDishGet: result });
-    }
-  });
+  
+  Restaurant.find({},{dishes:1,_id:0})
+  .then(restaurant => {
+      if(restaurant){
+          console.log("Get all Dishes customer: ", restaurant[0])
+          res.status(200).send({success: true, customerDishGet: restaurant[0]});
+      }
+      else{
+        res.status(401).send({success:false, customerDishGet: restaurant[0]});
+      }
+  })
+  .catch(error => {
+      console.log(error);
+  })
 });
 
-//Get all Restaurants
-
+//Get All Restaurants
 router.get("/getAllRestaurants", (req, res) => {
-  console.log("req data ", req.query);
-  let query =
-    "select restaurant.id, restaurant.name, restaurant.email, restaurant.location, restaurant.description, restaurant.contact, restaurant.restaurantprofilepic, restaurant.country, restaurant.state, restaurant.ratings,restaurant.address,restaurant.method, restaurant.cuisine, group_concat(dishes.dishname) as dishes from restaurant inner join dishes on restaurant.id = dishes.restaurantid group by restaurant.id";
-  let args = [];
-
-  executeQuery(query, args, (flag, result) => {
-    if (!flag) console.log("-------Restaurants not found-------");
-    else {
-      console.log("result ", result);
-      res.send({ success: true, allRestaurants: result });
-    }
+    //console.log("Get all restaurants data ", req.query);
+  
+    Restaurant.find({})
+    .then(restaurants=>{
+        if (restaurants) {
+            console.log("Restaurant Found", restaurants);
+            res.status(200).send({success: true, allRestaurants : restaurants});
+          //   res.redirect(
+          //     "http://" + process.env.ip + ":3000" + "/restaurant/dashboard");
+        }
+        else{
+            res.status(401).send({success: false, allRestaurants: restaurants});
+          //   res.redirect(
+          //     "http://" + process.env.ip + ":3000" + "/restaurant/dashboard");
+        }
+        
+    })
+  
   });
-});
+  
 
 module.exports = router;
