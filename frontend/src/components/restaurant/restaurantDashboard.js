@@ -9,6 +9,10 @@ import { Map, InfoWindow, Marker, GoogleApiWrapper } from "google-maps-react";
 import EachDish from "../dish/individualRestaurantDish";
 import { BsStarFill } from "react-icons/all";
 import EachReview from "../individual/indivudalReview";
+import {getAllDishesAction,addDishAction,updateDishAction} from "../../redux/actions/dishAction";
+import { connect } from "react-redux";
+
+
 var dotenv = require("dotenv").config({
   path: "../../../../.env",
 });
@@ -43,7 +47,9 @@ class RestaurantDashboard extends Component {
   }
 
   componentDidMount() {
+    
     axios.defaults.withCredentials = true;
+
     //make a post request with the Restaurant data
     let data = {
       RID: localStorage.getItem("RID"),
@@ -57,7 +63,7 @@ class RestaurantDashboard extends Component {
       method: "GET",
       params: data,
     }).then((response) => {
-      // console.log("profile details", response.data.profileData[0]);
+      //console.log(" Profile details restaurant", response.data.restaurantProfileData);
 
       let restaurantData = response.data.restaurantProfileData;
       this.setState({
@@ -76,27 +82,12 @@ class RestaurantDashboard extends Component {
         restaurantProfilePic: restaurantData.restaurantProfilePic,
       });
     });
-    //Get All dishes
-    axios
-      .get(
-        "http://" +
-          process.env.REACT_APP_IP +
-          ":3001" +
-          "/restaurantDishes/getAllDishes",
-        {
-          params: {
-            RID: localStorage.getItem("RID"),
-          },
-        }
-      )
-      .then((response) => {
-        console.log("Received Dishes");
+   
+    //Get all dishes
+    //data define RID
+    console.log("Getting all dishes Restaurant dashboard",localStorage.getItem("RID"));
+    this.props.getAllDishesAction(localStorage.getItem("RID"));
 
-        this.setState({
-          dishes: this.state.dishes.concat(response.data.restaurantDishGet),
-        });
-        //console.log("Dishes: ", this.state.dishes);
-      });
 
     //Get all reviews given to restaurant
     axios
@@ -127,6 +118,13 @@ class RestaurantDashboard extends Component {
       });
   }
 
+  componentWillReceiveProps(nextProps) {
+    console.log("in restaurant dashboard recieve all dishes", nextProps.dishes);
+    this.setState({
+      dishes: nextProps.dishes
+    });
+  }
+
   submitUpdate = (e) => {
     e.preventDefault();
     var formData = new FormData();
@@ -149,31 +147,7 @@ class RestaurantDashboard extends Component {
       console.log(pair[0] + ", " + pair[1]);
     }
     if (formData.get("category") != "undefined") {
-      axios
-        .post(
-          "http://" +
-            process.env.REACT_APP_IP +
-            ":3001" +
-            "/restaurantDishes/addRestaurantDishes",
-          formData,
-          {
-            headers: {
-              "content-type": "multipart/form-data",
-            },
-          }
-        )
-        .then((response) => {
-          console.log("Status Code : ", response.status);
-          console.log("response, ", response.data.success);
-          if (response.data.success) {
-            window.location.reload(true);
-          }
-        })
-        .catch((response) => {
-          this.setState({
-            ErrorMessage: "Something went wrong while adding dish",
-          });
-        });
+      this.props.addDishAction(formData);
     } else {
       alert("Please provide all the information");
     }
@@ -476,6 +450,20 @@ class RestaurantDashboard extends Component {
     );
   }
 }
-export default GoogleApiWrapper({
+
+
+const WrappedContainer = GoogleApiWrapper({
   apiKey: "AIzaSyBIRmVN1sk9HHlXxIAg-3_H5oRb2j-TyC4",
 })(RestaurantDashboard);
+
+const mapStateToProps = (state) => {
+  return {
+    dishes: state.RestaurantDish.dishes,
+    isDishAdded: state.RestaurantDish.isDishAdded,
+  };
+};
+
+export default connect(mapStateToProps, {
+  getAllDishesAction,addDishAction,updateDishAction
+})(WrappedContainer,RestaurantDashboard);
+

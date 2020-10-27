@@ -4,6 +4,8 @@ import { Redirect } from "react-router";
 import { Map, Marker, GoogleApiWrapper } from "google-maps-react";
 import EachDish from "../individual/individualOrderDish";
 import EachRestaurant from "../individual/individualRestaurants";
+import {getAllRestaurantsAction} from "../../redux/actions/dishAction";
+import { connect } from "react-redux";
 
 class CustomerDashboard extends Component {
   constructor(props) {
@@ -57,43 +59,54 @@ class CustomerDashboard extends Component {
   componentDidMount() {
     axios.defaults.withCredentials = true;
 
-    //Get All dishes
-    axios
-      .get(
-        "http://" +
-          process.env.REACT_APP_IP +
-          ":3001" +
-          "/customerDishes/getAllDishes",
-        {
-          params: {},
-        }
-      )
-      .then((response) => {
-        console.log("Received Dishes", response.data.customerDishGet);
-        this.setState({
-          dishes: this.state.dishes.concat(response.data.customerDishGet.dishes),
-        });
-        console.log("State Dishes", this.state.dishes);
-      });
+    // //Get All dishes
+    // axios
+    //   .get(
+    //     "http://" +
+    //       process.env.REACT_APP_IP +
+    //       ":3001" +
+    //       "/customerDishes/getAllDishes",
+    //     {
+    //       params: {},
+    //     }
+    //   )
+    //   .then((response) => {
+    //     console.log("Received Dishes", response.data.customerDishGet);
+    //     this.setState({
+    //       dishes: this.state.dishes.concat(response.data.customerDishGet.dishes),
+    //     });
+    //     console.log("State Dishes", this.state.dishes);
+    //   });
 
-    axios
-      .get(
-        "http://" +
-          process.env.REACT_APP_IP +
-          ":3001" +
-          "/customerDishes/getAllRestaurants",
-        {
-          params: {},
-        }
-      )
-      .then((response) => {
-        console.log("Received All restaurants", response.data.allRestaurants);
-        this.setState({
-          restaurants: this.state.restaurants.concat(
-            response.data.allRestaurants
-          ),
-        });
-      });
+    //get all restaurants
+    // axios
+    //   .get(
+    //     "http://" +
+    //       process.env.REACT_APP_IP +
+    //       ":3001" +
+    //       "/customerDishes/getAllRestaurants",
+    //     {
+    //       params: {},
+    //     }
+    //   )
+    //   .then((response) => {
+    //     console.log("Received All restaurants", response.data.allRestaurants);
+    //     this.setState({
+    //       restaurants: this.state.restaurants.concat(
+    //         response.data.allRestaurants
+    //       ),
+    //     });
+    //   });
+
+    this.props.getAllRestaurantsAction();
+
+  }
+
+  componentWillReceiveProps(nextProps) {
+    console.log("in customer dashboard recieve all restaurants", nextProps.restaurants);
+    this.setState({
+      restaurants: nextProps.restaurants
+    });
   }
 
   render() {
@@ -270,6 +283,19 @@ class CustomerDashboard extends Component {
   }
 }
 
-export default GoogleApiWrapper({
+const WrappedContainer = GoogleApiWrapper({
   apiKey: "AIzaSyBIRmVN1sk9HHlXxIAg-3_H5oRb2j-TyC4",
 })(CustomerDashboard);
+
+
+const mapStateToProps = (state) => {
+  return {
+    restaurants: state.CustomerDishGet.restaurants,
+    
+  };
+};
+
+export default connect(mapStateToProps, {
+  getAllRestaurantsAction,
+})(WrappedContainer,CustomerDashboard);
+

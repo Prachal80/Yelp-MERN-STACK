@@ -47,8 +47,9 @@ router.post(
     }).then(dish => {
         if(dish){
             console.log('Dish added: ', dish.dishes);
-                res.redirect(
-                    "http://" + process.env.ip + ":3000" + "/restaurant/dashboard");
+            res.status(200).send({success: true});
+                // res.redirect(
+                //     "http://" + process.env.ip + ":3000" + "/restaurant/dashboard");
         }
         else {
             console.log('Error while adding dish')

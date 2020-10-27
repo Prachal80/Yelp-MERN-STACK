@@ -4,8 +4,11 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Card from "react-bootstrap/Card";
 import axios from "axios";
+import {updateDishAction} from "../../redux/actions/dishAction";
+import { connect } from "react-redux";
 
-export default class individualDish extends Component {
+
+class individualDish extends Component {
   constructor(props) {
     super(props);
 
@@ -57,31 +60,7 @@ export default class individualDish extends Component {
       console.log(pair[0] + ", " + pair[1]);
     }
 
-    axios
-      .post(
-        "http://" +
-          process.env.REACT_APP_IP +
-          ":3001" +
-          "/restaurantDishes/updateRestaurantDishes",
-        formData,
-        {
-          headers: {
-            "content-type": "multipart/form-data",
-          },
-        }
-      )
-      .then((response) => {
-        console.log("Status Code : ", response.status);
-        console.log("response, ", response.data.success);
-        if (response.data.success) {
-          window.location.assign("/restaurant/dashboard");
-        }
-      })
-      .catch((response) => {
-        this.setState({
-          ErrorMessage: "Something went wrong while adding dish",
-        });
-      });
+    this.props.updateDishAction(formData);
   };
 
   // change handlers to update state variable with the text entered by the user
@@ -275,9 +254,9 @@ export default class individualDish extends Component {
                     <p style={{ marginBottom: "0px" }}>
                       Description : {this.props.data.description}
                     </p>
-                    <p style={{ marginBottom: "0px" }}>
+                    {/* <p style={{ marginBottom: "0px" }}>
                       Restaurant : {this.props.data.restaurantname}
-                    </p>
+                    </p> */}
                   </Col>
                 </Row>
                 <br />
@@ -309,3 +288,15 @@ export default class individualDish extends Component {
     );
   }
 }
+
+const mapStateToProps = (state) => {
+  return {
+    isUpdatedDish: state.RestaurantDish.isUpdateDish,
+    
+  };
+};
+
+export default connect(mapStateToProps, {
+  updateDishAction
+})(individualDish);
+

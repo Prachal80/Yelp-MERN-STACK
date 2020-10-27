@@ -425,7 +425,7 @@ const mapStateToProps = (state) => {
   };
 };
 
-//export Login Component
+
 
 export default connect(mapStateToProps, {
   updateCustomerProfileAction,

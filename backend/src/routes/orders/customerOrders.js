@@ -72,7 +72,7 @@ router.post("/deleteOrderCustomer", (req, res) => {
   Orders.findByIdAndUpdate({_id:req.body.orderid},
     {
         $set:{
-            status:"CSancelled",
+            status:"Cancelled",
     }      
 }).then(order=>{
     console.log("order made", order);
