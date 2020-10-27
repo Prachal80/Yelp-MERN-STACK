@@ -43,11 +43,11 @@ router.post(
                 restaurantname: req.body.Rname,
                 restaurantid: req.body.RID,   
                 }
-                }        
-    }).then(dish => {
+          }        
+    },{new:true}).then(dish => {
         if(dish){
             console.log('Dish added: ', dish.dishes);
-            res.status(200).send({success: true});
+            res.status(200).send({success: true, dish:dish.dishes});
                 // res.redirect(
                 //     "http://" + process.env.ip + ":3000" + "/restaurant/dashboard");
         }
@@ -72,11 +72,10 @@ router.post(
     var imagepath = req.file.path;
     console.log("imagepath ", imagepath);
 
-    Restaurant.findByIdAndUpdate({_id:req.body.RID},
+    Restaurant.findOneAndUpdate({dishes: {$elemMatch: {_id: req.body.id}}},
         {$set:
             { 
-                dishes:{
-
+                "dishes.$":{
                 dishname:req.body.dishname,
                 ingredients:req.body.ingredients,
                 image:imagepath,
@@ -87,12 +86,12 @@ router.post(
                 }        
     }
         
-    }).then(dish => {
+    },{new:true}).then(dish => {
         if(dish){
             console.log('Dish Updated: ', dish);
                 // res.redirect(
                 //     "http://" + process.env.ip + ":3000" + "/restaurant/dashboard");
-                res.status(200).send({success: true});
+                res.status(200).send({success: true, dish:dish.dishes});
         }
         else {
             console.log('wrong dish details')

@@ -16,13 +16,16 @@ export default function restaurantDishReducer(state = initialState, action) {
       case RESTAURANT_ADD_DISH:
         console.log("inside restaurant add dish", action.payload);
         return Object.assign({},state,{
-            isAddDish: action.payload,
+            dishes: action.payload.dish,
+            isDishAdded: action.payload.success,
+            
           });
           
       case RESTAURANT_UPDATE_DISH:
         console.log("inside restaurant update all dishes", action.payload);
         return Object.assign({},state,{
-            isUpdateDish: action.payload,
+          dishes: action.payload.dish,
+            isUpdateDish: action.payload.success,
           });
       default:
         return state;

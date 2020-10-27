@@ -1,30 +1,14 @@
-import { CUSTOMER_PROFILE_UPDATE } from "../constants/action-types";
+import { CUSTOMER_PROFILE_UPDATE,CUSTOMER_PROFILE_GET } from "../constants/action-types";
 import axios from "axios";
 import { Redirect } from "react-router";
 
 export const updateCustomerProfileAction = (data) => (dispatch) => {
-  // //set the with credentials to true
-  // axios.defaults.withCredentials = true;
-  // //make a post request with the user data
-  // axios
-  //   .post("http://localhost:5001/customerProfile/updateProfile", data)
-  //   .then((response) => {
-  //     console.log("Status Code : ", response.status);
-  //     console.log("response, ", response);
-  //     console.log("*******************************", response);
-  //     if (response.data.success) {
-  //       return dispatch({
-  //         type: CUSTOMER_PROFILE_UPDATE,
-  //         payload: response.data.success,
-  //       });
-  //     }
-  //   });
-
-
+   console.log("In action update",data);
    //set the with credentials to true
    axios.defaults.withCredentials = true;
    //make a post request with the user data
    if (data) {
+     console.log("Iside functuin");
      axios
        .post(
          "http://" +
@@ -40,12 +24,12 @@ export const updateCustomerProfileAction = (data) => (dispatch) => {
            response.data.success 
             && localStorage.getItem("user") === "customer"
          ) {
+          let customerData = response.data.profileData;
+          console.log("Customer Data", customerData);
           return dispatch({
                     type: CUSTOMER_PROFILE_UPDATE,
-                    payload: response.data,
+                    payload: customerData,
                   });
-                  
-           window.location.assign("/customer/profile");
           
          }
        })
@@ -56,4 +40,31 @@ export const updateCustomerProfileAction = (data) => (dispatch) => {
          });
        });
    }
-};
+}
+
+export const getCustomerProfileAction = (data) => (dispatch) => {
+
+
+  axios.defaults.withCredentials = true;
+
+  axios({
+    url:
+      "http://" +
+      process.env.REACT_APP_IP +
+      ":3001" +
+      "/customerProfile/getCustomerProfile",
+    method: "GET",
+    params: data,
+  }).then((response) => {
+
+    let customerData = response.data.profileData;
+    console.log("Customer Data", customerData);
+    return dispatch({
+      type: CUSTOMER_PROFILE_GET,
+      payload: customerData,
+    })
+    
+  }).catch((error)=>{
+    console.log(error);
+  });
+}

@@ -8,8 +8,8 @@ import Col from "react-bootstrap/Col";
 import { Map, InfoWindow, Marker, GoogleApiWrapper } from "google-maps-react";
 import { BsStarFill } from "react-icons/all";
 import { connect } from "react-redux";
-import { getRestaurantProfileAction } from "../../redux/actions/getRestaurantProfileAction";
-import { updateRestaurantProfileAction } from "../../redux/actions/updateRestaurantProfileAction";
+// import { getRestaurantProfileAction } from "../../redux/actions/getRestaurantProfileAction";
+import { updateRestaurantProfileAction, getRestaurantProfileAction } from "../../redux/actions/restaurantProfileAction";
 
 
 
@@ -48,21 +48,21 @@ class RestaurantProfile extends Component {
     }
   
  componentWillReceiveProps(nextProps) {
-    console.log("In will recieve props Restaurant for details", nextProps.ProfileGet);
+    console.log("In will recieve props Restaurant for details", nextProps.restaurantProfile);
     this.setState({
-      name: nextProps.ProfileGet.name,
-      location: nextProps.ProfileGet.location,
-      address: nextProps.ProfileGet.address,
-      state: nextProps.ProfileGet.state,
-      country: nextProps.ProfileGet.country,
-      description: nextProps.ProfileGet.description,
-      timings: nextProps.ProfileGet.timings,
-      email: nextProps.ProfileGet.email,
-      contact: nextProps.ProfileGet.contact,
-      ratings: nextProps.ProfileGet.ratings,
-      method: nextProps.ProfileGet.method,
-      cuisine: nextProps.ProfileGet.cuisine,
-      restaurantProfilePic: nextProps.ProfileGet.restaurantProfilePic,
+      name: nextProps.restaurantProfile.name,
+      location: nextProps.restaurantProfile.location,
+      address: nextProps.restaurantProfile.address,
+      state: nextProps.restaurantProfile.state,
+      country: nextProps.restaurantProfile.country,
+      description: nextProps.restaurantProfile.description,
+      timings: nextProps.restaurantProfile.timings,
+      email: nextProps.restaurantProfile.email,
+      contact: nextProps.restaurantProfile.contact,
+      ratings: nextProps.restaurantProfile.ratings,
+      method: nextProps.restaurantProfile.method,
+      cuisine: nextProps.restaurantProfile.cuisine,
+      restaurantProfilePic: nextProps.restaurantProfile.restaurantProfilePic,
     });
   }
 
@@ -76,7 +76,7 @@ class RestaurantProfile extends Component {
   //submit Login handler to send a request to the node backend
   submitUpdate = (e) => {
     //prevent page from refresh
-    //e.preventDefault();
+    e.preventDefault();
     const data = {
       name: this.state.name,
       location: this.state.location,
@@ -97,31 +97,8 @@ class RestaurantProfile extends Component {
     axios.defaults.withCredentials = true;
     //make a post request with the user data
     console.log("#############", data);
-    axios
-      .post(
-        "http://" +
-          process.env.REACT_APP_IP +
-          ":3001" +
-          "/restaurantProfile/updateRestaurantProfile",
-        data
-      )
-      .then((response) => {
-        console.log("Status Code : ", response.status);
-        console.log("response, ", response.data.success);
-        if (
-          response.data.success &&
-          localStorage.getItem("user") === "restaurant"
-        ) {
-          window.location.assign("/restaurant/profile");
-        }
-      })
-      .catch((response) => {
-        console.log("********** Catch", response);
-        this.setState({
-          authFlag: false,
-          ErrorMessage: "Invalid Login Credentials",
-        });
-      });
+    this.props.updateRestaurantProfileAction(data);
+
   };
 
   render() {
@@ -422,14 +399,10 @@ class RestaurantProfile extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    isProfileUpdated: state.RestaurantProfileUpdate.isProfileUpdated,
-    ProfileGet: state.RestaurantProfileGet.ProfileGet,
+    isProfileUpdated: state.RestaurantProfile.isProfileUpdated,
+    restaurantProfile: state.RestaurantProfile.restaurantProfile,
   };
 };
-
-// export default GoogleApiWrapper({
-//   apiKey: "AIzaSyBIRmVN1sk9HHlXxIAg-3_H5oRb2j-TyC4",
-// });
 
 const WrappedContainer = GoogleApiWrapper({
     apiKey: "AIzaSyBIRmVN1sk9HHlXxIAg-3_H5oRb2j-TyC4",

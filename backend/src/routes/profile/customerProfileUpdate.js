@@ -85,7 +85,7 @@ router.post("/updateCustomerProfile", (req, res) => {
             name : req.body.name,
             birthdate : req.body.dob,
             email: req.body.emailid,
-            city: req.body.city,
+            cißty: req.body.city,
             state: req.body.state,
             country: req.body.country,
             nickname: req.body.nickname,
@@ -96,10 +96,11 @@ router.post("/updateCustomerProfile", (req, res) => {
             findMeIn: req.body.findMeIn,
             thingsIlove: req.body.thingsIlove,
             
-        })
+        }, {new:true})
         .then(customer => {
             if (customer) {
                 console.log('All the details Customer: ', customer);
+                res.status(200).send({success: true, profileData: customer});
                 // res.redirect(
                 //     "http://" + process.env.ip + ":3000" + "/customer/profile");
             }

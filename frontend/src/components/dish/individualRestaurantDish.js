@@ -55,7 +55,7 @@ class individualDish extends Component {
     formData.append("price", this.state.price);
     formData.append("RID", localStorage.getItem("RID"));
     formData.append("Rname", localStorage.getItem("Rname"));
-    formData.append("id", this.props.data.id);
+    formData.append("id", this.props.data._id);
     for (var pair of formData.entries()) {
       console.log(pair[0] + ", " + pair[1]);
     }

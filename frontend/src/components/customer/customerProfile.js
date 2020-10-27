@@ -5,8 +5,9 @@ import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import { connect } from "react-redux";
-import { getCustomerProfileAction } from "../../redux/actions/getCustomerProfileAction";
-import { updateCustomerProfileAction } from "../../redux/actions/updateCustomerProfileAction";
+// import { getCustomerProfileAction } from "../../redux/actions/getCustomerProfileAction";
+import { updateCustomerProfileAction, getCustomerProfileAction } from "../../redux/actions/customerProfileAction";
+import { push } from 'react-router-redux';
 
 
 var dotenv = require("dotenv").config({
@@ -33,6 +34,7 @@ class CustomerProfile extends Component {
       findMeIn: "",
       imagePath: "",
       ErrorMessage: "",
+      updateFlag:false,
     };
 
     //Bind the handlers to this class
@@ -51,22 +53,22 @@ class CustomerProfile extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    console.log("in customer will recieve props for details", nextProps.ProfileGet);
+    console.log("in customer will recieve props for details", nextProps.customerProfile);
     this.setState({
-      name: nextProps.ProfileGet.name,
-      dob: nextProps.ProfileGet.birthdate,
-      city: nextProps.ProfileGet.city,
-      state: nextProps.ProfileGet.state,
-      country: nextProps.ProfileGet.country,
-      nickname: nextProps.ProfileGet.nickname,
-      headline: nextProps.ProfileGet.headline,
-      phone: nextProps.ProfileGet.phone,
-      emailid: nextProps.ProfileGet.email,
-      blog: nextProps.ProfileGet.blog,
-      yelpingSince: nextProps.ProfileGet.yelpingSince,
-      thingsIlove: nextProps.ProfileGet.thingsIlove,
-      findMeIn: nextProps.ProfileGet.findMeIn,
-      imagePath: nextProps.ProfileGet.profilePic,
+      name: nextProps.customerProfile.name,
+      dob: nextProps.customerProfile.birthdate,
+      city: nextProps.customerProfile.city,
+      state: nextProps.customerProfile.state,
+      country: nextProps.customerProfile.country,
+      nickname: nextProps.customerProfile.nickname,
+      headline: nextProps.customerProfile.headline,
+      phone: nextProps.customerProfile.phone,
+      emailid: nextProps.customerProfile.email,
+      blog: nextProps.customerProfile.blog,
+      yelpingSince: nextProps.customerProfile.yelpingSince,
+      thingsIlove: nextProps.customerProfile.thingsIlove,
+      findMeIn: nextProps.customerProfile.findMeIn,
+      imagePath: nextProps.customerProfile.profilePic,
     });
   }
 
@@ -77,9 +79,9 @@ class CustomerProfile extends Component {
   });
 };
   //submit Login handler to send a request to the node backend
-  submitUpdate = (e) => {
+  submitUpdate = async (e) => {
     //prevent page from refresh
-    //e.preventDefault();
+    e.preventDefault();
     const data = {
       name: this.state.name,
       dob: this.state.dob,
@@ -95,9 +97,13 @@ class CustomerProfile extends Component {
       thingsIlove: this.state.thingsIlove,
       findMeIn: this.state.findMeIn,
       CID: localStorage.getItem("CID"),
+      
     };
     console.log(data);
-    this.props.updateCustomerProfileAction(data);
+    await this.props.updateCustomerProfileAction(data);
+    this.setState({
+      updateFlag:true,
+    })
   
   };
 
@@ -106,9 +112,20 @@ class CustomerProfile extends Component {
     if (!localStorage.getItem("CID")) {
       redirectVar = <Redirect to="/login" />;
     }
+
+
+    let redirectUrl= null;
+    if(this.state.updateFlag){
+      redirectUrl = <Redirect to="/customer/profile" />;
+      this.setState({
+        updateFlag: false,
+      })
+    }
+
     return (
       <div>
         {redirectVar}
+        {redirectUrl}
         <div>
           <div class="row" style={{ backgroundColor: "" }}>
             <img
@@ -420,8 +437,8 @@ class CustomerProfile extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    isProfileUpdated: state.CustomerProfileUpdate.isProfileUpdated,
-    ProfileGet: state.CustomerProfileGet.ProfileGet,
+    isProfileUpdated: state.CustomerProfile.isProfileUpdated,
+    customerProfile: state.CustomerProfile.customerProfile,
   };
 };
 

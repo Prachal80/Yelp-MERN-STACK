@@ -96,10 +96,11 @@ router.post("/updateRestaurantProfile", (req, res) => {
             method: req.body.method,
             cuisine: req.body.cuisine,
             
-        })
+        },{new:true})
         .then(restaurant => {
             if (restaurant) {
                 console.log('All the details of restaurant: ', restaurant);
+                res.status(200).send({success: true, restaurantProfileData: restaurant});
                 // res.redirect(
                 //     "http://" + process.env.ip + ":3000" + "/customer/profile");
             }

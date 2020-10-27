@@ -19,11 +19,7 @@ export const getAllRestaurantsAction = (data) => (dispatch) => {
     .then((response) => {
         let allRestaurants = response.data.allRestaurants;
       console.log("Received All restaurants",allRestaurants );
-    //   this.setState({
-    //     restaurants: this.state.restaurants.concat(
-    //       response.data.allRestaurants
-    //     ),
-    //   });
+
       return dispatch({
         type: CUSTOMER_GET_ALL_REST,
         payload: allRestaurants,
@@ -58,10 +54,7 @@ export const getAllDishesAction = (data) => (dispatch) => {
             type: RESTAURANT_GET_ALL_DISH,
             payload: response.data.restaurantDishGet,
         })
-        // this.setState({
-        //   dishes: this.state.dishes.concat(response.data.restaurantDishGet),
-        // });
-        // //console.log("Dishes: ", this.state.dishes);
+   
       });
 
 
@@ -85,24 +78,18 @@ export const addDishAction = (data) => (dispatch) => {
     )
     .then((response) => {
       console.log("Status Code : ", response.status);
-      console.log("response, ", response.data.success);
+      console.log("response, ", response.data);
+      let payload = {
+        success: response.data.success,
+        dish:response.data.dish
+      }
       if (response.data.success) {
-        // window.location.reload(true);
         return dispatch({
             type: RESTAURANT_ADD_DISH,
-            payload: response.data.success,
+            payload: payload,
         })
       }
     })
-    // .catch((error) => {
-    //     return dispatch({
-    //         action: RESTAURANT_ADD_DISH,
-    //         payload: false,
-    //     }) 
-    //   this.setState({
-    //     ErrorMessage: "Something went wrong while adding dish",
-    //   });
-    // });
 
 }  
 
@@ -124,24 +111,19 @@ export const updateDishAction = (data) => (dispatch) => {
     )
     .then((response) => {
       console.log("Status Code : ", response.status);
-      console.log("response, ", response.data.success);
+      console.log("response, ", response.data);
+      let payload = {
+        success: response.data.success,
+        dish:response.data.dish
+      }
       if (response.data.success) {
-        //window.location.assign("/restaurant/dashboard");
         return dispatch({
             type: RESTAURANT_UPDATE_DISH,
-            payload: response.data.success,
+            payload: payload,
         })
       }
     })
-    // .catch((response) => {
-    //     return dispatch({
-    //         action: RESTAURANT_UPDATE_DISH,
-    //         payload: false,
-    //     })
-    //   this.setState({
-    //     ErrorMessage: "Something went wrong while updating dish",
-    //   });
-    // });
+  
 }  
 
 
