@@ -51,25 +51,25 @@ class customerRestaurantView extends Component {
 
   componentDidMount() {
     console.log("RID", this.state.restaurantid);
-   
-      //Get All dishes
-      axios
-      .get(
-        "http://" +
-          process.env.REACT_APP_IP +
-          ":3001" +
-          "/customerDishes/getAllDishes",
-        {
-          params: {},
-        }
-      )
-      .then((response) => {
-        console.log("Received Dishes", response.data.customerDishGet);
-        this.setState({
-          dishes: this.state.dishes.concat(response.data.customerDishGet.dishes),
-        });
-        console.log("State Dishes", this.state.dishes);
-      });
+    console.log("%%%%%%%%%%%%%%%% data of restaurants", this.props.location.state);
+      // //Get All dishes
+      // axios
+      // .get(
+      //   "http://" +
+      //     process.env.REACT_APP_IP +
+      //     ":3001" +
+      //     "/customerDishes/getAllDishes",
+      //   {
+      //     params: {},
+      //   }
+      // )
+      // .then((response) => {
+      //   console.log("Received Dishes", response.data.customerDishGet);
+      //   this.setState({
+      //     dishes: this.state.dishes.concat(response.data.customerDishGet.dishes),
+      //   });
+      //   console.log("State Dishes", this.state.dishes);
+      // });
 
       //Get customer reviews
     axios
@@ -159,7 +159,7 @@ class customerRestaurantView extends Component {
       return <EachCustomerReview data={review}></EachCustomerReview>;
     });
 
-    let orderDishAll = this.state.dishes.map((dish) => {
+    let orderDishAll = this.props.location.state.dishes.map((dish) => {
       return <OrderEachDish data={dish}></OrderEachDish>;
     });
     return (

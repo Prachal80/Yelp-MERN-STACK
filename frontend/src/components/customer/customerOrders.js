@@ -2,8 +2,10 @@ import React, { Component } from "react";
 import axios from "axios";
 import { Redirect } from "react-router";
 import EachOrderCustomer from "../individual/individualPlacedOrders";
+import { connect } from "react-redux";
+import { makeOrderRestaurantAction , getOrdersCustomerAction , cancelOrdersCustomerAction } from "../../redux/actions/orderAction";
 
-export class customerOrders extends Component {
+class customerOrders extends Component {
   constructor(props) {
     super(props);
 
@@ -29,28 +31,17 @@ export class customerOrders extends Component {
 
   componentDidMount() {
     axios.defaults.withCredentials = true;
-
+    let params = {
+      CID: localStorage.getItem("CID")}
     //Get All orders made by a customer
-    axios
-      .get(
-        "http://" +
-          process.env.REACT_APP_IP +
-          ":3001" +
-          "/customerOrders/getAllOrders",
-        {
-          params: {
-            CID: localStorage.getItem("CID"),
-          },
-        }
-      )
-      .then((response) => {
-        console.log("Received all Orders",response.data.CustomerGetOrder);
+    this.props.getOrdersCustomerAction(params);
+  }
 
-        this.setState({
-          orders: this.state.orders.concat(response.data.CustomerGetOrder),
-        });
-        console.log("orders", this.state.orders);
-      });
+  componentWillReceiveProps(nextProps) {
+    console.log("in customer recieve all orders", nextProps.orders);
+    this.setState({
+      orders: nextProps.orders
+    });
   }
 
   render() {
@@ -202,4 +193,15 @@ export class customerOrders extends Component {
   }
 }
 
-export default customerOrders;
+
+const mapStateToProps = (state) => {
+  return {
+    isMakeOrder: state.CustomerOrders.isMakeOrder,
+    isOrderCancelled: state.CustomerOrders.isOrderCancelled,
+    orders: state.CustomerOrders.orders
+  };
+};
+
+export default connect(mapStateToProps, {
+  makeOrderRestaurantAction , getOrdersCustomerAction , cancelOrdersCustomerAction
+})(customerOrders);

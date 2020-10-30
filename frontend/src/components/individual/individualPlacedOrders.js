@@ -4,8 +4,10 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Card from "react-bootstrap/Card";
 import axios from "axios";
+import { connect } from "react-redux";
+import {cancelOrdersCustomerAction} from "../../redux/actions/orderAction";
 
-export default class individualPlacedOrder extends Component {
+class individualPlacedOrder extends Component {
   constructor(props) {
     super(props);
 
@@ -19,6 +21,7 @@ export default class individualPlacedOrder extends Component {
       orderid: "",
       time: "",
       ErrorMessage: "",
+      isOrderCancelled: "",
     };
     this.ChangeHandler = this.ChangeHandler.bind(this);
     this.cancelOrder = this.cancelOrder.bind(this);
@@ -39,35 +42,16 @@ export default class individualPlacedOrder extends Component {
     const data = {
       orderid: this.props.data._id,
     };
-
-    //set the with credentials to true
-    axios.defaults.withCredentials = true;
-    //make a post request with the user data
-    console.log("#############", data);
-    axios
-      .post(
-        "http://" +
-          process.env.REACT_APP_IP +
-          ":3001" +
-          "/customerOrders/deleteOrderCustomer",
-        data
-      )
-      .then((response) => {
-        console.log("Status Code : ", response.status);
-        console.log("response, ", response.data.success);
-        if (response.data.success) {
-          window.location.assign("/customer/orders");
-        }
-      })
-      .catch((response) => {
-        console.log("********** Catch", response);
-        this.setState({
-          ErrorMessage: "Invalid delete request Credentials",
-        });
-      });
+    this.props.cancelOrdersCustomerAction(data);
+  
   };
 
   render() {
+
+    let redirectVar = null; 
+    if(this.state.isOrderCancelled){
+      redirectVar = "/customer/orders";
+    }
     return (
       <div
         style={{
@@ -76,7 +60,7 @@ export default class individualPlacedOrder extends Component {
           marginBottom: "5px",
           padding: "10px",
         }}
-      >
+      > {redirectVar}
         <Card border="secondary" style={{}}>
           <Card.Header>
             <h3 style={{ textAlign: "center", alignContent: "center" }}>
@@ -153,3 +137,16 @@ export default class individualPlacedOrder extends Component {
     );
   }
 }
+
+
+const mapStateToProps = (state) => {
+  return {
+    isOrderCancelled: state.CustomerOrders.isOrderCancelled,
+  };
+};
+
+
+
+export default connect(mapStateToProps, {
+   cancelOrdersCustomerAction
+})(individualPlacedOrder);

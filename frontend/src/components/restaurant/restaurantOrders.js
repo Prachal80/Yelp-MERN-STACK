@@ -2,8 +2,10 @@ import React, { Component } from "react";
 import { Redirect } from "react-router";
 import axios from "axios";
 import EachOrderRestaurant from "../individual/individualRestaurantOrders";
+import { connect } from "react-redux";
+import {getOrdersRestaurantAction} from "../../redux/actions/orderAction";
 
-export default class restaurantOrders extends Component {
+class restaurantOrders extends Component {
   constructor(props) {
     super(props);
 
@@ -29,28 +31,19 @@ export default class restaurantOrders extends Component {
     });
   };
   componentDidMount() {
-    axios.defaults.withCredentials = true;
-    console.log("mounting");
-    //Get All orders made by customers to the restaurant
-    axios
-      .get(
-        "http://" +
-          process.env.REACT_APP_IP +
-          ":3001" +
-          "/restaurantOrders/getAllOrdersRestaurant",
-        {
-          params: {
-            RID: localStorage.getItem("RID"),
-          },
-        }
-      )
-      .then((response) => {
-        console.log("Received all Orders");
 
-        this.setState({
-          orders: this.state.orders.concat(response.data.RestaurantGetOrder),
-        });
-      });
+    let params = {
+      RID: localStorage.getItem("RID")}
+    axios.defaults.withCredentials = true;
+    this.props.getOrdersRestaurantAction(params);
+    //window.location.history.push({pathName: "/restaurant/orders"});
+  }
+
+  componentWillReceiveProps(nextProps) {
+    console.log("in restaurant recieve all orders", nextProps.orders);
+    this.setState({
+      orders: nextProps.orders
+    });
   }
 
   render() {
@@ -158,3 +151,16 @@ export default class restaurantOrders extends Component {
     );
   }
 }
+
+
+const mapStateToProps = (state) => {
+  return {
+    
+    isOrderStatusChanged: state.RestaurantOrders.isOrderStatusChanged,
+    orders: state.RestaurantOrders.orders
+  };
+};
+
+export default connect(mapStateToProps, {
+  getOrdersRestaurantAction
+})(restaurantOrders);

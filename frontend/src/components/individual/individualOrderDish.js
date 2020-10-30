@@ -5,8 +5,10 @@ import Col from "react-bootstrap/Col";
 import Card from "react-bootstrap/Card";
 import axios from "axios";
 import M from "materialize-css";
+import { connect } from "react-redux";
+import { makeOrderRestaurantAction } from "../../redux/actions/orderAction";
 
-export default class individualOrderDish extends Component {
+class individualOrderDish extends Component {
   constructor(props) {
     super(props);
 
@@ -49,44 +51,21 @@ export default class individualOrderDish extends Component {
       restaurantname: this.props.data.restaurantname,
       customername: localStorage.getItem("Cname"),
       time: new Date().toISOString().slice(0, 19).replace("T", " "),
+      orderFlag:false,
     };
 
     //set the with credentials to true
     axios.defaults.withCredentials = true;
     //make a post request with the user data
-    console.log("#############", data);
-    if (data.option) {
-      axios
-        .post(
-          "http://" +
-            process.env.REACT_APP_IP +
-            ":3001" +
-            "/customerOrders/makeOrderCustomer",
-          data
-        )
-        .then((response) => {
-          console.log("Status Code : ", response.status);
-          console.log("response, ", response.data.success);
-          if (
-            response.data.success &&
-            localStorage.getItem("user") === "customer"
-          ) {
-            window.location.assign("/customer/orders");
-          }
-        })
-        .catch((response) => {
-          console.log("********** Catch", response);
-          this.setState({
-            authFlag: false,
-            ErrorMessage: "Something went wrong while placing the order",
-          });
-        });
-    } else {
-      M.toast({
-        html: "Please select 1 option",
-        classes: "red darken-1",
-      });
-    }
+    console.log("############# Inside individual order dish data: ", data);
+    
+     this.props.makeOrderRestaurantAction(data);
+    // this.setState({
+    //   orderFlag:true,
+    // })
+    // window.location.history.push({
+    //     pathName: "/customer/orders"
+    //   })
   };
 
   render() {
@@ -188,3 +167,17 @@ export default class individualOrderDish extends Component {
     );
   }
 }
+
+const mapStateToProps = (state) => {
+  return {
+    isMakeOrder: state.CustomerOrders.isMakeOrder,
+    isOrderCancelled: state.CustomerOrders.isOrderCancelled,
+    orders: state.CustomerOrders.orders
+  };
+};
+
+
+
+export default connect(mapStateToProps, {
+  makeOrderRestaurantAction
+})(individualOrderDish);

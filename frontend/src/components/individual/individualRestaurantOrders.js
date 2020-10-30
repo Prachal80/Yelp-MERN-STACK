@@ -5,11 +5,14 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Card from "react-bootstrap/Card";
 import axios from "axios";
+import { connect } from "react-redux";
+import {changeOrderStatusRestaurantAction} from "../../redux/actions/orderAction";
+
 var dotenv = require("dotenv").config({
   path: "../.env",
 });
 
-export default class individualRestaurantOrders extends Component {
+class individualRestaurantOrders extends Component {
   constructor(props) {
     super(props);
 
@@ -43,7 +46,7 @@ export default class individualRestaurantOrders extends Component {
     //prevent page from refresh
     e.preventDefault();
     const data = {
-      orderid: this.props.data.orderid,
+      orderid: this.props.data._id,
       status: this.state.status,
     };
 
@@ -51,31 +54,9 @@ export default class individualRestaurantOrders extends Component {
     axios.defaults.withCredentials = true;
     //make a post request with the user data
     console.log("************", data);
-    if (data.status) {
-      axios
-        .post(
-          "http://" +
-            process.env.REACT_APP_IP +
-            ":3001" +
-            "/restaurantOrders/changeOrderStatusRestaurant",
-          data
-        )
-        .then((response) => {
-          console.log("Status Code : ", response.status);
-          console.log("response, ", response.data.success);
-          if (response.data.success) {
-            window.location.assign("/restaurant/orders");
-          }
-        })
-        .catch((response) => {
-          console.log("********** Catch", response);
-          this.setState({
-            ErrorMessage: "Error while making change request",
-          });
-        });
-    } else {
-      alert("Please select the Order status");
-    }
+    this.props.changeOrderStatusRestaurantAction(data);
+
+    
   };
 
   showOptions = () => {
@@ -138,6 +119,7 @@ export default class individualRestaurantOrders extends Component {
   };
 
   render() {
+    console.log("Props", this.props);
     return (
       <div
         style={{
@@ -243,3 +225,15 @@ export default class individualRestaurantOrders extends Component {
     );
   }
 }
+
+const mapStateToProps = (state) => {
+  return {
+    
+    isOrderStatusChanged: state.RestaurantOrders.isOrderStatusChanged,
+    orders: state.RestaurantOrders.orders
+  };
+};
+
+export default connect(mapStateToProps, {
+  changeOrderStatusRestaurantAction
+})(individualRestaurantOrders);

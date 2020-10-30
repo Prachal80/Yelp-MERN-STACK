@@ -28,17 +28,15 @@ export default class individualRestaurant extends Component {
   }
 
   render() {
+
+    console.log("Restaurant Each component", this.props.data);
     return (
       <div
         style={{
-          //   marginLeft: "5%",
-          //   marginLeft: "5%",
-          //   border: "1px solid black",
           marginTop: "10px",
           marginBottom: "5px",
           paddingLeft: "40px",
-          //   height: "300px",
-          //   width: "600px",
+         
         }}
       >
         <Card border="secondary" style={{}}>
@@ -115,6 +113,7 @@ export default class individualRestaurant extends Component {
                           restaurantProfilePic: this.props.data.restaurantProfilePic,
                           email:this.props.data.email,
                           location:this.props.data.location,
+                          dishes : this.props.data.dishes,
                           path: "/customer/dashboard",
                         },
                       }}

@@ -5,7 +5,6 @@ import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import { connect } from "react-redux";
-// import { getCustomerProfileAction } from "../../redux/actions/getCustomerProfileAction";
 import { updateCustomerProfileAction, getCustomerProfileAction } from "../../redux/actions/customerProfileAction";
 import { push } from 'react-router-redux';
 

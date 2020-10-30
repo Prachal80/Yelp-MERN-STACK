@@ -26,7 +26,7 @@ router.post(
   "/addRestaurantDishes",
   upload.single("restaurantDishImage"),
   function (req, res) {
-    console.log("Inside update Restaurant Upload Dish");
+    console.log("Inside update Restaurant Upload Dish",req.body);
     var imagepath = req.file.path;
     console.log("imagepath ", imagepath);
 

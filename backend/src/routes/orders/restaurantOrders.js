@@ -42,8 +42,21 @@ router.post("/changeOrderStatusRestaurant", (req, res) => {
     Orders.findByIdAndUpdate({_id:orderid},{
         $set:{
             status:status
-        }
-    })
+        } 
+    },{new:true})
+    .then(order => {
+      if(order){
+          console.log('order status Updated: ', order);
+              // res.redirect(
+              //     "http://" + process.env.ip + ":3000" + "/restaurant/orders");
+              res.status(200).send({success: true, order:order});
+      }
+      else {
+          console.log('wrong order details')
+          res.status(401).end("wrong order details")
+      }
+  }).catch(error => {console.log('update order status error', error)
+})
    
   }
 });

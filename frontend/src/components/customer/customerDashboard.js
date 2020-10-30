@@ -59,24 +59,24 @@ class CustomerDashboard extends Component {
   componentDidMount() {
     axios.defaults.withCredentials = true;
 
-    // //Get All dishes
-    // axios
-    //   .get(
-    //     "http://" +
-    //       process.env.REACT_APP_IP +
-    //       ":3001" +
-    //       "/customerDishes/getAllDishes",
-    //     {
-    //       params: {},
-    //     }
-    //   )
-    //   .then((response) => {
-    //     console.log("Received Dishes", response.data.customerDishGet);
-    //     this.setState({
-    //       dishes: this.state.dishes.concat(response.data.customerDishGet.dishes),
-    //     });
-    //     console.log("State Dishes", this.state.dishes);
-    //   });
+    //Get All dishes
+    axios
+      .get(
+        "http://" +
+          process.env.REACT_APP_IP +
+          ":3001" +
+          "/customerDishes/getAllDishes",
+        {
+          params: {},
+        }
+      )
+      .then((response) => {
+        console.log("Received Dishes", response.data.customerDishGet);
+        this.setState({
+          dishes: this.state.dishes.concat(response.data.customerDishGet.dishes),
+        });
+        console.log("State Dishes", this.state.dishes);
+      });
 
     //get all restaurants
     // axios
@@ -127,7 +127,7 @@ class CustomerDashboard extends Component {
         ) {
           return (
             <EachRestaurant
-              // key={Math.random}
+              key={Math.random}
               data={eachRestaurant}
             ></EachRestaurant>
           );
@@ -247,15 +247,7 @@ class CustomerDashboard extends Component {
               {allRestaurants}
             </div>
           </div>
-          {/* <div class="overflow-auto" style={{}} className="col-4">
-            <h2 style={{ textAlign: "center" }}>Dishes</h2>
-            <div
-              class="DishInfo"
-              style={{ overflowY: "scroll", height: "700px" }}
-            >
-              {dishAll}
-            </div>
-          </div> */}
+         
           <div className="col-4">
             <h2 style={{ textAlign: "center" }}>Map</h2>
 
