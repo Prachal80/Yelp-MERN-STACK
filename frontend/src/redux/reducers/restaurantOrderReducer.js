@@ -20,7 +20,8 @@ const initialState = {
         let newOrder = action.payload.order;
 
           // console.log("to update order: ", newOrder);
-          // let orderVar = state.orders.filter(order => order._id != newOrder._id);
+          //let orderVar = state.orders.filter(order => order._id != newOrder._id);
+          //orderVar.push(newOrder);
           let updateOrder =[];
           let length = state.orders.length;
           for(let i = 0 ; i < length; i++){
@@ -35,7 +36,7 @@ const initialState = {
             }
           }
 
-          state.orders = updateOrder;
+          // state.orders = updateOrder;
           // updateOrder.map(order => {
           //   if(order._id === newOrder._id ){
           //     order = newOrder
@@ -46,7 +47,7 @@ const initialState = {
           //console.log("Updated order in reducer cancel : ",state.orders);
 
         return Object.assign({}, state, {
-          orders: state.orders,
+          orders: updateOrder,
           isOrderStatusChanged: action.payload.success,
         });
   
