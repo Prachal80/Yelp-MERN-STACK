@@ -7,6 +7,9 @@ import customerDishReducer from "./customerDishReducer";
 import restuarantDishReducer from "./restaurantDishReducer";
 import restaurantOrderReducer from "./restaurantOrderReducer";
 import customerOrderReducer from "./customerOrderReducer";
+import reviewReducer from "./reviewReducer";
+import EventReducer from "./eventReducer";
+
 
 const rootReducer = combineReducers({
   Login: loginReducer,
@@ -17,6 +20,8 @@ const rootReducer = combineReducers({
   RestaurantDish: restuarantDishReducer,
   RestaurantOrders: restaurantOrderReducer,
   CustomerOrders: customerOrderReducer,
+  Events: EventReducer,
+  Review: reviewReducer,
 });
 
 export default rootReducer;

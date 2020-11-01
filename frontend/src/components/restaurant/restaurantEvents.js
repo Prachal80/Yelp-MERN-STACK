@@ -6,6 +6,8 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import EachEventRestaurant from "../individual/individualEvents";
 import EachRegisteredEvent from "../individual/individualRegistredEvents";
+import { connect } from "react-redux";
+import { getRegisteredCustomers , getRestauarantEvents ,postRestaurantEvents} from "../../redux/actions/eventAction";
 
 export class restaurantEvents extends Component {
   constructor(props) {
@@ -24,6 +26,7 @@ export class restaurantEvents extends Component {
       customerid: "",
       events: [],
       registered_events: [],
+      isAdd: false
     };
 
     this.ChangeHandler = this.ChangeHandler.bind(this);
@@ -36,7 +39,7 @@ export class restaurantEvents extends Component {
       [e.target.name]: e.target.value,
     });
   };
-  addEvent = (e) => {
+  addEvent = async (e) => {
     e.preventDefault();
     const data = {
       eventname: this.state.eventname,
@@ -47,78 +50,33 @@ export class restaurantEvents extends Component {
       hashtags: this.state.hashtags,
       restaurantname: localStorage.getItem("Rname"),
       restaurantid: localStorage.getItem("RID"),
+      
     };
     console.log(data);
     //set the with credentials to true
-    axios.defaults.withCredentials = true;
-    //make a post request with the user data
-    axios
-      .post(
-        "http://" +
-          process.env.REACT_APP_IP +
-          ":3001" +
-          "/restaurantEvents/addRestaurantEvents",
-        data
-      )
-      .then((response) => {
-        console.log("Status Code : ", response.status);
-        console.log("response, ", response.data.success);
-        if (response.data.success) {
-          window.location.assign("/restaurant/events");
-        }
+    //axios.defaults.withCredentials = true;
+
+    await this.props.postRestaurantEvents(data);
+    this.setState({
+        isAdd: true,
       })
-      .catch((response) => {
-        this.setState({
-          ErrorMessage: "Something went wrong on event adding",
-        });
-      });
+    
   };
   componentDidMount() {
     axios.defaults.withCredentials = true;
 
-    //Get All unregistered events
-    axios
-      .get(
-        "http://" +
-          process.env.REACT_APP_IP +
-          ":3001" +
-          "/restaurantEvents/getAllEvents",
-        {
-          params: {
-            RID: localStorage.getItem("RID"),
-          },
-        }
-      )
-      .then((response) => {
-        console.log("Received all restaurant Events",response.data.restaurantEventsGet);
+    this.props.getRestauarantEvents( {RID: localStorage.getItem("RID")});
 
-        this.setState({
-          events: this.state.events.concat(response.data.restaurantEventsGet),
-        });
-      });
+    this.props.getRegisteredCustomers({RID: localStorage.getItem("RID")});
+    
+  }
 
-    //Get All registered customers
-    axios
-      .get(
-        "http://" +
-          process.env.REACT_APP_IP +
-          ":3001" +
-          "/restaurantEvents/getRegisteredCustomers",
-        {
-          params: {
-            RID: localStorage.getItem("RID"),
-          },
-        }
-      )
-      .then((response) => {
-        console.log("Received all registered Events");
-
-        this.setState({
-          registered_events: this.state.registered_events.concat(
-            response.data.getRegisteredCustomers
-          ),
-        });
-      });
+  componentWillReceiveProps(nextProps){
+    console.log("in restaurant recieve props", nextProps);
+    this.setState({
+      events: nextProps.restaurant_events,
+      registered_events: nextProps.registered_events,
+  });
   }
 
   render() {
@@ -126,6 +84,16 @@ export class restaurantEvents extends Component {
     if (!localStorage.getItem("RID")) {
       redirectVar = <Redirect to="/login" />;
     }
+
+    let redirectUrl= null;
+    if(this.state.isAdd){
+      redirectUrl = <Redirect to="/restaurant/events" />;
+      this.setState({
+        isAdd: false,
+      })
+    }
+
+
     let upcomingEvents = this.state.events.map((event) => {
       return <EachEventRestaurant data={event}></EachEventRestaurant>;
     });
@@ -140,7 +108,9 @@ export class restaurantEvents extends Component {
 
     return (
       <div>
+        {redirectUrl}
         {redirectVar}
+        
         <div>
           <br />
           <br />
@@ -156,7 +126,7 @@ export class restaurantEvents extends Component {
               overflowY: "scroll",
               height: "700px",
             }}
-            class="col-6"
+            class="col-5"
           >
             <h2>Registered Customers</h2>
             {registeredCustomers}
@@ -276,7 +246,13 @@ export class restaurantEvents extends Component {
                   Add Event
                 </button>
               </form>
-              <div style={{ marginTop: "10%", marginLeft: "10%" }}>
+              <div style={{ 
+              marginTop: "10%",
+              marginLeft: "10%" ,
+              width: "100%",
+              overflowY: "scroll",
+              height: "700px"
+              }}>
                 <h2 style={{ marginLeft: "10%" }}>All Upcoming Events</h2>
                 {upcomingEvents}
               </div>
@@ -289,4 +265,14 @@ export class restaurantEvents extends Component {
   }
 }
 
-export default restaurantEvents;
+
+const mapStateToProps = (state) => {
+  return {
+    restaurant_events:state.Events.restaurant_events,
+    registered_events: state.Events.registered_customers,
+  };
+};
+
+export default connect(mapStateToProps, {
+  getRegisteredCustomers , getRestauarantEvents ,postRestaurantEvents
+})(restaurantEvents);

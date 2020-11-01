@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 var registrationsSchema = new Schema({
+    eventid: String,
     eventname: String,
     eventdescription: String,
     eventtime:String,

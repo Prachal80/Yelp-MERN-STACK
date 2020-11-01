@@ -5,10 +5,14 @@ import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
 import { Redirect } from "react-router";
 import Container from "react-bootstrap/Container";
-import { BsStarFill } from "react-icons/all";
+import { BsStarFill, FaRoad } from "react-icons/all";
 import { Map, InfoWindow, Marker, GoogleApiWrapper } from "google-maps-react";
 import OrderEachDish from "../individual/individualOrderDish";
 import EachCustomerReview from "../individual/indivudalReview";
+import {postCustomerReview, getAllReviews} from "../../redux/actions/reviewAction";
+import { connect } from "react-redux";
+
+
 var dotenv = require("dotenv").config({
   path: "../.env",
 });
@@ -33,7 +37,7 @@ class customerRestaurantView extends Component {
       dishes: [],
       reviews: [],
       //Review form
-
+      isAdd: false,
       rating: "",
       review: "",
       reviewdate: "",
@@ -52,60 +56,39 @@ class customerRestaurantView extends Component {
   componentDidMount() {
     console.log("RID", this.state.restaurantid);
     console.log("%%%%%%%%%%%%%%%% data of restaurants", this.props.location.state);
-      // //Get All dishes
-      // axios
-      // .get(
-      //   "http://" +
-      //     process.env.REACT_APP_IP +
-      //     ":3001" +
-      //     "/customerDishes/getAllDishes",
-      //   {
-      //     params: {},
-      //   }
-      // )
-      // .then((response) => {
-      //   console.log("Received Dishes", response.data.customerDishGet);
-      //   this.setState({
-      //     dishes: this.state.dishes.concat(response.data.customerDishGet.dishes),
-      //   });
-      //   console.log("State Dishes", this.state.dishes);
-      // });
-
-      //Get customer reviews
-    axios
+      //Get All dishes
+      axios
       .get(
         "http://" +
           process.env.REACT_APP_IP +
           ":3001" +
-          "/reviews/getCustomerReviews",
+          "/customerDishes/getAllDishes",
         {
-          params: {
-            CID: localStorage.getItem("CID"),
-            RID: this.state.restaurantid,
-          },
+          params: {},
         }
       )
       .then((response) => {
-        console.log("Received All reviews");
-
+        console.log("Received Dishes", response.data.customerDishGet);
         this.setState({
-          reviews: this.state.reviews.concat(response.data.customerReviews),
+          dishes: this.state.dishes.concat(response.data.customerDishGet.dishes),
         });
-        console.log(this.state.reviews);
-      })
-      .catch((response) => {
-        console.log("********** Catch", response);
-        this.setState({
-          ErrorMessage: "Something went wrong while getting all the reviews",
-        });
+        console.log("State Dishes", this.state.dishes);
       });
 
+      //Get customer reviews
+      this.props.getAllReviews({CID: localStorage.getItem("CID"),
+      RID: this.state.restaurantid})
+  }
 
-  
+  componentWillReceiveProps(nextProps) {
+    console.log("in customer restaurant recieve posted reviews", nextProps);
+    this.setState({
+      reviews: nextProps.reviews
+    });
   }
 
   //Post the review
-  submitReview = (e) => {
+  submitReview = async (e) => {
     //prevent page from refresh
     e.preventDefault();
     const data = {
@@ -122,29 +105,11 @@ class customerRestaurantView extends Component {
     axios.defaults.withCredentials = true;
     //make a post request with the user data
     if (data.rating && data.review && data.reviewdate) {
-      axios
-        .post(
-          "http://" +
-            process.env.REACT_APP_IP +
-            ":3001" +
-            "/reviews/addReviewCustomer",
-          data
-        )
-        .then((response) => {
-          console.log("Status Code : ", response.status);
-          console.log("response, ", response.data.success);
-          if (
-            response.data.success &&
-            localStorage.getItem("user") === "customer"
-          ) {
-            window.location.assign("/customer/customerrestaurantview");
-          }
-        })
-        .catch((response) => {
-          this.setState({
-            ErrorMessage: "Review Post Error",
-          });
-        });
+      await this.props.postCustomerReview(data);
+      // this.setState({
+      //   isAdd: true,
+      // })
+      //window.location.reload();
     } else {
       alert("Please add all the review fields");
     }
@@ -155,6 +120,15 @@ class customerRestaurantView extends Component {
     if (!localStorage.getItem("CID")) {
       redirectVar = <Redirect to="/login" />;
     }
+
+    let redirectUrl= null;
+    if(this.state.isAdd){
+      redirectUrl = <Redirect to="/customer/customerrestaurantview" />;
+      this.setState({
+        isAdd: false,
+      })
+    }
+
     let CustomerReview = this.state.reviews.map((review) => {
       return <EachCustomerReview data={review}></EachCustomerReview>;
     });
@@ -165,6 +139,7 @@ class customerRestaurantView extends Component {
     return (
       <div>
         {redirectVar}
+        {redirectUrl}
         <div>
           <div class="row" style={{ marginTop: "2%" }}>
             <div
@@ -379,6 +354,19 @@ class customerRestaurantView extends Component {
   }
 }
 
-export default GoogleApiWrapper({
+const WrappedContainer = GoogleApiWrapper({
   apiKey: "AIzaSyBIRmVN1sk9HHlXxIAg-3_H5oRb2j-TyC4",
 })(customerRestaurantView);
+
+
+const mapStateToProps = (state) => {
+  return {
+    newReview: state.Review.newReview,
+    reviews: state.Review.reviews,
+  };
+};
+
+export default connect(mapStateToProps, {
+  postCustomerReview, getAllReviews
+})(WrappedContainer,customerRestaurantView);
+

@@ -114,9 +114,9 @@ class CustomerDashboard extends Component {
     if (!localStorage.getItem("CID")) {
       redirectVar = <Redirect to="/login" />;
     }
-    let dishAll = this.state.dishes.map((dish) => {
-      return <EachDish key={Math.random} data={dish}></EachDish>;
-    });
+    // let dishAll = this.state.dishes.map((dish) => {
+    //   return <EachDish key={Math.random} data={dish}></EachDish>;
+    // });
 
     let allRestaurants = this.state.restaurants.map((eachRestaurant) => {
       if (this.state.filter !== "") {
@@ -142,7 +142,7 @@ class CustomerDashboard extends Component {
         ) {
           return (
             <EachRestaurant
-              // key={Math.random}
+               key={Math.random}
               data={eachRestaurant}
             ></EachRestaurant>
           );
@@ -151,7 +151,7 @@ class CustomerDashboard extends Component {
       else {
         return (
           <EachRestaurant
-            // key={Math.random}
+             key={Math.random}
             data={eachRestaurant}
           ></EachRestaurant>
         );

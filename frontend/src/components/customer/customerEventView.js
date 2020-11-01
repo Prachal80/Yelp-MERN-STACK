@@ -2,6 +2,8 @@ import React, { Component, Fragment } from "react";
 import axios from "axios";
 import { Redirect } from "react-router";
 import { Card, Container, Row, Col } from "react-bootstrap";
+import { connect } from "react-redux";
+import {postCutomerRegister}  from "../../redux/actions/eventAction";
 
 class customerEventView extends Component {
   constructor(props) {
@@ -29,6 +31,7 @@ class customerEventView extends Component {
     //prevent page from refresh
     e.preventDefault();
     const data = {
+      eventid: this.state.eventid,
       eventname: this.state.eventname,
       eventdescription: this.state.eventdescription,
       eventtime: this.state.eventtime,
@@ -43,28 +46,7 @@ class customerEventView extends Component {
     console.log("Event regisstration customer Data", data);
     //set the with credentials to true
     if (!this.state.registered) {
-      axios.defaults.withCredentials = true;
-      //make a post request with the user data
-      axios
-        .post(
-          "http://" +
-            process.env.REACT_APP_IP +
-            ":3001" +
-            "/customerEvents/registerEventCustomer",
-          data
-        )
-        .then((response) => {
-          console.log("Status Code : ", response.status);
-          console.log("response, ", response.data.success);
-          if (response.data.success) {
-            window.location.assign("/customer/events");
-          }
-        })
-        .catch((response) => {
-          this.setState({
-            ErrorMessage: "Event Register Error",
-          });
-        });
+      this.props.postCutomerRegister(data);
     } else {
       alert("Already Registered for this event");
     }
@@ -199,4 +181,12 @@ class customerEventView extends Component {
   }
 }
 
-export default customerEventView;
+const mapStateToProps = (state) => {
+  return {
+    isRegistered: state.Events.isRegistered,
+  };
+};
+
+export default connect(mapStateToProps, {
+  postCutomerRegister
+})(customerEventView);

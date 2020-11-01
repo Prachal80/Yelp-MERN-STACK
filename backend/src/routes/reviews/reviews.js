@@ -56,13 +56,25 @@ router.post(
     restaurantname: req.body.restaurantname,
     })
 
-    newReview.save((err)=>{
-        if (err) {
-            res.status(400).send({ success: false});
-          } else {
-            res.status(200).send({ success: true});
+    newReview.save()
+    .then(review=>{
+      if (review) 
+      {
+        console.log("Review saved in DB: ", review);
+        res.status(200).send({ success: true, review: review });
+      }      
+       else {
+            console.log("Order not saved");
+            res.status(400).send({ success: false , review:null});
           }
     });
+    // ((err)=>{
+    //     if (err) {
+    //         res.status(400).send({ success: false});
+    //       } else {
+    //         res.status(200).send({ success: true});
+    //       }
+    // });
   }
 );
 

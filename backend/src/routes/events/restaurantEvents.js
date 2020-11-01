@@ -20,17 +20,32 @@ router.post(
           restaurantname: req.body.restaurantname,
           restaurantid: req.body.restaurantid,
         })
-        console.log("new order",newEvent)
-        newEvent.save((err)=>{
-            if (err) {
-              
-                res.status(400).send({ success: false,  message: "" });
-              } else {
-                
-                res.status(200).send({ success: true , message: ""});
-              }
-        });
+        console.log("new event",newEvent);
+        newEvent.save()
+        .then(event=>{
+            if (event) 
+            {
+              console.log("Event saved in DB: ", event);
+              res.status(200).send({ success: true, event: event });
+            }      
+             else {
+                  console.log("Event not saved");
+                  res.status(400).send({ success: false , event:null});
+                }
+          });
 }
+// .then(event=>{
+//   if (event) 
+//   {
+//     console.log("Event saved in DB: ", event);
+//     res.status(200).send({ success: true, event: event });
+//   }      
+//    else {
+//         console.log("Event not saved");
+//         res.status(400).send({ success: false , event:null});
+//       }
+// });
+
 );
 
 //Get All Events

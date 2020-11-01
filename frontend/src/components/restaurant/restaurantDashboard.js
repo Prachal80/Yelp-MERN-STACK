@@ -10,6 +10,7 @@ import EachDish from "../dish/individualRestaurantDish";
 import { BsStarFill } from "react-icons/all";
 import EachReview from "../individual/indivudalReview";
 import {getAllDishesAction,addDishAction,updateDishAction} from "../../redux/actions/dishAction";
+import {getRestaurantReviews} from "../../redux/actions/reviewAction";
 import { connect } from "react-redux";
 
 
@@ -90,38 +91,14 @@ class RestaurantDashboard extends Component {
 
 
     //Get all reviews given to restaurant
-    axios
-      .get(
-        "http://" +
-          process.env.REACT_APP_IP +
-          ":3001" +
-          "/reviews/getRestaurantReviews",
-        {
-          params: {
-            RID: localStorage.getItem("RID"),
-          },
-        }
-      )
-      .then((response) => {
-        console.log("Received All reviews");
-
-        this.setState({
-          reviews: this.state.reviews.concat(response.data.restaurantReviews),
-        });
-        console.log(this.state.reviews);
-      })
-      .catch((response) => {
-        console.log("********** Catch", response);
-        this.setState({
-          ErrorMessage: "Something went wrong while getting all the reviews",
-        });
-      });
+   this.props.getRestaurantReviews(localStorage.getItem("RID"));
   }
 
   componentWillReceiveProps(nextProps) {
-    console.log("in restaurant dashboard recieve all dishes", nextProps.dishes);
+    console.log("in restaurant dashboard recieve all dishes", nextProps);
     this.setState({
-      dishes: nextProps.dishes
+      dishes: nextProps.dishes,
+      reviews: nextProps.reviews
     });
   }
 
@@ -460,10 +437,11 @@ const mapStateToProps = (state) => {
   return {
     dishes: state.RestaurantDish.dishes,
     isDishAdded: state.RestaurantDish.isDishAdded,
+    reviews: state.Review.reviews,
   };
 };
 
 export default connect(mapStateToProps, {
-  getAllDishesAction,addDishAction,updateDishAction
+  getAllDishesAction,addDishAction,updateDishAction, getRestaurantReviews
 })(WrappedContainer,RestaurantDashboard);
 

@@ -66,7 +66,7 @@ router.get("/getRegisteredEvents", (req, res) => {
 
 // //Get customer registration from the registration table to check whether the customer is registered or not
 router.get("/getRegisteredCustomer", (req, res) => {
-  console.log("req data ", req.query);
+  console.log("req data for checking whether customer is registered or not", req.query);
 
   Registrations.find({customerid : req.query.CID, eventid:req.query.eventid})
   .then(event => {
@@ -74,10 +74,10 @@ router.get("/getRegisteredCustomer", (req, res) => {
         console.log("Registered Events: ", event)
         res.status(200).send({success: true, getRegisteredCustomer: event});
     }
-    else{
-      console.log("Customer Registrations not found for an event")
-      res.status(401).send({success:false, getRegisteredCustomer: event});
-    }
+    // else{
+    //   console.log("Customer Registrations not found for an event")
+    //   res.status(401).send({success:false, getRegisteredCustomer: event});
+    // }
 })
 .catch(error => {
     console.log(error);
@@ -90,6 +90,7 @@ router.post("/registerEventCustomer", (req, res) => {
   console.log("Register event data ", req.body);
 
   var newRegistrations = new Registrations({
+    eventid: req.body.eventid,
     eventname:req.body.eventname,
     reventdescription:req.body.eventdescription,
     eventtime:req.body.eventtime,

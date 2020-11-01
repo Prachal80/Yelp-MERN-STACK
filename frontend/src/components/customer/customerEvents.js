@@ -3,8 +3,11 @@ import axios from "axios";
 import { Redirect } from "react-router";
 import EachEventCustomer from "../individual/individualEvents";
 import EachRegisteredEvent from "../individual/individualRegistredEvents";
+import { connect } from "react-redux";
+import { getCutomerUnregisteredEvents , getCustomerRegisteredEvents } from "../../redux/actions/eventAction";
 
-export class CustomerEvents extends Component {
+
+class CustomerEvents extends Component {
   constructor(props) {
     super(props);
 
@@ -22,6 +25,7 @@ export class CustomerEvents extends Component {
       events: [],
       registered_events: [],
       pattern: "",
+      getAllEvents:"",
     };
   }
 
@@ -33,51 +37,18 @@ export class CustomerEvents extends Component {
 
   componentDidMount() {
     axios.defaults.withCredentials = true;
-
-    //Get All unregistered events
-    axios
-      .get(
-        "http://" +
-          process.env.REACT_APP_IP +
-          ":3001" +
-          "/customerEvents/getAllEvents",
-        {
-          params: {
-           
-          },
-        }
-      )
-      .then((response) => {
-        console.log("Received all unregistered Events", response.data.customerEventsGet);
-
-        this.setState({
-          events: this.state.events.concat(response.data.customerEventsGet),
-        });
-      });
-
-    //Get All registered events
-    axios
-      .get(
-        "http://" +
-          process.env.REACT_APP_IP +
-          ":3001" +
-          "/customerEvents/getRegisteredEvents",
-        {
-          params: {
-            CID: localStorage.getItem("CID"),
-          },
-        }
-      )
-      .then((response) => {
-        console.log("Received all registered Events");
-
-        this.setState({
-          registered_events: this.state.registered_events.concat(
-            response.data.getRegisteredEvents
-          ),
-        });
-      });
+    this.props.getCutomerUnregisteredEvents();
+    this.props.getCustomerRegisteredEvents({CID: localStorage.getItem("CID")});
+   
   }
+
+componentWillReceiveProps(nextProps){
+  console.log("in customer recieve all events", nextProps);
+  this.setState({
+    events: nextProps.events,
+    registered_events: nextProps.registered_events,
+  });
+}
 
   render() {
     let redirectVar = null;
@@ -160,4 +131,15 @@ export class CustomerEvents extends Component {
   }
 }
 
-export default CustomerEvents;
+
+const mapStateToProps = (state) => {
+  return {
+    getAllEvents: state.Events.getAllEvents,
+    registered_events: state.Events.registered_events,
+    events: state.Events.events,
+  };
+};
+
+export default connect(mapStateToProps, {
+  getCutomerUnregisteredEvents , getCustomerRegisteredEvents 
+})(CustomerEvents);
