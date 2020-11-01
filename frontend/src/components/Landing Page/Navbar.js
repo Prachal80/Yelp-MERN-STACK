@@ -85,6 +85,15 @@ class Navbar extends Component {
                     Events <span class="sr-only"></span>
                   </a>
                 </li>
+                <li>
+                  <a
+                    class="nav-link"
+                    style={{ color: "white", fontWeight: "bold" }}
+                    href="/customer/users"
+                  >
+                    Users <span class="sr-only"></span>
+                  </a>
+                </li>
                 <li onClick={this.handleLogout} class="nav-item active">
                   <a
                     class="nav-link"

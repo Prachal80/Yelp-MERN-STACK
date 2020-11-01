@@ -12,6 +12,7 @@ import EachReview from "../individual/indivudalReview";
 import {getAllDishesAction,addDishAction,updateDishAction} from "../../redux/actions/dishAction";
 import {getRestaurantReviews} from "../../redux/actions/reviewAction";
 import { connect } from "react-redux";
+import Pagination from 'react-bootstrap/Pagination'
 
 
 var dotenv = require("dotenv").config({
@@ -382,7 +383,7 @@ class RestaurantDashboard extends Component {
               class="btn btn-primary"
               onClick={() => this.setState({ showForm: true })}
               style={{
-                marginLeft: "20%",
+                marginLeft: "24%",
                 background: "#D32323",
                 color: "#ffffff",
                 fontWeight: "bold",
@@ -400,11 +401,14 @@ class RestaurantDashboard extends Component {
 
             <div class="DishInfo" class="row">
               <div
-                style={{ overflowY: "scroll", height: "700px" }}
-                class="col-6"
+                style={{ overflowY: "scroll", height: "700px"}}
+                class="col-7"
               >
                 <h3 style={{ textAlign: "center" }}> Dishes</h3>
+                <div style={{ paddingLeft: "11%" , paddingRight: "auto"}}>
                 {dishAll}
+                </div>
+                
               </div>
 
               <div
@@ -413,7 +417,7 @@ class RestaurantDashboard extends Component {
                   overflowY: "scroll",
                   height: "700px",
                 }}
-                class="col-4"
+                class="col-3"
               >
                 <h3 style={{ marginLeft: "10%" }}>Reviews Received</h3>
                 <br />

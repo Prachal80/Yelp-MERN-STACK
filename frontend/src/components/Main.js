@@ -9,6 +9,7 @@ import CustomerEvents from "./customer/customerEvents";
 import CustomerOrders from "./customer/customerOrders";
 import CustomerRestaurantView from "./customer/customerRestaurantView";
 import CustomerEventView from "./customer/customerEventView";
+import CustomerUserView from "./customer/customerUserView";
 
 import RestaurantDashboard from "./restaurant/restaurantDashboard";
 import RestaurantProfile from "./restaurant/restaurantProfile";
@@ -41,6 +42,11 @@ class Main extends Component {
           path="/customer/customereventview"
           component={CustomerEventView}
         />
+        <Route
+        path = "/customer/users"
+        component={CustomerUserView}
+        />
+
         <Route
           path="/restaurant/restaurantcustomerview"
           component={ReastaurantCustomerView}
