@@ -18,10 +18,9 @@ var customerSchema = new Schema({
     thingsIlove: String,
     profilePic: String,
     findMeIn: String,
-    followers:{
-        type: Number,
-        default: 0,
-    } 
+    followers: [{_id : false , follower_id: String}],
+    following : [{_id : false , following_id: String }],
+   
 },
     {
         versionKey: false

@@ -118,9 +118,9 @@ router.post("/updateCustomerProfile", (req, res) => {
 
 //Get All Customers 
 router.get("/getAllUsers", (req, res) => {
-  console.log("req data for get users ", req.query.email);
+  console.log("req data for get users ", req.query.Cemail);
 
-  Customer.find( {email: {$ne: req.query.email } } )
+  Customer.find( {email: {$ne: req.query.Cemail } } )
   .then(users=>{
       if (users) {
           console.log("Customer Found", users);
@@ -133,6 +133,102 @@ router.get("/getAllUsers", (req, res) => {
   })
   
 });
+
+//Follow Customer
+router.post("/follow", (req,res) => {
+
+  console.log("Follow request for the customer ", req.body);
+  var followers = null;
+  var following = null;
+  Customer.findByIdAndUpdate(req.body.Follow_CID, {
+    $push: {
+      followers:{
+        follower_id: req.body.CID,
+      }
+    }
+  },{ new : true})
+  .then(result => {
+    if(result){
+      followers = result.followers;
+      console.log("Result of Following:  " , followers);
+      //console.log("Result of Following:  " , result.followers);
+
+
+      Customer.findByIdAndUpdate(req.body.CID, { 
+        $push: {
+          following:{
+            following_id: req.body.Follow_CID,
+          }
+        }
+      }, {new:true}).then(follower =>{
+        if(follower){
+          following = follower.following;
+          //console.log("Result of Follower:  " , follower.following);
+          console.log("Result of Follower:  " , following);
+    
+          res.status(200).send({success:true, followers:followers, following:following });
+    
+        }
+      }) 
+    }
+  })
+  .catch(err=> {
+    res.status(400).send({success:false, followers:followers, following:following });
+  })
+ 
+})
+
+//UnFollow Customer
+router.post("/unfollow", (req,res) => {
+
+  console.log("UnFollow request for the customer ", req.body);
+  var followers = null;
+  var following = null;
+  Customer.findByIdAndUpdate(req.body.Follow_CID, {
+    $pull: { 
+      followers: 
+      {
+        //$elemMatch:{
+          follower_id: req.body.CID
+        //}
+      }
+     
+    }
+  },{ new : true})
+  .then(result => {
+    if(result){
+      followers = result.followers;
+      console.log("Result of Following:  " , followers);
+      //console.log("Result of Following:  " , result.followers);
+
+
+      Customer.findByIdAndUpdate(req.body.CID, { 
+        $pull: { 
+          following: 
+            {
+              //$elemMatch :  {
+            following_id: req.body.Follow_CID
+         // }
+        }
+          
+        }
+      }, {new:true}).then(follower =>{
+        if(follower){
+          following = follower.following;
+          //console.log("Result of Follower:  " , follower.following);
+          console.log("Result of Follower:  " , following);
+    
+          res.status(200).send({success:true, followers:followers, following:following });
+    
+        }
+      }) 
+    }
+  })
+  .catch(err=> {
+    res.status(400).send({success:false, followers:followers, following:following });
+  })
+ 
+})
 
 
 module.exports = router;
