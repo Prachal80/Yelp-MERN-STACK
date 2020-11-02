@@ -1,6 +1,9 @@
 import React, { Component } from "react";
 import axios from "axios";
 import { Redirect } from "react-router";
+import Col from "react-bootstrap/Col";
+import Row from "react-bootstrap/Row";
+import Container from "react-bootstrap/Container";
 
 class restaurantCustomerView extends Component {
   constructor(props) {
@@ -30,7 +33,7 @@ class restaurantCustomerView extends Component {
 
     //make a get request for the user data
     let data = {
-      CID: this.props.location.state.customerid,
+      CID: this.props.location.state._id,
     };
     console.log("########### Getting customer deatails", data);
     axios({
@@ -149,19 +152,77 @@ class restaurantCustomerView extends Component {
           <br />
           <br />
 
-          <div class="wrapper fadeInDown">
+          <div >
             <div
               style={{
                 position: "absolute",
-                width: "30%",
+                width: "40%",
                 top: "55%",
-                left: "2%",
+                left: "25%",
+                border: "1px solid black",
+                overflowY: "scroll",
+                height: "400px",
               }}
+              class="overflow-auto"
             >
               <br />
               <br />
+              <form
+                  class="Review"
+                  name="Review"
+                  onSubmit={this.sendMessage}
+                  style={{
+                    marginLeft: "0%",
+                    zIndex: "100",
+                    right: "10%",
+                    top: "60%",
+                    width: "100%",
+                  }}
+                >
+                  <Container>
+                    <p
+                      style={{
+                        textAlign: "center",
+                        fontWeight: "bold",
+                        marginTop: "2px",
+                        width: "100%",
+                      }}
+                    >
+                      Message from {this.state.name}
+                    </p>
+                    <hr />
+                    <Col>
+            
+                      <Row xs={15}>
+                        <input
+                          height="100px"
+                          type="text"
+                          name="message"
+                          placeholder="Type text"
+                          class="form-control"
+                          onChange={this.ChangeHandler}
+                        />
 
-              <p></p>
+                      <button
+                        type="submit"
+                        class="btn btn-primary"
+                        style={{
+                          type: "button",
+                          background: "#D32323",
+                          color: "#ffffff",
+                          fontWeight: "bold",
+                          borderBlockColor: "white",
+                          border: "1px #D32323",
+                        }}
+                      >
+                        send
+                      </button>
+                      </Row>
+                    
+                    </Col>
+                  </Container>
+                </form>
+             
             </div>
           </div>
         </div>

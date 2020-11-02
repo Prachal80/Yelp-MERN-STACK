@@ -15,6 +15,7 @@ import RestaurantDashboard from "./restaurant/restaurantDashboard";
 import RestaurantProfile from "./restaurant/restaurantProfile";
 import RestaurantEvents from "./restaurant/restaurantEvents";
 import RestaurantOrders from "./restaurant/restaurantOrders";
+import RestaurantUsers from "./restaurant/restaurantUser";
 import ReastaurantCustomerView from "./restaurant/restaurantCustomerView";
 
 import Navbar from "./Landing Page/Navbar.js";
@@ -60,6 +61,7 @@ class Main extends Component {
         <Route path="/restaurant/profile" component={RestaurantProfile} />
         <Route path="/restaurant/events" component={RestaurantEvents} />
         <Route path="/restaurant/orders" component={RestaurantOrders} />
+        <Route path="/restaurant/users" component={RestaurantUsers} />
 
         {/* <Route path="/home" component={Home} /> */}
       </div>

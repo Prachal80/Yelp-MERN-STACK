@@ -237,22 +237,95 @@ class customerRestaurantView extends Component {
               }}
               class="overflow-auto"
               //class="lefttdiv"
-              class="col-4"
+              class="col-5"
             >
               {orderDishAll}
             </div>
             <div class="rightdiv">
+
+              <div
+              style={{
+                marginLeft: "25%",
+                marginTop: "5%",
+                border: "1px solid black",
+                width: "100%",
+                height: "250px",
+                padding: "2%",
+                left: "80%",
+
+              }}
+              >
+
+              <form
+                  class="Review"
+                  name="Review"
+                  onSubmit={this.sendMessage}
+                  style={{
+                    marginLeft: "0%",
+                    zIndex: "100",
+                    right: "10%",
+                    top: "60%",
+                    width: "100%",
+                  }}
+                >
+                  <Container>
+                    <p
+                      style={{
+                        textAlign: "center",
+                        fontWeight: "bold",
+                        marginTop: "2px",
+                        width: "100%",
+                      }}
+                    >
+                      Message from {this.state.name}
+                    </p>
+                    <hr />
+                    <Col>
+            
+                      <Row xs={15}>
+                        <input
+                          height="100px"
+                          type="text"
+                          name="message"
+                          placeholder="Type text"
+                          class="form-control"
+                          onChange={this.ChangeHandler}
+                        />
+
+                      <button
+                        type="submit"
+                        class="btn btn-primary"
+                        style={{
+                          type: "button",
+                          background: "#D32323",
+                          color: "#ffffff",
+                          fontWeight: "bold",
+                          borderBlockColor: "white",
+                          border: "1px #D32323",
+                        }}
+                      >
+                        send
+                      </button>
+                      </Row>
+                    
+                    </Col>
+                  </Container>
+                </form>
+              </div>
               <div
                 style={{
-                  marginLeft: "45%",
+                  marginLeft: "25%",
                   marginTop: "5%",
                   border: "1px solid black",
                   width: "100%",
                   height: "250px",
                   padding: "2%",
                   left: "80%",
+
                 }}
+                //class="col-6"
               >
+                <br/>
                 <form
                   class="Review"
                   name="Review"
@@ -324,12 +397,13 @@ class customerRestaurantView extends Component {
                       >
                         Post Review
                       </button>
+                      <br/>
                     </Col>
                   </Container>
                 </form>
                 <br />
                 <br />
-                <h2> Reviews You Posted</h2>
+                <h2 style={{textAlign:"center"}}> Reviews You Posted</h2>
               </div>
               <br />
               <div

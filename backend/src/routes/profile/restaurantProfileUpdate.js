@@ -4,6 +4,7 @@ var app = express();
 const router = express.Router();
 var path = require("path");
 const Restaurant = require('../../../models/restaurant');
+const Customer = require('../../../models/customer');
 
 
 const storage = multer.diskStorage({
@@ -114,7 +115,24 @@ router.post("/updateRestaurantProfile", (req, res) => {
         })
   
   }); 
-  module.exports = router;
+
+//Get All Customers 
+router.get("/getAllUsers", (req, res) => {
+  console.log("req data for get users ", req.query);
+
+  Customer.find()
+  .then(users=>{
+      if (users) {
+          console.log("Customer Found", users);
+          res.status(200).send({success: true, users: users});
+      }
+      else{
+          res.status(401).send({success: false, users: users});
+      }
+      
+  })
+  
+});
 
 
 module.exports = router;
