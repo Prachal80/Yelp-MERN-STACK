@@ -34,6 +34,8 @@ class CustomerProfile extends Component {
       imagePath: "",
       ErrorMessage: "",
       updateFlag:false,
+      followers:[],
+      following:[]
     };
 
     //Bind the handlers to this class
@@ -68,6 +70,8 @@ class CustomerProfile extends Component {
       thingsIlove: nextProps.customerProfile.thingsIlove,
       findMeIn: nextProps.customerProfile.findMeIn,
       imagePath: nextProps.customerProfile.profilePic,
+      followers: nextProps.customerProfile.followers,
+      following: nextProps.customerProfile.following,
     });
   }
 
@@ -96,6 +100,7 @@ class CustomerProfile extends Component {
       thingsIlove: this.state.thingsIlove,
       findMeIn: this.state.findMeIn,
       CID: localStorage.getItem("CID"),
+     
       
     };
     console.log(data);
@@ -160,6 +165,8 @@ class CustomerProfile extends Component {
                 {this.state.city}, {this.state.state}, {this.state.country}
               </p>
               <p>{this.state.headline}</p>
+              <p>Followers: {this.state.followers.length} </p>
+              <p>Following: {this.state.following.length} </p> 
             </div>
             <div
               class="card"

@@ -114,9 +114,6 @@ class CustomerDashboard extends Component {
     if (!localStorage.getItem("CID")) {
       redirectVar = <Redirect to="/login" />;
     }
-    // let dishAll = this.state.dishes.map((dish) => {
-    //   return <EachDish key={Math.random} data={dish}></EachDish>;
-    // });
 
     let allRestaurants = this.state.restaurants.map((eachRestaurant) => {
       if (this.state.filter !== "") {

@@ -18,11 +18,30 @@ class customerUserView extends Component {
     //   orderpic: "",
     //   orderid: "",
     //   time: "",
-    //   optiontype: "",
-      users: [],
+      option: "",
       filter: "",
+      pattern: "",
+      searchCriteria: "name",
+      users: [],
     };
   }
+
+
+  userSearch = (e) => {
+    this.setState({
+      pattern: e.target.value,
+    });
+    console.log(this.state.pattern)
+  };
+
+  selectSearchCriteria = (e) => {
+    this.setState({
+      searchCriteria: e.target.value,
+      filter: "",
+    });
+    console.log(this.state.searchCriteria)
+  };
+
   ChangeHandler = (e) => {
     this.setState({
       filter: e.target.value,
@@ -72,9 +91,30 @@ class customerUserView extends Component {
 
     let userFunction = this.state.users.map((user) => {
       if (this.state.filter !== "") {
-        // if (user. === this.state.filter) {
-        //   return <EachOrderCustomer data={order}></EachOrderCustomer>;
-        // }
+        if (user.followers.some(match => match.follower_id === localStorage.getItem("CID"))) {
+          console.log("Matched user", user)
+          return <EachUser data={user}></EachUser>;
+        }
+
+
+        else if (this.state.pattern !== "" && this.state.pattern !== null) {
+          let criteria = this.state.searchCriteria;
+          console.log("Each User", user[criteria]);
+          console.log("criteria", criteria);
+    
+          if (
+            JSON.stringify(user[this.state.searchCriteria]).toLowerCase().includes(this.state.pattern.toLowerCase())
+          ) {
+             return (
+              <EachUser
+                 key={Math.random}
+                data={user}
+              ></EachUser>
+            );
+          }
+       } 
+
+
       } else {
         return <EachUser data={user}></EachUser>;
       }
@@ -106,86 +146,13 @@ class customerUserView extends Component {
                 border: "1px solid #f0ab0c",
               }}
               className="btn btn-danger"
-              value="Order Received"
+              value="following"
+              //name="option"
               onClick={this.ChangeHandler}
             >
-              Order Received
+              Following
             </button>
             &nbsp;
-            <button
-              style={{
-                float: "left",
-                fontWeight: "bold",
-                marginLeft: "5px",
-                background: "#f07a0c",
-                border: "1px solid #f07a0c",
-              }}
-              className="btn btn-danger"
-              value="Preparing"
-              onClick={this.ChangeHandler}
-            >
-              Preparing
-            </button>
-            &nbsp;
-            <button
-              style={{
-                float: "left",
-                fontWeight: "bold",
-                marginLeft: "5px",
-                background: "#D23232",
-                border: "1px solid #D23232",
-              }}
-              className="btn btn-danger"
-              value="On the way"
-              onClick={this.ChangeHandler}
-            >
-              On the way
-            </button>
-            &nbsp;
-            <button
-              style={{
-                float: "left",
-                fontWeight: "bold",
-                marginLeft: "5px",
-                background: "#D23232",
-                border: "1px solid #D23232",
-              }}
-              className="btn btn-danger"
-              value="Ready for Pickup"
-              onClick={this.ChangeHandler}
-            >
-              Ready for Pickup
-            </button>
-            &nbsp;
-            <button
-              style={{
-                float: "left",
-                fontWeight: "bold",
-                marginLeft: "5px",
-                background: "#11ad17",
-                border: "1px solid #11ad17",
-              }}
-              className="btn btn-primary"
-              value="Picked up"
-              onClick={this.ChangeHandler}
-            >
-              Picked up
-            </button>
-            &nbsp;
-            <button
-              style={{
-                float: "left",
-                fontWeight: "bold",
-                marginLeft: "5px",
-                background: "#11ad17",
-                border: "1px solid #11ad17",
-              }}
-              className="btn btn-primary"
-              value="Delivered"
-              onClick={this.ChangeHandler}
-            >
-              Delivered
-            </button>
             &nbsp;
             <button
               style={{ float: "left", fontWeight: "bold", marginLeft: "5px" }}
@@ -195,6 +162,35 @@ class customerUserView extends Component {
             >
               Clear
             </button>
+            &nbsp;
+            &nbsp; &nbsp;
+            &nbsp; &nbsp;
+            &nbsp; &nbsp;
+            &nbsp;
+            <form>
+            <div className="form-row">
+              <div class="form-group " style={{}}>
+                <select
+                  id="inputState"
+                  class="form-control"
+                  onChange={this.selectSearchCriteria}
+                >
+                  <option value="name">Name</option>
+                  <option value="nickname">Nickname</option>                 
+                  <option value="city">Location</option>
+                </select>
+              </div>
+              &nbsp;
+              <div className="form-group ">
+                <input
+                  type="text"
+                  placeholder="Search Users"
+                  onChange={this.userSearch}
+                  classNames="test-class"
+                />
+              </div>
+            </div>
+          </form>
           </div>
           <br />
           <hr />
