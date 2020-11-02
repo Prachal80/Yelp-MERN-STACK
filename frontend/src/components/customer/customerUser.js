@@ -95,9 +95,9 @@ class customerUserView extends Component {
           console.log("Matched user", user)
           return <EachUser data={user}></EachUser>;
         }
+      }
 
-
-        else if (this.state.pattern !== "" && this.state.pattern !== null) {
+        else if (this.state.pattern !== "") {
           let criteria = this.state.searchCriteria;
           console.log("Each User", user[criteria]);
           console.log("criteria", criteria);
@@ -107,7 +107,7 @@ class customerUserView extends Component {
           ) {
              return (
               <EachUser
-                 key={Math.random}
+                 //key={Math.random}
                 data={user}
               ></EachUser>
             );
@@ -115,7 +115,7 @@ class customerUserView extends Component {
        } 
 
 
-      } else {
+       else {
         return <EachUser data={user}></EachUser>;
       }
     });

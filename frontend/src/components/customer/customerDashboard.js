@@ -40,6 +40,7 @@ class CustomerDashboard extends Component {
     this.setState({
       filter: e.target.value,
       searchCriteria: "",
+      pattern:"",
     });
   };
 
@@ -116,7 +117,7 @@ class CustomerDashboard extends Component {
     }
 
     let allRestaurants = this.state.restaurants.map((eachRestaurant) => {
-      if (this.state.filter !== "") {
+      if (this.state.filter !== "" ) {
         if (
           eachRestaurant.method
             .toLowerCase()
@@ -124,12 +125,12 @@ class CustomerDashboard extends Component {
         ) {
           return (
             <EachRestaurant
-              key={Math.random}
+              //key={Math.random}
               data={eachRestaurant}
             ></EachRestaurant>
           );
         }
-      } else if (this.state.pattern !== "" && this.state.pattern !== null) {
+      } else if (this.state.pattern !== "" ) {
         let criteria = this.state.searchCriteria;
         console.log("Each Restaurant", eachRestaurant[criteria]);
         console.log("criteria", criteria);
@@ -139,7 +140,7 @@ class CustomerDashboard extends Component {
         ) {
           return (
             <EachRestaurant
-               key={Math.random}
+              // key={Math.random}
               data={eachRestaurant}
             ></EachRestaurant>
           );
@@ -148,7 +149,7 @@ class CustomerDashboard extends Component {
       else {
         return (
           <EachRestaurant
-             key={Math.random}
+             //key={Math.random}
             data={eachRestaurant}
           ></EachRestaurant>
         );
