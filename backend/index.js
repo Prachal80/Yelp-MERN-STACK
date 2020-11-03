@@ -127,6 +127,8 @@ app.use("/customerEvents", customerEvents);
 var restaurantEvents = require("./src/routes/events/restaurantEvents");
 app.use("/restaurantEvents", restaurantEvents);
 
+var messages = require("./src/routes/messages/message");
+app.use("/message",messages);
 
 
 //Mongo Routes

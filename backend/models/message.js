@@ -4,8 +4,8 @@ const Schema = mongoose.Schema;
 
 var reviewSchema = new Schema({
    
-    customerid: String,
-    restaurantid: String,
+    CID: String,
+    RID: String,
     message: [{_id : false , type :String}],
 
 },
@@ -13,4 +13,4 @@ var reviewSchema = new Schema({
         versionKey: false
     });
 
-module.exports = mongoose.model('review', reviewSchema);
+module.exports = mongoose.model('message', reviewSchema);

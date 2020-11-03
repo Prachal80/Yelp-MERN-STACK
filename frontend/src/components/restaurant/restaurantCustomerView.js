@@ -26,8 +26,21 @@ class restaurantCustomerView extends Component {
       findMeIn: "",
       imagePath: "",
       ErrorMessage: "",
+      messages:[],
+      message: "",
+      followers:[],
+      following:[]
     };
   }
+
+  // change handlers to update state variable with the text entered by the user
+  ChangeHandler = (e) => {
+    console.log("Inside message change handler", e.target.value);
+    this.setState({
+      [e.target.name]: e.target.value,
+    });
+  };
+
   componentDidMount() {
     axios.defaults.withCredentials = true;
 
@@ -63,16 +76,71 @@ class restaurantCustomerView extends Component {
         thingsIlove: customerData.thingsIlove,
         findMeIn: customerData.findMeIn,
         imagePath: customerData.profilePic,
+        followers: customerData.followers,
+      following: customerData.following,
       });
       console.log("Profile ", this.state.imagePath);
     });
-  }
+
+
+  //get all messages
+    axios.get( "http://" +
+    process.env.REACT_APP_IP +
+    ":3001" +
+    "/message/messages",
+  {
+    params: {CID: this.props.location.state._id, RID: localStorage.getItem("RID") },
+  }).then(response=>{
+    console.log("Message ",response);
+    this.setState({
+      messages:response.data.messages,
+    })
+  })
+  
+}
+
+  //Send Message Restaurant
+  sendMessage = async (e) =>{
+
+    e.preventDefault();
+    axios.defaults.withCredentials = true;
+    const data = { 
+      RID: localStorage.getItem("RID"),
+      CID: this.props.location.state._id,
+      name:  localStorage.getItem("Rname"),
+      message: this.state.message,
+    }
+    axios.post("http://" +
+    process.env.REACT_APP_IP +
+    ":3001" +
+    "/message/customer", data
+ )
+ .then(response=>{
+    console.log("Message ",response);
+    this.setState({
+      messages:response.data.message.message,
+    })
+  })
+    
+  } 
 
   render() {
     let redirectVar = null;
     if (!localStorage.getItem("RID")) {
       redirectVar = <Redirect to="/login" />;
     }
+
+
+  let messageFuction =this.state.messages.map((message)=>{
+    return <h6 style={{
+      background: "#429ef5",
+      borderRadius:"3px",
+      color: "#ffffff",
+      borderBlockColor: "white",
+      border: "1px #D32323",
+    }}>{message}</h6>
+  }) 
+
     return (
       <div>
         {redirectVar}
@@ -126,7 +194,8 @@ class restaurantCustomerView extends Component {
                 {this.state.city}, {this.state.state}, {this.state.country}
               </p>
               <p>{this.state.headline}</p>
-            
+              <p>Followers: {this.state.followers.length} </p>
+              <p>Following: {this.state.following.length} </p> 
             </div>
             <div
               className="col-4"
@@ -168,8 +237,8 @@ class restaurantCustomerView extends Component {
               <br />
               <br />
               <form
-                  class="Review"
-                  name="Review"
+                 // class="Review"
+                  name="message"
                   onSubmit={this.sendMessage}
                   style={{
                     marginLeft: "0%",
@@ -192,7 +261,13 @@ class restaurantCustomerView extends Component {
                     </p>
                     <hr />
                     <Col>
-            
+                    <div 
+                      style={{
+                        //marginLeft: "5%",
+                        overflowY: "scroll",
+                        height: "250px",
+                      }}
+                      class="overflow-auto">{messageFuction}</div>
                       <Row xs={15}>
                         <input
                           height="100px"

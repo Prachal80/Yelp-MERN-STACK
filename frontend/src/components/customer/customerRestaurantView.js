@@ -41,13 +41,15 @@ class customerRestaurantView extends Component {
       rating: "",
       review: "",
       reviewdate: "",
+      messages: [],
+      message: "",
     };
     this.ChangeHandler = this.ChangeHandler.bind(this);
   }
 
   // change handlers to update state variable with the text entered by the user
   ChangeHandler = (e) => {
-    console.log("Inside option change handler", e.target.value);
+    console.log("Inside message change handler", e.target.value);
     this.setState({
       [e.target.name]: e.target.value,
     });
@@ -78,6 +80,20 @@ class customerRestaurantView extends Component {
       //Get customer reviews
       this.props.getAllReviews({CID: localStorage.getItem("CID"),
       RID: this.state.restaurantid})
+
+      //get all messages
+      axios.get( "http://" +
+      process.env.REACT_APP_IP +
+      ":3001" +
+      "/message/messages",
+    {
+      params: {CID: localStorage.getItem("CID"), RID: this.state.restaurantid },
+    }).then(response=>{
+      console.log("Message ",response);
+      this.setState({
+        messages:response.data.messages,
+      })
+    })
   }
 
   componentWillReceiveProps(nextProps) {
@@ -115,6 +131,46 @@ class customerRestaurantView extends Component {
     }
   };
 
+  //Send Message Customer
+  sendMessage = async (e) =>{
+
+    e.preventDefault();
+    axios.defaults.withCredentials = true;
+    const data = { 
+      RID: this.state.restaurantid,
+      CID: localStorage.getItem("CID"),
+      name:  localStorage.getItem("Cname"),
+      message: this.state.message,
+    }
+    if(this.state.messages.length>0){
+      axios.post("http://" +
+      process.env.REACT_APP_IP +
+      ":3001" +
+      "/message/customer", data
+   )
+   .then(response=>{
+      console.log("Message ",response);
+      this.setState({
+        messages:response.data.message.message,
+      })
+    })
+    }
+    else{
+      alert("Can not start conversation");
+    }  
+    
+  }
+  
+//  showButton = {
+ 
+//     if(this.state.messages.length)
+//     {
+//       return 
+//     }
+//   }
+
+
+
   render() {
     let redirectVar = null;
     if (!localStorage.getItem("CID")) {
@@ -134,8 +190,19 @@ class customerRestaurantView extends Component {
     });
 
     let orderDishAll = this.props.location.state.dishes.map((dish) => {
-      return <OrderEachDish data={dish}></OrderEachDish>;
+      return <OrderEachDish data={dish}></OrderEachDish>; 
     });
+    let messageFuction =this.state.messages.map((message)=>{
+      return <p style={{
+        background: "#429ef5",
+        borderRadius:"3px",
+        color: "#ffffff",
+        borderBlockColor: "white",
+        border: "1px #D32323",
+      }}>{message}</p>
+    }) 
+
+  
     return (
       <div>
         {redirectVar}
@@ -281,7 +348,13 @@ class customerRestaurantView extends Component {
                     </p>
                     <hr />
                     <Col>
-            
+                      <div 
+                      style={{
+                        //marginLeft: "5%",
+                        overflowY: "scroll",
+                        height: "100px",
+                      }}
+                      class="overflow-auto">{messageFuction}</div>
                       <Row xs={15}>
                         <input
                           height="100px"
