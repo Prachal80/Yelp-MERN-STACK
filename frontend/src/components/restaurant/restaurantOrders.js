@@ -4,6 +4,7 @@ import axios from "axios";
 import EachOrderRestaurant from "../individual/individualRestaurantOrders";
 import { connect } from "react-redux";
 import {getOrdersRestaurantAction} from "../../redux/actions/orderAction";
+import Pagination from "../Pagination"
 
 class restaurantOrders extends Component {
   constructor(props) {
@@ -22,6 +23,12 @@ class restaurantOrders extends Component {
       optiontype: "",
       orders: [],
       filter: "",
+      currentPage:1,
+      ordersPerPage: 2,
+      inndexOfLastOrder: 2,
+      indexOfFirstOrder: 0,
+      currentOrders: [],
+
     };
   }
 
@@ -39,11 +46,57 @@ class restaurantOrders extends Component {
     //window.location.history.push({pathName: "/restaurant/orders"});
   }
 
+  // Change page
+  paginate = (pageNumber) => {
+    console.log("pagenumber ", pageNumber);
+
+    let indexOfLastOrder = pageNumber * this.state.OrderPerPage;
+    let indexOfFirstOrder = indexOfLastOrder - this.state.ordersPerPage;
+    let currentOrders = this.state.orders.slice(
+      indexOfLastOrder,
+      indexOfFirstOrder
+    );
+
+    this.setState({
+      currentPage: pageNumber,
+      indexOfLastOrder: indexOfLastOrder,
+      indexOfFirstOrder: indexOfFirstOrder,
+      currentOrders: currentOrders,
+    });
+  };
+
   componentWillReceiveProps(nextProps) {
     console.log("in restaurant recieve all orders", nextProps.orders);
     this.setState({
-      orders: nextProps.orders
-    });
+      orders: nextProps.orders,
+      currentOrders : nextProps.orders.slice(
+         0,2
+        // this.state.indexOfFirstOrder,
+        // this.state.indexOfLastOrder
+      )
+     })
+    //  .then( result =>{
+    //    console.log("result", result);
+    //   console.log("Orders", this.state.orders);
+    //   console.log("Sliced orders", this.state.currentOrders);
+    //  }
+
+    //  );
+    //.then(
+      
+    //    currentOrders = this.state.orders.slice(
+    //     this.state.indexOfFirstOrder,
+    //     this.state.indexOfLastOrder
+    //   ),
+        
+    //   this.setState({
+    //     currentOrders: currentOrders,
+    //   }).then(
+
+
+    // //   )
+    // );
+
   }
 
   render() {
@@ -52,7 +105,7 @@ class restaurantOrders extends Component {
       redirectVar = <Redirect to="/login" />;
     }
 
-    let orderDishAll = this.state.orders.map((order) => {
+    let orderDishAll = this.state.currentOrders.map((order) => {
       if (this.state.filter !== "") {
         if (order.status === this.state.filter) {
           return <EachOrderRestaurant data={order}></EachOrderRestaurant>;
@@ -61,6 +114,8 @@ class restaurantOrders extends Component {
         return <EachOrderRestaurant data={order}></EachOrderRestaurant>;
       }
     });
+
+    console.log("SLICED ORDERS ", this.state.currentOrders);
 
     return (
       <div>
@@ -139,13 +194,18 @@ class restaurantOrders extends Component {
 
         <div class="row">
           <div
-            class="col-6"
+            class="col-8"
             style={{ width: "100%", overflowY: "scroll", height: "700px" }}
           >
             <h2 style={{ textAlign: "center" }}>All orders</h2>
-            {orderDishAll}
+            <div>{orderDishAll}</div>
+            <Pagination
+            ordersPerPage= {this.state.ordersPerPage}
+            totalOrders={this.state.orders.length}
+            paginate={this.paginate}
+          />
           </div>
-          <div class="rightdiv"></div>
+
         </div>
       </div>
     );
