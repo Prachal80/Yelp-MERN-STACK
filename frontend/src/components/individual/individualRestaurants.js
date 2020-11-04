@@ -49,7 +49,7 @@ export default class individualRestaurant extends Component {
             <Fragment>
               <Container>
                 <Row>
-                  <Col xs={6}>
+                  <Col style={{ marginRight:"0px", paddingLeft: "50px" }} xs={6}>
                     <img
                       src={
                         "http://" +
@@ -59,35 +59,35 @@ export default class individualRestaurant extends Component {
                       }
                       alt="Dish Image"
                       style={{
-                        width: "100%",
+                        width: "90%",
                         height: "90%",
                       }}
                     />
                   </Col>
-                  <Col xs={6} style={{ padding: "0px" }}>
+                  <Col xs={6} style={{ marginLeft:"0px", padding: "0px" }}>
                     <p style={{ marginBottom: "0px" }}>
-                      {this.props.data.address}
+                      Address: {this.props.data.address}
                     </p>
 
                     <p style={{ marginBottom: "0px" }}>
-                      {this.props.data.location}, {this.props.data.state}
+                      City: {this.props.data.location}, {this.props.data.state}
                     </p>
 
                     <p style={{ marginBottom: "0px" }}>
-                      {this.props.data.timings}
+                      Timings: {this.props.data.timings}
                     </p>
                     <p style={{ marginBottom: "0px" }}>
-                      {this.props.data.contact}
+                      Contact: {this.props.data.contact}
                     </p>
                     <p style={{ marginBottom: "0px" }}>
-                      {this.props.data.email}
+                      Email: {this.props.data.email}
                     </p>
                     <p style={{ marginBottom: "0px" }}>
-                      {this.props.data.ratings} <BsStarFill />
+                      Ratings: {this.props.data.ratings} <BsStarFill />
                     </p>
                   </Col>
                 </Row>
-                <br />
+                {/* <br /> */}
                 <Row>
                   <Col>
                     <Link

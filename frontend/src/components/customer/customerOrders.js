@@ -4,6 +4,7 @@ import { Redirect } from "react-router";
 import EachOrderCustomer from "../individual/individualPlacedOrders";
 import { connect } from "react-redux";
 import { makeOrderRestaurantAction , getOrdersCustomerAction , cancelOrdersCustomerAction } from "../../redux/actions/orderAction";
+import Pagination from "../Pagination";
 
 class customerOrders extends Component {
   constructor(props) {
@@ -21,6 +22,14 @@ class customerOrders extends Component {
       optiontype: "",
       orders: [],
       filter: "",
+
+      //pagination
+      currentPage:1,
+      ordersPerPage: 2,
+      indexOfLastOrder: 2,
+      indexOfFirstOrder: 0,
+      currentOrders: [],
+
     };
   }
   ChangeHandler = (e) => {
@@ -38,11 +47,46 @@ class customerOrders extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
+
     console.log("in customer recieve all orders", nextProps.orders);
+    let currentOrders = nextProps.orders.slice(
+      this.state.indexOfFirstOrder,
+      this.state.indexOfLastOrder
+    )
+    console.log("current orders", currentOrders, " first index " , this.state.indexOfFirstOrder , " last index: ", this.state.indexOfLastOrder);
     this.setState({
-      orders: nextProps.orders
-    });
+      orders: nextProps.orders,
+      currentOrders : currentOrders
+     })
+
+    // console.log("in customer recieve all orders", nextProps.orders);
+    // this.setState({
+    //   orders: nextProps.orders
+    // });
   }
+
+  // Change page
+  paginate = (pageNumber) => {
+    console.log("pagenumber ", pageNumber);
+
+    let indexOfLastOrder = pageNumber * this.state.ordersPerPage;
+    let indexOfFirstOrder = indexOfLastOrder - this.state.ordersPerPage;
+    let allOrders = this.state.orders;
+    let currentOrders = allOrders.slice(
+      indexOfFirstOrder,
+      indexOfLastOrder
+      
+    );
+    console.log("all orders, ", allOrders, "current orders", currentOrders, " first index " , indexOfFirstOrder , " last index: ", indexOfLastOrder);
+
+    this.setState({
+      currentPage: pageNumber,
+      indexOfLastOrder: indexOfLastOrder,
+      indexOfFirstOrder: indexOfFirstOrder,
+      currentOrders: currentOrders,
+    });
+
+  };
 
   render() {
     let redirectVar = null;
@@ -50,7 +94,7 @@ class customerOrders extends Component {
       redirectVar = <Redirect to="/login" />;
     }
 
-    let orderDishAll = this.state.orders.map((order) => {
+    let orderDishAll = this.state.currentOrders.map((order) => {
       if (this.state.filter !== "") {
         if (order.status === this.state.filter) {
           return <EachOrderCustomer data={order}></EachOrderCustomer>;
@@ -181,10 +225,16 @@ class customerOrders extends Component {
         </div>
 
         <div class="row">
-          <div style={{ width: "100%" }} class="col-6">
-            <h2 style={{ textAlign: "center" }}>All orders</h2>
-            <div style={{ overflowY: "scroll", height: "700px" }}>
+          <div style={{ width: "100%" }} class="col-8">
+            <div style={{marginLeft:"30%"}}>
               {orderDishAll}
+            </div>
+            <div style={{marginLeft:"60%"}}>
+            <Pagination
+            elementsPerPage= {this.state.ordersPerPage}
+            totalElements={this.state.orders.length}
+            paginate={this.paginate}
+            />
             </div>
           </div>
         </div>

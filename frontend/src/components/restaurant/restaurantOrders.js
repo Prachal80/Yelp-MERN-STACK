@@ -25,7 +25,7 @@ class restaurantOrders extends Component {
       filter: "",
       currentPage:1,
       ordersPerPage: 2,
-      inndexOfLastOrder: 2,
+      indexOfLastOrder: 2,
       indexOfFirstOrder: 0,
       currentOrders: [],
 
@@ -50,12 +50,15 @@ class restaurantOrders extends Component {
   paginate = (pageNumber) => {
     console.log("pagenumber ", pageNumber);
 
-    let indexOfLastOrder = pageNumber * this.state.OrderPerPage;
+    let indexOfLastOrder = pageNumber * this.state.ordersPerPage;
     let indexOfFirstOrder = indexOfLastOrder - this.state.ordersPerPage;
-    let currentOrders = this.state.orders.slice(
-      indexOfLastOrder,
-      indexOfFirstOrder
+    let allOrders = this.state.orders;
+    let currentOrders = allOrders.slice(
+      indexOfFirstOrder,
+      indexOfLastOrder
+      
     );
+    console.log("all orders, ", allOrders, "current orders", currentOrders, " first index " , indexOfFirstOrder , " last index: ", indexOfLastOrder);
 
     this.setState({
       currentPage: pageNumber,
@@ -63,39 +66,20 @@ class restaurantOrders extends Component {
       indexOfFirstOrder: indexOfFirstOrder,
       currentOrders: currentOrders,
     });
+
   };
 
   componentWillReceiveProps(nextProps) {
     console.log("in restaurant recieve all orders", nextProps.orders);
+    let currentOrders = nextProps.orders.slice(
+      this.state.indexOfFirstOrder,
+      this.state.indexOfLastOrder
+    )
+    console.log("current orders", currentOrders, " first index " , this.state.indexOfFirstOrder , " last index: ", this.state.indexOfLastOrder);
     this.setState({
       orders: nextProps.orders,
-      currentOrders : nextProps.orders.slice(
-         0,2
-        // this.state.indexOfFirstOrder,
-        // this.state.indexOfLastOrder
-      )
+      currentOrders : currentOrders
      })
-    //  .then( result =>{
-    //    console.log("result", result);
-    //   console.log("Orders", this.state.orders);
-    //   console.log("Sliced orders", this.state.currentOrders);
-    //  }
-
-    //  );
-    //.then(
-      
-    //    currentOrders = this.state.orders.slice(
-    //     this.state.indexOfFirstOrder,
-    //     this.state.indexOfLastOrder
-    //   ),
-        
-    //   this.setState({
-    //     currentOrders: currentOrders,
-    //   }).then(
-
-
-    // //   )
-    // );
 
   }
 
@@ -114,8 +98,6 @@ class restaurantOrders extends Component {
         return <EachOrderRestaurant data={order}></EachOrderRestaurant>;
       }
     });
-
-    console.log("SLICED ORDERS ", this.state.currentOrders);
 
     return (
       <div>
@@ -195,15 +177,18 @@ class restaurantOrders extends Component {
         <div class="row">
           <div
             class="col-8"
-            style={{ width: "100%", overflowY: "scroll", height: "700px" }}
+             style={{ width: "100%", marginLeft: "25%" }}
           >
-            <h2 style={{ textAlign: "center" }}>All orders</h2>
-            <div>{orderDishAll}</div>
+            <div >{orderDishAll}
+            
+            </div>
+            <div style={{marginLeft:"25%"}}>
             <Pagination
-            ordersPerPage= {this.state.ordersPerPage}
-            totalOrders={this.state.orders.length}
+            elementsPerPage= {this.state.ordersPerPage}
+            totalElements={this.state.orders.length}
             paginate={this.paginate}
-          />
+            />
+            </div>
           </div>
 
         </div>

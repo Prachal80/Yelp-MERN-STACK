@@ -6,6 +6,7 @@ import EachDish from "../individual/individualOrderDish";
 import EachRestaurant from "../individual/individualRestaurants";
 import {getAllRestaurantsAction} from "../../redux/actions/dishAction";
 import { connect } from "react-redux";
+import Pagination from "../Pagination";
 
 class CustomerDashboard extends Component {
   constructor(props) {
@@ -34,6 +35,13 @@ class CustomerDashboard extends Component {
         { latitude: 37.324849, longitude: -121.879581 },
         { latitude: 37.324545, longitude: -121.881218 },
       ],
+
+      //pagination
+      currentPage:1,
+      restaurantsPerPage: 2,
+      indexOfLastRestaurant: 2,
+      indexOfFirstRestaurant: 0,
+      currentRestaurants: [],
     };
   }
   ChangeHandler = (e) => {
@@ -61,23 +69,23 @@ class CustomerDashboard extends Component {
     axios.defaults.withCredentials = true;
 
     //Get All dishes
-    axios
-      .get(
-        "http://" +
-          process.env.REACT_APP_IP +
-          ":3001" +
-          "/customerDishes/getAllDishes",
-        {
-          params: {},
-        }
-      )
-      .then((response) => {
-        console.log("Received Dishes", response.data.customerDishGet);
-        this.setState({
-          dishes: this.state.dishes.concat(response.data.customerDishGet.dishes),
-        });
-        console.log("State Dishes", this.state.dishes);
-      });
+    // axios
+    //   .get(
+    //     "http://" +
+    //       process.env.REACT_APP_IP +
+    //       ":3001" +
+    //       "/customerDishes/getAllDishes",
+    //     {
+    //       params: {},
+    //     }
+    //   )
+    //   .then((response) => {
+    //     console.log("Received Dishes", response.data.customerDishGet);
+    //     this.setState({
+    //       dishes: this.state.dishes.concat(response.data.customerDishGet.dishes),
+    //     });
+    //     console.log("State Dishes", this.state.dishes);
+    //   });
 
     //get all restaurants
     // axios
@@ -103,11 +111,41 @@ class CustomerDashboard extends Component {
 
   }
 
+   // Change page
+   paginate = (pageNumber) => {
+    console.log("pagenumber ", pageNumber);
+
+    let indexOfLastRestaurant = pageNumber * this.state.restaurantsPerPage;
+    let indexOfFirstRestaurant = indexOfLastRestaurant - this.state.restaurantsPerPage;
+    let allRestaurants = this.state.restaurants;
+    let currentRestaurants = allRestaurants.slice(
+      indexOfFirstRestaurant,
+      indexOfLastRestaurant
+      
+    );
+    //console.log("all orders, ", allOrders, "current orders", currentOrders, " first index " , indexOfFirstOrder , " last index: ", indexOfLastOrder);
+
+    this.setState({
+      currentPage: pageNumber,
+      indexOfLastRestaurant: indexOfLastRestaurant,
+      indexOfFirstRestaurant: indexOfFirstRestaurant,
+      currentRestaurants: currentRestaurants,
+    });
+
+  };
+
   componentWillReceiveProps(nextProps) {
     console.log("in customer dashboard recieve all restaurants", nextProps.restaurants);
+
+    let currentRestaurants = nextProps.restaurants.slice(
+      this.state.indexOfFirstRestaurant,
+      this.state.indexOfLastRestaurant
+    )
+    //console.log("current orders", currentOrders, " first index " , this.state.indexOfFirstOrder , " last index: ", this.state.indexOfLastOrder);
     this.setState({
-      restaurants: nextProps.restaurants
-    });
+      restaurants: nextProps.restaurants,
+      currentRestaurants : currentRestaurants
+     })
   }
 
   render() {
@@ -116,7 +154,7 @@ class CustomerDashboard extends Component {
       redirectVar = <Redirect to="/login" />;
     }
 
-    let allRestaurants = this.state.restaurants.map((eachRestaurant) => {
+    let allRestaurants = this.state.currentRestaurants.map((eachRestaurant) => {
       if (this.state.filter !== "" ) {
         if (
           eachRestaurant.method
@@ -240,9 +278,16 @@ class CustomerDashboard extends Component {
             <h2 style={{ textAlign: "center" }}>Restaurants</h2>
             <div
               class="DishInfo"
-              style={{ overflowY: "scroll", height: "700px" }}
+              style={{ height: "600px" }}
             >
               {allRestaurants}
+            </div>
+            <div style={{marginLeft:"25%"}}>
+            <Pagination
+            elementsPerPage= {this.state.restaurantsPerPage}
+            totalElements={this.state.restaurants.length}
+            paginate={this.paginate}
+            />
             </div>
           </div>
          

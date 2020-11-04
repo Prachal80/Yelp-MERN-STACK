@@ -82,6 +82,13 @@ class RestaurantDashboard extends Component {
         method: restaurantData.method,
         cuisine: restaurantData.cuisine,
         restaurantProfilePic: restaurantData.restaurantProfilePic,
+
+        //pagination
+        currentPage:1,
+        dishesPerPage: 2,
+        indexOfLastDish: 2,
+        indexOfFirstDish: 0,
+        currentDishes: [],
       });
     });
    
@@ -95,11 +102,40 @@ class RestaurantDashboard extends Component {
    this.props.getRestaurantReviews(localStorage.getItem("RID"));
   }
 
+  // Change page
+   paginate = (pageNumber) => {
+    console.log("pagenumber ", pageNumber);
+
+    let indexOfLastDish = pageNumber * this.state.dishesPerPage;
+    let indexOfFirstDish = indexOfLastDish - this.state.dishesPerPage;
+    let allDishes = this.state.dishes;
+    let currentDishes = allDishes.slice(
+      indexOfFirstDish,
+      indexOfFirstDish
+      
+    );
+    //console.log("all orders, ", allOrders, "current orders", currentOrders, " first index " , indexOfFirstOrder , " last index: ", indexOfLastOrder);
+
+    this.setState({
+      currentPage: pageNumber,
+      indexOfLastDish: indexOfLastDish,
+      indexOfFirstDish: indexOfFirstDish,
+      currentDishes: currentDishes,
+    });
+
+  };
+
   componentWillReceiveProps(nextProps) {
     console.log("in restaurant dashboard recieve all dishes", nextProps);
+
+    let currentDishes = nextProps.dishes.slice(
+      this.state.indexOfFirstDish,
+      this.state.indexOfLastDish
+    )
     this.setState({
       dishes: nextProps.dishes,
-      reviews: nextProps.reviews
+      reviews: nextProps.reviews,
+      currentDishes:currentDishes
     });
   }
 
@@ -280,7 +316,7 @@ class RestaurantDashboard extends Component {
     if (!localStorage.getItem("RID")) {
       redirectVar = <Redirect to="/login" />;
     }
-    let dishAll = this.state.dishes.map((dish) => {
+    let dishAll = this.state.currentDishes.map((dish) => {
       return <EachDish data={dish}></EachDish>;
     });
 
