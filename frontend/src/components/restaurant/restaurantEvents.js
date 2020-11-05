@@ -8,6 +8,7 @@ import EachEventRestaurant from "../individual/individualEvents";
 import EachRegisteredEvent from "../individual/individualRegistredEvents";
 import { connect } from "react-redux";
 import { getRegisteredCustomers , getRestauarantEvents ,postRestaurantEvents} from "../../redux/actions/eventAction";
+import Pagination from "../Pagination";
 
 export class restaurantEvents extends Component {
   constructor(props) {
@@ -26,7 +27,14 @@ export class restaurantEvents extends Component {
       customerid: "",
       events: [],
       registered_events: [],
-      isAdd: false
+      isAdd: false,
+
+      //pagination
+      currentPage:1,
+      eventsPerPage: 2,
+      indexOfLastEvent: 2,
+      indexOfFirstEvent: 0,
+      currentEvents: [],
     };
 
     this.ChangeHandler = this.ChangeHandler.bind(this);
@@ -73,11 +81,40 @@ export class restaurantEvents extends Component {
 
   componentWillReceiveProps(nextProps){
     console.log("in restaurant recieve props", nextProps);
+
+    let currentEvents = nextProps.restaurant_events.slice(
+      this.state.indexOfFirstEvent,
+      this.state.indexOfLastEvent
+    )
+    console.log("Current events ", currentEvents );
     this.setState({
       events: nextProps.restaurant_events,
       registered_events: nextProps.registered_events,
+      currentEvents: currentEvents
   });
   }
+
+    // Change page
+    paginate = (pageNumber) => {
+      console.log("pagenumber ", pageNumber);
+  
+      let indexOfLastEvent = pageNumber * this.state.eventsPerPage;
+      let indexOfFirstEvent = indexOfLastEvent - this.state.eventsPerPage;
+      let allEvents = this.state.events;
+      let currentEvents = allEvents.slice(
+        indexOfFirstEvent,
+        indexOfLastEvent
+        
+      );
+      console.log("updated events", currentEvents);
+      this.setState({
+        currentPage: pageNumber,
+        indexOfLastEvent: indexOfLastEvent,
+        indexOfFirstEvent: indexOfFirstEvent,
+        currentEvents: currentEvents,
+      });
+  
+    };
 
   render() {
     let redirectVar = null;
@@ -94,7 +131,7 @@ export class restaurantEvents extends Component {
     }
 
 
-    let upcomingEvents = this.state.events.map((event) => {
+    let upcomingEvents = this.state.currentEvents.map((event) => {
       return <EachEventRestaurant data={event}></EachEventRestaurant>;
     });
 
@@ -255,6 +292,13 @@ export class restaurantEvents extends Component {
               }}>
                 <h2 style={{ marginLeft: "10%" }}>All Upcoming Events</h2>
                 {upcomingEvents}
+                <div style={{marginLeft:"25%"}}>
+                  <Pagination
+                  elementsPerPage= {this.state.eventsPerPage}
+                  totalElements={this.state.events.length}
+                  paginate={this.paginate}
+                  />
+                  </div>
               </div>
             </div>
             <br />

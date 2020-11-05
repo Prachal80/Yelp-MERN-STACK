@@ -11,6 +11,8 @@ import OrderEachDish from "../individual/individualOrderDish";
 import EachCustomerReview from "../individual/indivudalReview";
 import {postCustomerReview, getAllReviews} from "../../redux/actions/reviewAction";
 import { connect } from "react-redux";
+import Pagination from "../Pagination";
+
 
 
 var dotenv = require("dotenv").config({
@@ -43,6 +45,14 @@ class customerRestaurantView extends Component {
       reviewdate: "",
       messages: [],
       message: "",
+
+      //pagination
+      currentPage:1,
+      dishesPerPage: 2,
+      indexOfLastDish: 2,
+      indexOfFirstDish: 0,
+      currentDishes: [],
+
     };
     this.ChangeHandler = this.ChangeHandler.bind(this);
   }
@@ -70,11 +80,18 @@ class customerRestaurantView extends Component {
         }
       )
       .then((response) => {
+        let currentDishes = this.props.location.state.dishes.slice(
+          this.state.indexOfFirstDish,
+          this.state.indexOfLastDish
+        )
+
         console.log("Received Dishes", response.data.customerDishGet);
         this.setState({
-          dishes: this.state.dishes.concat(response.data.customerDishGet.dishes),
+          dishes: this.state.dishes.concat(this.props.location.state.dishes),
+          currentDishes : currentDishes
         });
-        console.log("State Dishes", this.state.dishes);
+
+      
       });
 
       //Get customer reviews
@@ -96,8 +113,32 @@ class customerRestaurantView extends Component {
     })
   }
 
+   // Change page
+   paginate = (pageNumber) => {
+    console.log("pagenumber ", pageNumber);
+
+    let indexOfLastDish = pageNumber * this.state.dishesPerPage;
+    let indexOfFirstDish = indexOfLastDish - this.state.dishesPerPage;
+    let allDishes = this.state.dishes;
+    let currentDishes = allDishes.slice(
+      indexOfFirstDish,
+      indexOfLastDish
+      
+    );
+
+    this.setState({
+      currentPage: pageNumber,
+      indexOfLastDish: indexOfLastDish,
+      indexOfFirstDish: indexOfFirstDish,
+      currentDishes: currentDishes,
+    });
+
+  };
+
+
   componentWillReceiveProps(nextProps) {
     console.log("in customer restaurant recieve posted reviews", nextProps);
+    
     this.setState({
       reviews: nextProps.reviews
     });
@@ -194,12 +235,19 @@ class customerRestaurantView extends Component {
     });
     let messageFuction =this.state.messages.map((message)=>{
       return <p style={{
-        background: "#429ef5",
-        borderRadius:"3px",
-        color: "#ffffff",
-        borderBlockColor: "white",
-        border: "1px #D32323",
-      }}>{message}</p>
+        marginBottom: "2px",
+      }}>
+          <span style={{
+              background: "#429ef5",
+              borderRadius:"5px",
+              color: "#ffffff",
+              borderBlockColor: "white",
+              border: "1px solid #ffffff",
+              padding: "5px",
+    
+      }}>{message}
+      </span>
+      </p>
     }) 
 
   
@@ -299,15 +347,23 @@ class customerRestaurantView extends Component {
             <div
               style={{
                 marginLeft: "5%",
-                overflowY: "scroll",
-                height: "700px",
+              
+                height: "200px",
               }}
-              class="overflow-auto"
-              //class="lefttdiv"
               class="col-5"
             >
-              {orderDishAll}
+              <div style={{ height: "600px" }} >{orderDishAll}
+            
+              </div>
+              <div style={{marginLeft:"25%"}}>
+                  <Pagination
+                  elementsPerPage= {this.state.dishesPerPage}
+                  totalElements={this.state.dishes.length}
+                  paginate={this.paginate}
+                  />
+                  </div>
             </div>
+           
             <div class="rightdiv">
 
               <div

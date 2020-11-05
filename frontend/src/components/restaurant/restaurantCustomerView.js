@@ -113,7 +113,7 @@ class restaurantCustomerView extends Component {
     axios.post("http://" +
     process.env.REACT_APP_IP +
     ":3001" +
-    "/message/customer", data
+    "/message/restaurant", data
  )
  .then(response=>{
     console.log("Message ",response);
@@ -132,13 +132,15 @@ class restaurantCustomerView extends Component {
 
 
   let messageFuction =this.state.messages.map((message)=>{
-    return <h6 style={{
+    return <h5 style={{marginBottom: "20px"}} ><span style={{
       background: "#429ef5",
-      borderRadius:"3px",
+      borderRadius:"5px",
       color: "#ffffff",
       borderBlockColor: "white",
-      border: "1px #D32323",
-    }}>{message}</h6>
+      border: "1px solid #ffffff",
+      padding: "5px",
+  
+    }}>{message}</span></h5>
   }) 
 
     return (
@@ -218,23 +220,21 @@ class restaurantCustomerView extends Component {
             </div>
           </div>
           <hr />
-          <br />
-          <br />
+
 
           <div >
             <div
               style={{
                 position: "absolute",
                 width: "40%",
-                top: "55%",
+                top: "52%",
                 left: "25%",
                 border: "1px solid black",
                 overflowY: "scroll",
-                height: "400px",
+                height: "410px",
               }}
-              class="overflow-auto"
+              //class="overflow-auto"
             >
-              <br />
               <br />
               <form
                  // class="Review"
@@ -257,7 +257,7 @@ class restaurantCustomerView extends Component {
                         width: "100%",
                       }}
                     >
-                      Message from {this.state.name}
+                      Message History with {this.state.name}
                     </p>
                     <hr />
                     <Col>

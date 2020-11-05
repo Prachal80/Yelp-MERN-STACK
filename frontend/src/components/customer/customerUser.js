@@ -4,6 +4,7 @@ import { Redirect } from "react-router";
 import EachUser from "../individual/individualUser";
 import { connect } from "react-redux";
 //import { makeOrderRestaurantAction , getOrdersCustomerAction , cancelOrdersCustomerAction } from "../../redux/actions/orderAction";
+import Pagination from "../Pagination";
 
 class customerUserView extends Component {
   constructor(props) {
@@ -23,6 +24,13 @@ class customerUserView extends Component {
       pattern: "",
       searchCriteria: "name",
       users: [],
+
+       //pagination
+       currentPage:1,
+       usersPerPage: 2,
+       indexOfLastUser: 2,
+       indexOfFirstUser: 0,
+       currentUsers: [],
     };
   }
 
@@ -65,17 +73,52 @@ class customerUserView extends Component {
             params: params
         }
     )
-    .then((response =>{
-        console.log("ALL users", response.data.users);
-        this.setState({
+    .then((response) => {
+      let currentUsers = response.data.users.slice(
+        this.state.indexOfFirstUser,
+        this.state.indexOfLastUser
+      )
+
+      console.log("ALL users", response.data.users);
+      this.setState({
         users: response.data.users,
-        });
+        currentUsers : currentUsers
+      });
+
+    
+    });
+    // .then((response =>{
+    //     console.log("ALL users", response.data.users);
+    //     this.setState({
+    //     users: response.data.users,
+    //     });
             
-       })
-       )
+    //    })
+    //    )
      
   }
 
+   // Change page
+   paginate = (pageNumber) => {
+    console.log("pagenumber ", pageNumber);
+
+    let indexOfLastUser = pageNumber * this.state.usersPerPage;
+    let indexOfFirstUser = indexOfLastUser - this.state.usersPerPage;
+    let allUsers = this.state.users;
+    let currentUsers = allUsers.slice(
+      indexOfFirstUser,
+      indexOfLastUser
+      
+    );
+
+    this.setState({
+      currentPage: pageNumber,
+      indexOfFirstUser: indexOfFirstUser,
+      indexOfLastUser: indexOfLastUser,
+      currentUsers: currentUsers,
+    });
+
+  };  
 //   componentWillReceiveProps(nextProps) {
 //     console.log("in customer recieve all orders", nextProps.users);
 //     this.setState({
@@ -89,7 +132,7 @@ class customerUserView extends Component {
       redirectVar = <Redirect to="/login" />;
     }
 
-    let userFunction = this.state.users.map((user) => {
+    let userFunction = this.state.currentUsers.map((user) => {
       if (this.state.filter !== "") {
         if (user.followers.some(match => match.follower_id === localStorage.getItem("CID"))) {
           console.log("Matched user", user)
@@ -197,10 +240,18 @@ class customerUserView extends Component {
         </div>
 
         <div class="row">
-          <div style={{ width: "100%" }} class="col-6">
+          <div style={{ width: "100%" }} class="col-12">
             <h2 style={{ textAlign: "center" }}>All Users</h2>
-            <div style={{ overflowY: "scroll", height: "700px" }}>
+            <div style={{marginLeft:"35%", overflowY: "scroll", height: "700px" }}>
               {userFunction}
+
+              <div style={{marginLeft:"15%"}}>
+                  <Pagination
+                  elementsPerPage= {this.state.usersPerPage}
+                  totalElements={this.state.users.length}
+                  paginate={this.paginate}
+                  />
+                  </div>
             </div>
           </div>
         </div>

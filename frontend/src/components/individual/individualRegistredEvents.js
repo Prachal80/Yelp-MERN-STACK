@@ -73,7 +73,7 @@ export default class individualRegisteredEvents extends Component {
                         to={{
                           pathname: "/restaurant/restaurantcustomerview",
                           state: {
-                            customerid: this.props.data.customerid,
+                            _id: this.props.data.customerid,
                             path: "/customer/events",
                           },
                         }}

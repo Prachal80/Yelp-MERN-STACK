@@ -12,7 +12,7 @@ import EachReview from "../individual/indivudalReview";
 import {getAllDishesAction,addDishAction,updateDishAction} from "../../redux/actions/dishAction";
 import {getRestaurantReviews} from "../../redux/actions/reviewAction";
 import { connect } from "react-redux";
-import Pagination from 'react-bootstrap/Pagination'
+import Pagination from "../Pagination";
 
 
 var dotenv = require("dotenv").config({
@@ -40,6 +40,13 @@ class RestaurantDashboard extends Component {
       showForm: false,
       dishes: [],
       reviews: [],
+
+      //pagination
+      currentPage:1,
+      dishesPerPage: 2,
+      indexOfLastDish: 2,
+      indexOfFirstDish: 0,
+      currentDishes: [],
     };
 
     //Bind the handlers to this class
@@ -83,12 +90,6 @@ class RestaurantDashboard extends Component {
         cuisine: restaurantData.cuisine,
         restaurantProfilePic: restaurantData.restaurantProfilePic,
 
-        //pagination
-        currentPage:1,
-        dishesPerPage: 2,
-        indexOfLastDish: 2,
-        indexOfFirstDish: 0,
-        currentDishes: [],
       });
     });
    
@@ -111,7 +112,7 @@ class RestaurantDashboard extends Component {
     let allDishes = this.state.dishes;
     let currentDishes = allDishes.slice(
       indexOfFirstDish,
-      indexOfFirstDish
+      indexOfLastDish
       
     );
     //console.log("all orders, ", allOrders, "current orders", currentOrders, " first index " , indexOfFirstOrder , " last index: ", indexOfLastOrder);
@@ -135,7 +136,7 @@ class RestaurantDashboard extends Component {
     this.setState({
       dishes: nextProps.dishes,
       reviews: nextProps.reviews,
-      currentDishes:currentDishes
+      currentDishes : currentDishes
     });
   }
 
@@ -373,7 +374,7 @@ class RestaurantDashboard extends Component {
                 src={
                   "http://" +
                   process.env.REACT_APP_IP +
-                  ":3001/" +
+                  ":3001/" + 
                   this.state.restaurantProfilePic
                 }
                 alt="Profile Pic"
@@ -437,14 +438,20 @@ class RestaurantDashboard extends Component {
 
             <div class="DishInfo" class="row">
               <div
-                style={{ overflowY: "scroll", height: "700px"}}
-                class="col-7"
+                style={{  height: "700px"}}
+                class="col-6"
               >
                 <h3 style={{ textAlign: "center" }}> Dishes</h3>
                 <div style={{ paddingLeft: "11%" , paddingRight: "auto"}}>
                 {dishAll}
                 </div>
-                
+                <div style={{marginLeft:"25%"}}>
+                  <Pagination
+                  elementsPerPage= {this.state.dishesPerPage}
+                  totalElements={this.state.dishes.length}
+                  paginate={this.paginate}
+                  />
+                  </div>
               </div>
 
               <div
@@ -453,7 +460,7 @@ class RestaurantDashboard extends Component {
                   overflowY: "scroll",
                   height: "700px",
                 }}
-                class="col-3"
+                class="col-4"
               >
                 <h3 style={{ marginLeft: "10%" }}>Reviews Received</h3>
                 <br />
