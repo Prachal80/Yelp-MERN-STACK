@@ -5,7 +5,9 @@ const router = express.Router();
 var path = require("path");
 const Restaurant = require('../../../models/restaurant');
 const Customer = require('../../../models/customer');
-
+//const { checkCustomerAuth } = require("../../../Utils/passport");
+const { checkRestaurantAuth , auth} = require("../../../Utils/passport");
+auth();
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -62,7 +64,7 @@ router.post("/updateRestaurantProfilePic", upload.single("restaurantprofilePic")
 
 
 //Get Restaurant Profile
-router.get("/getRestaurantProfile", (req, res) => {
+router.get("/getRestaurantProfile", checkRestaurantAuth,(req, res) => {
     console.log("req data for get restaurant ", req.query);
 
     Restaurant.findById(req.query.RID)
@@ -79,7 +81,7 @@ router.get("/getRestaurantProfile", (req, res) => {
     
   });
 
-router.post("/updateRestaurantProfile", (req, res) => {
+router.post("/updateRestaurantProfile", checkRestaurantAuth,(req, res) => {
     console.log("update profile req data ", req.body);
 
     Restaurant.findByIdAndUpdate({_id:req.body.RID}, 
@@ -117,7 +119,7 @@ router.post("/updateRestaurantProfile", (req, res) => {
   }); 
 
 //Get All Customers 
-router.get("/getAllUsers", (req, res) => {
+router.get("/getAllUsers",checkRestaurantAuth, (req, res) => {
   console.log("req data for get users ", req.query);
 
   Customer.find()

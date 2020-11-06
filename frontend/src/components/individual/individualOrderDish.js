@@ -6,7 +6,7 @@ import Card from "react-bootstrap/Card";
 import axios from "axios";
 import M from "materialize-css";
 import { connect } from "react-redux";
-import { makeOrderRestaurantAction } from "../../redux/actions/orderAction";
+import { makeOrderCustomerAction } from "../../redux/actions/orderAction";
 
 class individualOrderDish extends Component {
   constructor(props) {
@@ -59,7 +59,7 @@ class individualOrderDish extends Component {
     //make a post request with the user data
     console.log("############# Inside individual order dish data: ", data);
     
-     this.props.makeOrderRestaurantAction(data);
+     this.props.makeOrderCustomerAction(data);
     // this.setState({
     //   orderFlag:true,
     // })
@@ -179,5 +179,5 @@ const mapStateToProps = (state) => {
 
 
 export default connect(mapStateToProps, {
-  makeOrderRestaurantAction
+  makeOrderCustomerAction
 })(individualOrderDish);

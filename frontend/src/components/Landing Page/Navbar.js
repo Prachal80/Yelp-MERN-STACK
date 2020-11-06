@@ -14,11 +14,13 @@ class Navbar extends Component {
       localStorage.removeItem("CID");
       localStorage.removeItem("Cemail");
       localStorage.removeItem("Cname");
+      localStorage.removeItem("token");
     } else {
       localStorage.removeItem("user");
       localStorage.removeItem("RID");
       localStorage.removeItem("Remail");
       localStorage.removeItem("Rname");
+      localStorage.removeItem("token");
     }
   };
   render() {

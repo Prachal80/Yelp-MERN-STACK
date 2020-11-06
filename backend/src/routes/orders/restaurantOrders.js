@@ -3,9 +3,12 @@ var app = express();
 const router = express.Router();
 var path = require("path");
 const Orders = require("../../../models/orders")
+//const { checkCustomerAuth } = require("../../../Utils/passport");
+const { checkRestaurantAuth , auth} = require("../../../Utils/passport");
+auth();
 
 //Get All orders
-router.get("/getAllOrdersRestaurant", (req, res) => {
+router.get("/getAllOrdersRestaurant",checkRestaurantAuth, (req, res) => {
 console.log("req data ", req.query);
 
 Orders.find({restaurantid: req.query.RID})
@@ -23,7 +26,7 @@ Orders.find({restaurantid: req.query.RID})
 });
 
 //Change Order status
-router.post("/changeOrderStatusRestaurant", (req, res) => {
+router.post("/changeOrderStatusRestaurant", checkRestaurantAuth,(req, res) => {
   console.log("Inside change status Order Restaurant");
   console.log("Req Body : ", req.body);
 

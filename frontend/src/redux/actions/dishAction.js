@@ -5,7 +5,7 @@ export const getAllRestaurantsAction = (data) => (dispatch) => {
 
 
     axios.defaults.withCredentials = true;
-  
+    axios.defaults.headers.common["authorization"] = localStorage.getItem("token");
     axios
     .get(
       "http://" +
@@ -35,6 +35,7 @@ export const getAllDishesAction = (data) => (dispatch) => {
     axios.defaults.withCredentials = true;
     console.log("Get all dish action data",data);
     //Get All dishes
+    axios.defaults.headers.common["authorization"] = localStorage.getItem("token");
     axios
       .get(
         "http://" +
@@ -62,7 +63,7 @@ export const getAllDishesAction = (data) => (dispatch) => {
 
 export const addDishAction = (data) => (dispatch) => {
     axios.defaults.withCredentials = true;
-
+    axios.defaults.headers.common["authorization"] = localStorage.getItem("token");
     axios
     .post(
       "http://" +
@@ -95,7 +96,7 @@ export const addDishAction = (data) => (dispatch) => {
 
 export const updateDishAction = (data) => (dispatch) => {
     axios.defaults.withCredentials = true;
-
+    axios.defaults.headers.common["authorization"] = localStorage.getItem("token");
     axios
     .post(
       "http://" +

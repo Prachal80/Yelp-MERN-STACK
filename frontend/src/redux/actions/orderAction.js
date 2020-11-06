@@ -6,6 +6,7 @@ export const getOrdersRestaurantAction = (data) => (dispatch) => {
     axios.defaults.withCredentials = true;
     console.log("Data for get orders :", data);
      //Get All orders made by customers to the restaurant
+     axios.defaults.headers.common["authorization"] = localStorage.getItem("token");
      axios
      .get(
        "http://" +
@@ -38,6 +39,7 @@ export const changeOrderStatusRestaurantAction = (data) => (dispatch) => {
 
 
     if (data.status) {
+        axios.defaults.headers.common["authorization"] = localStorage.getItem("token");
         axios
           .post(
             "http://" +
@@ -74,9 +76,10 @@ export const changeOrderStatusRestaurantAction = (data) => (dispatch) => {
 }
 
 
-export const makeOrderRestaurantAction = (data) => (dispatch) => {
+export const makeOrderCustomerAction = (data) => (dispatch) => {
     axios.defaults.withCredentials = true;
     if (data.option) {
+      axios.defaults.headers.common["authorization"] = localStorage.getItem("token");
         axios
           .post(
             "http://" +
@@ -124,7 +127,7 @@ export const makeOrderRestaurantAction = (data) => (dispatch) => {
 
 export const getOrdersCustomerAction = (data) => (dispatch) => {
     axios.defaults.withCredentials = true;
-
+    axios.defaults.headers.common["authorization"] = localStorage.getItem("token");
     axios
     .get(
       "http://" +
@@ -160,6 +163,7 @@ export const cancelOrdersCustomerAction = (data) => (dispatch) => {
       //set the with credentials to true
       axios.defaults.withCredentials = true;
       //make a post request with the user data
+      axios.defaults.headers.common["authorization"] = localStorage.getItem("token");
       console.log("#############", data);
       axios
         .post(

@@ -55,6 +55,7 @@ class RestaurantUser extends Component {
 
 }
     //get all the customers 
+    axios.defaults.headers.common["authorization"] = localStorage.getItem("token");
     axios.get(
 
         "http://" +

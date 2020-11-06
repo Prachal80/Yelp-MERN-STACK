@@ -1,5 +1,5 @@
 //import the require dependencies
-const { mongoDB} = require("./config");
+const { mongoDB} = require("../backend/Utils/config");
 var express = require("express");
 var cors = require("cors");
 var app = express();

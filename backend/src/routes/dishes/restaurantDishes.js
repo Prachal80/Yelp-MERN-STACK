@@ -6,6 +6,9 @@ var path = require("path");
 const Restaurant = require('../../../models/restaurant');
 const mongoose = require('mongoose');
 const { EROFS } = require("constants");
+//const { checkCustomerAuth } = require("../../../Utils/passport");
+const { checkRestaurantAuth , auth} = require("../../../Utils/passport");
+auth();
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -23,7 +26,7 @@ var upload = multer({ storage: storage });
 
 //Add dishes
 router.post(
-  "/addRestaurantDishes",
+  "/addRestaurantDishes", checkRestaurantAuth,
   upload.single("restaurantDishImage"),
   function (req, res) {
     console.log("Inside update Restaurant Upload Dish",req.body);
@@ -64,7 +67,7 @@ router.post(
 
 //Update Dishes
 router.post(
-  "/updateRestaurantDishes",
+  "/updateRestaurantDishes", checkRestaurantAuth,
   upload.single("restaurantDishImage"),
   function (req, res) {
     console.log("Inside update Restaurant update Dish");
@@ -103,7 +106,7 @@ router.post(
 );
 
 //Get All Dishes
-router.get("/getAllDishes", (req, res) => {
+router.get("/getAllDishes",checkRestaurantAuth ,(req, res) => {
   console.log("Get all dishes data ", req.query);
 
   Restaurant.findById(req.query.RID)

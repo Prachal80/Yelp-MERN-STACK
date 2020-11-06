@@ -1,7 +1,8 @@
 import { LOGIN } from "../constants/action-types";
 import axios from "axios";
 import M from "materialize-css";
-
+// const jwt_decode = require('jwt-decode');
+import jwt_decode from 'jwt-decode';
 
 export const loginAction = (data) => (dispatch) => {
 
@@ -21,11 +22,21 @@ export const loginAction = (data) => (dispatch) => {
           .then((response) => {
             console.log("Status Code : ", response.status);
             console.log("response, ", response.data);
-            if (response.data.success && data.userType === "customer") {
+            // console.log("token", response.data.token);
+            var token_data = response.data.token.split(' ')[1];
+            // console.log("token data", token_data)
+           
+            var decoded = jwt_decode(token_data)
+            if (response.data.success && decoded.user === "customer") {
+
+              // var decoded = jwt_decode(response.token.split(' ')[1]);
+              // console.log("decoded", decoded)
+              console.log("inside if customer", decoded)
               localStorage.setItem("user", "customer");
-              localStorage.setItem("CID", response.data.res._id);
-              localStorage.setItem("Cname", response.data.res.name);
-              localStorage.setItem("Cemail", response.data.res.email);
+              localStorage.setItem("CID", decoded.CID);
+              localStorage.setItem("Cname", decoded.Cname);
+              localStorage.setItem("Cemail", decoded.Cemail);
+              localStorage.setItem("token",response.data.token);
               
               //window.location.assign("/customer/dashboard");
               M.toast({
@@ -44,12 +55,16 @@ export const loginAction = (data) => (dispatch) => {
               });
             } else if (
               response.data.success &&
-              data.userType === "restaurant"
+              decoded.user === "restaurant"
             ) {
+
+              console.log("Restaurant login action");
               localStorage.setItem("user", "restaurant");
-              localStorage.setItem("RID", response.data.res._id);
-              localStorage.setItem("Rname", response.data.res.name);
-              localStorage.setItem("Remail", response.data.res.email);
+              localStorage.setItem("RID", decoded.RID);
+              localStorage.setItem("Rname", decoded.Rname);
+              localStorage.setItem("Remail", decoded.Remail);
+              localStorage.setItem("token",response.data.token);
+              
               //window.location.assign("/restaurant/dashboard");
               M.toast({
                 html: "Signup success",

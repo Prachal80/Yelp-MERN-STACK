@@ -8,7 +8,7 @@ export const updateRestaurantProfileAction = (data) => (dispatch) => {
    axios.defaults.withCredentials = true;
    //make a post request with the user data
    if (data) {
-
+    axios.defaults.headers.common["authorization"] = localStorage.getItem("token");
     axios
     .post(
       "http://" +
@@ -42,7 +42,7 @@ export const getRestaurantProfileAction = (data) => (dispatch) => {
  
   axios.defaults.withCredentials = true;
   //make a post request with the user data
- 
+  axios.defaults.headers.common["authorization"] = localStorage.getItem("token");
   axios({
     url:
       "http://" +

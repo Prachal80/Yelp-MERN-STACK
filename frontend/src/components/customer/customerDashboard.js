@@ -278,7 +278,7 @@ class CustomerDashboard extends Component {
             <h2 style={{ textAlign: "center" }}>Restaurants</h2>
             <div
               class="DishInfo"
-              style={{ height: "600px" }}
+              style={{ height: "600px" , marginBottom:"100px"}}
             >
               {allRestaurants}
             </div>

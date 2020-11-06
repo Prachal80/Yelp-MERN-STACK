@@ -3,7 +3,7 @@ import axios from "axios";
 import { Redirect } from "react-router";
 import EachOrderCustomer from "../individual/individualPlacedOrders";
 import { connect } from "react-redux";
-import { makeOrderRestaurantAction , getOrdersCustomerAction , cancelOrdersCustomerAction } from "../../redux/actions/orderAction";
+import { makeOrderCustomerAction , getOrdersCustomerAction , cancelOrdersCustomerAction } from "../../redux/actions/orderAction";
 import Pagination from "../Pagination";
 
 class customerOrders extends Component {
@@ -253,5 +253,5 @@ const mapStateToProps = (state) => {
 };
 
 export default connect(mapStateToProps, {
-  makeOrderRestaurantAction , getOrdersCustomerAction , cancelOrdersCustomerAction
+  makeOrderCustomerAction , getOrdersCustomerAction , cancelOrdersCustomerAction
 })(customerOrders);

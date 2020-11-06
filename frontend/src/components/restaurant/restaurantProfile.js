@@ -209,6 +209,7 @@ class RestaurantProfile extends Component {
               }}
             >
               <form
+                
                 action="http://localhost:3001/restaurantProfile/updateRestaurantProfilePic"
                 method="POST"
                 encType="multipart/form-data"

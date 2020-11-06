@@ -4,10 +4,13 @@ const router = express.Router();
 var path = require("path");
 const Events = require('../../../models/events');
 const Registrations = require('../../../models/registrations');
+//const { checkCustomerAuth } = require("../../../Utils/passport");
+const { checkRestaurantAuth , auth} = require("../../../Utils/passport");
+auth();
 
 //Add Events
 router.post(
-  "/addRestaurantEvents",
+  "/addRestaurantEvents",checkRestaurantAuth , 
   function (req, res) {
     console.log("Inside update Restaurant Add Event", req.body);
       var  newEvent = new Events({
@@ -49,7 +52,7 @@ router.post(
 );
 
 //Get All Events
-router.get("/getAllEvents", (req, res) => {
+router.get("/getAllEvents", checkRestaurantAuth,(req, res) => {
   console.log("get all events req data ", req.query);
 
   Events.find({restaurantid:req.query.RID})
@@ -69,7 +72,7 @@ router.get("/getAllEvents", (req, res) => {
 });
 
 //Get Registered Customers
-router.get("/getRegisteredCustomers", (req, res) => {
+router.get("/getRegisteredCustomers", checkRestaurantAuth,(req, res) => {
   console.log("req data ", req.query);
 
 

@@ -5,6 +5,7 @@ import M from "materialize-css";
 export const getCutomerUnregisteredEvents = (data) => (dispatch) => {
     axios.defaults.withCredentials = true;
         //Get All unregistered events
+        axios.defaults.headers.common["authorization"] = localStorage.getItem("token");
         axios
         .get(
           "http://" +
@@ -37,6 +38,7 @@ export const getCustomerRegisteredEvents = (data) => (dispatch) => {
     axios.defaults.withCredentials = true;
 
      //Get All registered events
+     axios.defaults.headers.common["authorization"] = localStorage.getItem("token");
      axios
      .get(
        "http://" +
@@ -80,6 +82,7 @@ export const postCutomerRegister = (data) => (dispatch) => {
     axios.defaults.withCredentials = true;
 
     //make a post request with the user data
+    axios.defaults.headers.common["authorization"] = localStorage.getItem("token");
     axios
       .post(
         "http://" +
@@ -110,6 +113,7 @@ export const getRestauarantEvents = (data) => (dispatch) => {
     axios.defaults.withCredentials = true;
 
     //Get All events
+    axios.defaults.headers.common["authorization"] = localStorage.getItem("token");
     axios
       .get(
         "http://" +
@@ -139,6 +143,7 @@ export const getRegisteredCustomers = (data) => (dispatch) => {
     axios.defaults.withCredentials = true;
 
     //Get All registered customers
+    axios.defaults.headers.common["authorization"] = localStorage.getItem("token");
     axios
       .get(
         "http://" +
@@ -168,6 +173,7 @@ export const postRestaurantEvents = (data) => (dispatch) => {
     axios.defaults.withCredentials = true;
 
     //make a post request with the user data
+    axios.defaults.headers.common["authorization"] = localStorage.getItem("token");
     axios
       .post(
         "http://" +

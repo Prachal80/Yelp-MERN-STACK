@@ -15,6 +15,7 @@
     "enzyme-adapter-react-16": "^1.15.5",
     "file-loader": "^6.1.0",
     "google-maps-react": "^2.0.6",
+    "jwt-decode": "^3.1.1",
     "material-ui-rating": "^4.0.0-beta.2",
     "materialize-css": "^1.0.0-rc.2",
     "react": "^16.13.1",
