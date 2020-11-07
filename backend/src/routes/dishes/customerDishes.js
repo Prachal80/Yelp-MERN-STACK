@@ -2,10 +2,12 @@ var express = require("express");
 var app = express();
 const router = express.Router();
 const Restaurant = require('../../../models/restaurant');
-
+const { checkCustomerAuth, auth } = require("../../../Utils/passport");
+//const { checkRestaurantAuth , auth} = require("../../../Utils/passport");
+auth();
 
 //Get All Dishes from dish table
-router.get("/getAllDishes", (req, res) => {
+router.get("/getAllDishes",checkCustomerAuth, (req, res) => {
   console.log("req data ", req.query);
   
   Restaurant.find({},{dishes:1,_id:0})
@@ -24,7 +26,7 @@ router.get("/getAllDishes", (req, res) => {
 });
 
 //Get All Restaurants
-router.get("/getAllRestaurants", (req, res) => {
+router.get("/getAllRestaurants",checkCustomerAuth ,(req, res) => {
     //console.log("Get all restaurants data ", req.query);
   
     Restaurant.find({})

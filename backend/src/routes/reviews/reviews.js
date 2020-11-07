@@ -2,10 +2,12 @@ var express = require("express");
 var app = express();
 const router = express.Router();
 const Review = require("../../../models/reviews");
-
+const { checkCustomerAuth, auth } = require("../../../Utils/passport");
+const { checkRestaurantAuth } = require("../../../Utils/passport");
+auth();
 
 //Get All reviews customerside
-router.get("/getCustomerReviews", (req, res) => {
+router.get("/getCustomerReviews",checkRestaurantAuth, (req, res) => {
 
   Review.find({restaurantid:req.query.RID, customerid: req.query.CID})
   .then(reviews=>{
@@ -21,7 +23,7 @@ router.get("/getCustomerReviews", (req, res) => {
 });
 
 //Get All reviews restaurantside
-router.get("/getRestaurantReviews", (req, res) => {
+router.get("/getRestaurantReviews",checkRestaurantAuth, (req, res) => {
   console.log("req data ", req.query);
 
   Review.find({restaurantid:req.query.RID})
@@ -39,7 +41,7 @@ router.get("/getRestaurantReviews", (req, res) => {
 
 //Post reviews from customer
 router.post(
-  "/addReviewCustomer",
+  "/addReviewCustomer",checkCustomerAuth,
 
   function (req, res) {
     console.log("Inside review Customer side");
@@ -68,13 +70,7 @@ router.post(
             res.status(400).send({ success: false , review:null});
           }
     });
-    // ((err)=>{
-    //     if (err) {
-    //         res.status(400).send({ success: false});
-    //       } else {
-    //         res.status(200).send({ success: true});
-    //       }
-    // });
+   
   }
 );
 

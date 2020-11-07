@@ -16,7 +16,7 @@ function auth() {
     passport.use("customer", new JwtStrategy(opts, (jwt_payload, callback) => {
         // console.log("jwt payload", jwt_payload);
         const CID = jwt_payload.CID;
-        Students.findById(CID, (err, results) => {
+        Customer.findById(CID, (err, results) => {
             if (err) {
                 return callback(err, false);
             }

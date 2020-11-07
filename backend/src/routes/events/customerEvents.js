@@ -2,12 +2,15 @@ var express = require("express");
 var app = express();
 const router = express.Router();
 var path = require("path");
-
 const Events = require('../../../models/events');
 const Registrations = require('../../../models/registrations');
+const { checkCustomerAuth, auth } = require("../../../Utils/passport");
+//const { checkRestaurantAuth , auth} = require("../../../Utils/passport");
+auth();
+
 
 //Get all unregistered events
-router.get("/getAllEvents", (req, res) => {
+router.get("/getAllEvents",checkCustomerAuth, (req, res) => {
   //console.log("req data ", req.query);
   Events.find({})
   .then(events => {
@@ -26,7 +29,7 @@ router.get("/getAllEvents", (req, res) => {
 });
 
 //Get Single Event
-router.get("/getSingleEvent", (req, res) => {
+router.get("/getSingleEvent", checkCustomerAuth,(req, res) => {
   console.log("Single event query ", req.query.eventid);
 
   Events.find({_id: req.query.eventid})
@@ -46,7 +49,7 @@ router.get("/getSingleEvent", (req, res) => {
 });
 
 //Get Registered Events
-router.get("/getRegisteredEvents", (req, res) => {
+router.get("/getRegisteredEvents",checkCustomerAuth, (req, res) => {
   console.log("req data ", req.query);
 
   Registrations.find({customerid : req.query.CID})
@@ -65,7 +68,7 @@ router.get("/getRegisteredEvents", (req, res) => {
 });
 
 // //Get customer registration from the registration table to check whether the customer is registered or not
-router.get("/getRegisteredCustomer", (req, res) => {
+router.get("/getRegisteredCustomer", checkCustomerAuth,(req, res) => {
   console.log("req data for checking whether customer is registered or not", req.query);
 
   Registrations.find({customerid : req.query.CID, eventid:req.query.eventid})

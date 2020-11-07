@@ -4,6 +4,10 @@ var app = express();
 const router = express.Router();
 var path = require("path");
 const Customer = require('../../../models/customer');
+const { checkCustomerAuth, auth } = require("../../../Utils/passport");
+//const { checkRestaurantAuth , auth} = require("../../../Utils/passport");
+auth();
+
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
@@ -19,7 +23,7 @@ const storage = multer.diskStorage({
 
   var upload = multer({ storage: storage });
 
-  router.post("/updateCustomerProfilePic", upload.single("profilePic"), function (
+  router.post("/updateCustomerProfilePic",checkCustomerAuth, upload.single("profilePic"), function (
     req,
     res
   ) {
@@ -59,7 +63,7 @@ const storage = multer.diskStorage({
 
 
 //Get Customer Profile
-router.get("/getCustomerProfile", (req, res) => {
+router.get("/getCustomerProfile", checkCustomerAuth,(req, res) => {
     console.log("req data for get customer ", req.query);
 
     Customer.findById(req.query.CID)
@@ -77,7 +81,7 @@ router.get("/getCustomerProfile", (req, res) => {
   });
 
 
-router.post("/updateCustomerProfile", (req, res) => {
+router.post("/updateCustomerProfile", checkCustomerAuth,(req, res) => {
     console.log("update profile req data ", req.body);
 
     Customer.findByIdAndUpdate({_id:req.body.CID}, 
@@ -117,7 +121,7 @@ router.post("/updateCustomerProfile", (req, res) => {
 
 
 //Get All Customers 
-router.get("/getAllUsers", (req, res) => {
+router.get("/getAllUsers", checkCustomerAuth,(req, res) => {
   console.log("req data for get users ", req.query.Cemail);
 
   Customer.find( {email: {$ne: req.query.Cemail } } )
@@ -135,7 +139,7 @@ router.get("/getAllUsers", (req, res) => {
 });
 
 //Follow Customer
-router.post("/follow", (req,res) => {
+router.post("/follow",checkCustomerAuth, (req,res) => {
 
   console.log("Follow request for the customer ", req.body);
   var followers = null;
@@ -179,7 +183,7 @@ router.post("/follow", (req,res) => {
 })
 
 //UnFollow Customer
-router.post("/unfollow", (req,res) => {
+router.post("/unfollow", checkCustomerAuth,(req,res) => {
 
   console.log("UnFollow request for the customer ", req.body);
   var followers = null;

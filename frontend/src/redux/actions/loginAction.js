@@ -40,7 +40,7 @@ export const loginAction = (data) => (dispatch) => {
               
               //window.location.assign("/customer/dashboard");
               M.toast({
-                html: "Signup success",
+                html: "Signin success",
                 classes: "green darken-1",
               });
               //dispatch
@@ -67,7 +67,7 @@ export const loginAction = (data) => (dispatch) => {
               
               //window.location.assign("/restaurant/dashboard");
               M.toast({
-                html: "Signup success",
+                html: "Signin success",
                 classes: "green darken-1",
               });
             }

@@ -5,6 +5,7 @@ import { Redirect } from "react-router";
 export const updateCustomerProfileAction = (data) => (dispatch) => {
    console.log("In action update",data);
    //set the with credentials to true
+   axios.defaults.headers.common["authorization"] = localStorage.getItem("token");
    axios.defaults.withCredentials = true;
    //make a post request with the user data
    if (data) {
@@ -46,7 +47,7 @@ export const getCustomerProfileAction = (data) => (dispatch) => {
 
 
   axios.defaults.withCredentials = true;
-
+  axios.defaults.headers.common["authorization"] = localStorage.getItem("token");
   axios({
     url:
       "http://" +

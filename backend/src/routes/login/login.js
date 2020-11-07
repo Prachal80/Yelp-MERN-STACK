@@ -5,7 +5,6 @@ const {secret} = require("../../../Utils/config");
 const { checkCustomerAuth } = require("../../../Utils/passport");
 const { checkRestaurantAuth } = require("../../../Utils/passport");
 const jwt = require('jsonwebtoken')
-
 const bcrypt = require('bcrypt');
 var express = require("express");
 const router = express.Router();

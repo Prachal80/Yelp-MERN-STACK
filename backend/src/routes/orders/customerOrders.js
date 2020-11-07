@@ -4,11 +4,13 @@ const router = express.Router();
 var path = require("path");
 const Orders = require("../../../models/orders")
 const mongoose = require('mongoose');
-
+const { checkCustomerAuth, auth } = require("../../../Utils/passport");
+//const { checkRestaurantAuth , auth} = require("../../../Utils/passport");
+auth();
 
 //Make order
 router.post(
-  "/makeOrderCustomer",
+  "/makeOrderCustomer",checkCustomerAuth,
 (req, res)=>{
     console.log("Inside Order Customer side");
 
@@ -47,7 +49,7 @@ router.post(
 );
 
 //Get All orders
-router.get("/getAllOrders", (req, res) => {
+router.get("/getAllOrders",checkCustomerAuth, (req, res) => {
   console.log("req data ", req.query);
 
   Orders.find({customerid: req.query.CID, 
@@ -68,7 +70,7 @@ router.get("/getAllOrders", (req, res) => {
 });
 
 //Cancel Order Customer
-router.post("/deleteOrderCustomer", (req, res) => {
+router.post("/deleteOrderCustomer", checkCustomerAuth,(req, res) => {
   console.log("Inside delete Order Request");
   console.log("Req Body : ", req.body);
 

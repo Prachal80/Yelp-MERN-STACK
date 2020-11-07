@@ -69,6 +69,7 @@ class customerRestaurantView extends Component {
     console.log("RID", this.state.restaurantid);
     console.log("%%%%%%%%%%%%%%%% data of restaurants", this.props.location.state);
       //Get All dishes
+      axios.defaults.headers.common["authorization"] = localStorage.getItem("token");
       axios
       .get(
         "http://" +
@@ -99,6 +100,7 @@ class customerRestaurantView extends Component {
       RID: this.state.restaurantid})
 
       //get all messages
+      axios.defaults.headers.common["authorization"] = localStorage.getItem("token");
       axios.get( "http://" +
       process.env.REACT_APP_IP +
       ":3001" +
@@ -202,14 +204,6 @@ class customerRestaurantView extends Component {
     
   }
   
-//  showButton = {
- 
-//     if(this.state.messages.length)
-//     {
-//       return 
-//     }
-//   }
-
 
 
   render() {
@@ -230,7 +224,7 @@ class customerRestaurantView extends Component {
       return <EachCustomerReview data={review}></EachCustomerReview>;
     });
 
-    let orderDishAll = this.props.location.state.dishes.map((dish) => {
+    let orderDishAll = this.state.currentDishes.map((dish) => {
       return <OrderEachDish data={dish}></OrderEachDish>; 
     });
     let messageFuction =this.state.messages.map((message)=>{
@@ -352,7 +346,7 @@ class customerRestaurantView extends Component {
               }}
               class="col-5"
             >
-              <div style={{ height: "600px" }} >{orderDishAll}
+              <div style={{ height: "600px", marginBottom:"50px" }} >{orderDishAll}
             
               </div>
               <div style={{marginLeft:"25%"}}>
@@ -361,7 +355,7 @@ class customerRestaurantView extends Component {
                   totalElements={this.state.dishes.length}
                   paginate={this.paginate}
                   />
-                  </div>
+              </div>
             </div>
            
             <div class="rightdiv">

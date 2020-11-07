@@ -58,7 +58,7 @@ class RestaurantDashboard extends Component {
   componentDidMount() {
     
     axios.defaults.withCredentials = true;
-
+    axios.defaults.headers.common["authorization"] = localStorage.getItem("token");
     //make a post request with the Restaurant data
     let data = {
       RID: localStorage.getItem("RID"),

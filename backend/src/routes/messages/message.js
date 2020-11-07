@@ -3,11 +3,13 @@ const message = require("../../../models/message");
 var app = express();
 const router = express.Router();
 const Message = require("../../../models/message");
-
+const { checkCustomerAuth, auth } = require("../../../Utils/passport");
+const { checkRestaurantAuth } = require("../../../Utils/passport");
+auth();
 //Post message from restaurant
 router.post(
     "/restaurant",
-  
+    checkRestaurantAuth,
     function (req, res) {
       console.log("Inside post message restaurant side");
       console.log("CID", req.body.CID);
@@ -68,7 +70,7 @@ router.post(
 //Post message from customer
 router.post(
     "/customer",
-  
+    checkCustomerAuth,
     function (req, res) {
       console.log("Inside post message Customer side");
       console.log("CID", req.body.CID);
@@ -130,7 +132,7 @@ router.post(
     //Get Messaages
     router.get("/messages", (req,res) => {
         console.log("Inside get all messages", req.query);
-
+        
         Message.findOne({RID:req.query.RID, CID:req.query.CID})
         .then(messages=>{
             if(messages){

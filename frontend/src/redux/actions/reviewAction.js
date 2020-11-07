@@ -6,7 +6,7 @@ import M from "materialize-css";
 export const postCustomerReview = (data) => (dispatch) => {
     
     axios.defaults.withCredentials = true;
-
+    axios.defaults.headers.common["authorization"] = localStorage.getItem("token");
     //Post review customer
     axios
         .post(
@@ -46,7 +46,7 @@ export const postCustomerReview = (data) => (dispatch) => {
 export const getAllReviews = (data) =>(dispatch) =>{
 
     axios.defaults.withCredentials = true;
-
+    axios.defaults.headers.common["authorization"] = localStorage.getItem("token");
     axios
   .get(
     "http://" +
@@ -82,7 +82,7 @@ export const getAllReviews = (data) =>(dispatch) =>{
 export const getRestaurantReviews = (data) =>(dispatch) =>{
 
     axios.defaults.withCredentials = true;
-
+    axios.defaults.headers.common["authorization"] = localStorage.getItem("token");
     axios
     .get(
       "http://" +
