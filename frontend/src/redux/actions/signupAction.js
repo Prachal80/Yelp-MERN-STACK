@@ -67,13 +67,21 @@ export const signupAction = (data) => (dispatch) => {
         .catch((error) => {
           console.log("response ", error.response.data.message);
           if(error.response.data.message !== ""){
-            this.setState({
-              ErrorMessage: error.response.data.message,
+            M.toast({
+              html: error.response.data.message,
+              classes: "green darken-1",
             });
+            // this.setState({
+            //   ErrorMessage: error.response.data.message,
+            // });
           }else{
-            this.setState({
-              ErrorMessage: "Please provide all the details",
+            M.toast({
+              html: "Please provide all the details",
+              classes: "green darken-1",
             });
+            // this.setState({
+            //   ErrorMessage: "Please provide all the details",
+            // });
           }
           
         });

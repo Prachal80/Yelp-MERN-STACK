@@ -9,13 +9,32 @@ const { checkCustomerAuth, auth } = require("../../../Utils/passport");
 auth();
 
 
-//Get all unregistered events
-router.get("/getAllEvents",checkCustomerAuth, (req, res) => {
+//Get all unregistered events in ascending order
+router.get("/getAllEvents/asc",checkCustomerAuth, (req, res) => {
   //console.log("req data ", req.query);
-  Events.find({})
+  Events.find({}).sort({eventdate:1}) 
   .then(events => {
     if(events){
-        console.log("Events: ", events)
+        console.log("Events in ascending order: ", events)
+        res.status(200).send({success: true, customerEventsGet: events});
+    }
+    else{
+      res.status(401).send({success:false, customerEventsGet: events});
+    }
+})
+.catch(error => {
+    console.log(error);
+})
+ 
+});
+
+//Get all unregistered events in descending order
+router.get("/getAllEvents/desc",checkCustomerAuth, (req, res) => {
+  //console.log("req data ", req.query);
+  Events.find({}).sort({eventdate:-1})
+  .then(events => {
+    if(events){
+        console.log("Events in descending order ", events)
         res.status(200).send({success: true, customerEventsGet: events});
     }
     else{

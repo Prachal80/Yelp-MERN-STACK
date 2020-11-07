@@ -1,4 +1,4 @@
-import { GET_CUSTOMER_UNREGISTERED_EVENTS,GET_CUSTOMER_REGISTERED_EVENTS, GET_CUSTOMER_SINGLE_EVENT,GET_CUSTOMER_IS_REGISTERED,POST_CUSTOMER_REGISTER_EVENT, GET_RESTAURANT_EVENTS, GET_REGISTERED_CUSTOMERS ,POST_RESTAURANT_EVENTS } from "../constants/action-types";
+import { GET_CUSTOMER_UNREGISTERED_EVENTS_ASC,GET_CUSTOMER_UNREGISTERED_EVENTS_DESC,GET_CUSTOMER_REGISTERED_EVENTS, GET_CUSTOMER_SINGLE_EVENT,GET_CUSTOMER_IS_REGISTERED,POST_CUSTOMER_REGISTER_EVENT, GET_RESTAURANT_EVENTS, GET_REGISTERED_CUSTOMERS ,POST_RESTAURANT_EVENTS } from "../constants/action-types";
 
 const initialState = {
   events : [],
@@ -13,8 +13,15 @@ const initialState = {
 
 export default function customerEventReducer(state = initialState, action) {
     switch (action.type) {
-        case GET_CUSTOMER_UNREGISTERED_EVENTS:
+        case GET_CUSTOMER_UNREGISTERED_EVENTS_ASC:
             console.log("inside Customer GET all unregistered events reducer", action.payload);
+            return Object.assign({}, state, {
+                events: action.payload.events,
+                getAllEvents: action.payload.success
+         });
+        
+         case GET_CUSTOMER_UNREGISTERED_EVENTS_DESC:
+            console.log("inside Customer GET all unregistered events in descending order reducer", action.payload);
             return Object.assign({}, state, {
                 events: action.payload.events,
                 getAllEvents: action.payload.success

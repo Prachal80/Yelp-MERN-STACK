@@ -1,8 +1,8 @@
-import {GET_CUSTOMER_UNREGISTERED_EVENTS,GET_CUSTOMER_REGISTERED_EVENTS, GET_CUSTOMER_SINGLE_EVENT,GET_CUSTOMER_IS_REGISTERED,POST_CUSTOMER_REGISTER_EVENT, GET_RESTAURANT_EVENTS,GET_REGISTERED_CUSTOMERS, POST_RESTAURANT_EVENTS } from "../constants/action-types";
+import {GET_CUSTOMER_UNREGISTERED_EVENTS_ASC, GET_CUSTOMER_UNREGISTERED_EVENTS_DESC ,GET_CUSTOMER_REGISTERED_EVENTS, GET_CUSTOMER_SINGLE_EVENT,GET_CUSTOMER_IS_REGISTERED,POST_CUSTOMER_REGISTER_EVENT, GET_RESTAURANT_EVENTS,GET_REGISTERED_CUSTOMERS, POST_RESTAURANT_EVENTS } from "../constants/action-types";
 import axios from "axios";
 import M from "materialize-css";
 
-export const getCutomerUnregisteredEvents = (data) => (dispatch) => {
+export const getCutomerUnregisteredEventsAscending = (data) => (dispatch) => {
     axios.defaults.withCredentials = true;
         //Get All unregistered events
         axios.defaults.headers.common["authorization"] = localStorage.getItem("token");
@@ -11,7 +11,7 @@ export const getCutomerUnregisteredEvents = (data) => (dispatch) => {
           "http://" +
             process.env.REACT_APP_IP +
             ":3001" +
-            "/customerEvents/getAllEvents",
+            "/customerEvents/getAllEvents/asc",
           {
             params: {
              
@@ -19,19 +19,51 @@ export const getCutomerUnregisteredEvents = (data) => (dispatch) => {
           }
         )
         .then((response) => {
-          console.log("Received all unregistered Events", response.data.customerEventsGet);
+          console.log("Received all unregistered Events in ascending order", response.data.customerEventsGet);
           let payload  = {
             success: response.data.success,
             events: response.data.customerEventsGet 
         }
           return dispatch({
-              type: GET_CUSTOMER_UNREGISTERED_EVENTS,
+              type: GET_CUSTOMER_UNREGISTERED_EVENTS_ASC,
               payload: payload
           })  
         //   this.setState({
         //     events: this.state.events.concat(response.data.customerEventsGet),
         //   });
         });
+}
+
+export const getCutomerUnregisteredEventsDescending = (data) => (dispatch) => {
+  axios.defaults.withCredentials = true;
+      //Get All unregistered events
+      axios.defaults.headers.common["authorization"] = localStorage.getItem("token");
+      axios
+      .get(
+        "http://" +
+          process.env.REACT_APP_IP +
+          ":3001" +
+          "/customerEvents/getAllEvents/desc",
+        {
+          params: {
+           
+          },
+        }
+      )
+      .then((response) => {
+        console.log("Received all unregistered Events in descending order", response.data.customerEventsGet);
+        let payload  = {
+          success: response.data.success,
+          events: response.data.customerEventsGet 
+      }
+        return dispatch({
+            type: GET_CUSTOMER_UNREGISTERED_EVENTS_DESC,
+            payload: payload
+        })  
+      //   this.setState({
+      //     events: this.state.events.concat(response.data.customerEventsGet),
+      //   });
+      });
 }
 
 export const getCustomerRegisteredEvents = (data) => (dispatch) => {

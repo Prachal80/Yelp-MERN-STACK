@@ -4,7 +4,7 @@ import { Redirect } from "react-router";
 import EachEventCustomer from "../individual/individualEvents";
 import EachRegisteredEvent from "../individual/individualRegistredEvents";
 import { connect } from "react-redux";
-import { getCutomerUnregisteredEvents , getCustomerRegisteredEvents } from "../../redux/actions/eventAction";
+import { getCutomerUnregisteredEventsAscending, getCutomerUnregisteredEventsDescending , getCustomerRegisteredEvents } from "../../redux/actions/eventAction";
 
 
 class CustomerEvents extends Component {
@@ -27,6 +27,7 @@ class CustomerEvents extends Component {
       pattern: "",
       getAllEvents:"",
     };
+    
   }
 
   eventSearch = (e) => {
@@ -37,10 +38,11 @@ class CustomerEvents extends Component {
 
   componentDidMount() {
     axios.defaults.withCredentials = true;
-    this.props.getCutomerUnregisteredEvents();
+    this.props.getCutomerUnregisteredEventsAscending();
     this.props.getCustomerRegisteredEvents({CID: localStorage.getItem("CID")});
    
   }
+
 
 componentWillReceiveProps(nextProps){
   console.log("in customer recieve all events", nextProps);
@@ -101,8 +103,12 @@ componentWillReceiveProps(nextProps){
                 marginLeft: "15%",
               }}
             >
-              Upcoming Events
+              Upcoming Events{"  "}
+              <button onClick={this.props.getCutomerUnregisteredEventsAscending}>Asc</button>
+              {" "}
+              <button onClick={this.props.getCutomerUnregisteredEventsDescending}>Desc</button>
             </h2>
+           
             <div
               style={{
                 marginLeft: "13%",
@@ -141,5 +147,5 @@ const mapStateToProps = (state) => {
 };
 
 export default connect(mapStateToProps, {
-  getCutomerUnregisteredEvents , getCustomerRegisteredEvents 
+  getCutomerUnregisteredEventsAscending ,getCutomerUnregisteredEventsDescending, getCustomerRegisteredEvents 
 })(CustomerEvents);

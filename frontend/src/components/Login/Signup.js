@@ -123,7 +123,7 @@ class Signup extends Component {
 
   componentDidUpdate() {
     let redirectVar = null;
-    console.log("Is singed in: ", this.props.isSignedup);
+    console.log("Is singedup: ", this.props.isSignedup);
     // if (this.props.isSignedup) {
     //   console.log("Is Sign up Action called: ", this.props.isSignedup);
     //   redirectVar = <Redirect to="/login" />;
