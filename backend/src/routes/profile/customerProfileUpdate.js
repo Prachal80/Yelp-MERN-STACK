@@ -6,6 +6,8 @@ var path = require("path");
 const Customer = require('../../../models/customer');
 const { checkCustomerAuth, auth } = require("../../../Utils/passport");
 //const { checkRestaurantAuth , auth} = require("../../../Utils/passport");
+const kafka = require("../../../kafka/client");
+
 auth();
 
 
@@ -65,17 +67,21 @@ const storage = multer.diskStorage({
 //Get Customer Profile
 router.get("/getCustomerProfile",(req, res) => {
     console.log("req data for get customer ", req.query);
+    let body = {
+      CID : req.query.CID
+    }
 
-    Customer.findById(req.query.CID)
-    .then(customer=>{
-        if (customer) {
-            console.log("Customer Found", customer);
-            res.status(200).send({success: true, profileData: customer});
-        }
-        else{
-            res.status(401).send({success: false, profileData: customer});
-        }
-        
+    kafka.make_request('get_customer_profile', body , function (err,result){
+      console.log("get customer profile", result);
+      if(result.success){
+        // console.log(result)
+        res.status(200).send({success: true, profileData:result.profileData});
+      }
+      else{
+        console.log('Error while getting customer profile');
+        res.status(400).send({success:false, profileData:result.profileData});
+      }
+    
     })
     
   });

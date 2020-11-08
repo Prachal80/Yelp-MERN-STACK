@@ -87,7 +87,7 @@ export default class individualEvents extends Component {
                     </p>
                     <p style={{ marginBottom: "0px" }}>
                       Date:{" "}
-                      {this.props.data.eventdate}
+                      {this.props.data.eventdate.slice(0,10)}
                     </p>
                     <p style={{ marginBottom: "0px" }}>
                       Time: {this.props.data.eventtime}

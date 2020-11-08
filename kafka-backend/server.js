@@ -9,6 +9,15 @@ const { mongoDB } = require("./Utils/config");
 var Books = require('./services/books.js');
 var login = require("./services/login");
 var signup = require("./services/signup");
+var restaurant_post_dish = require("./services/restaurantPostDish");
+var restaurant_update_profile = require("./services/restaurantUpdateProfile");
+var restaurant_add_event = require("./services/restaurantAddEvent");
+var restaurant_get_orders = require("./services/restaurantGetOrders");
+var restaurant_post_message = require("./services/restaurantPostMessage");
+var customer_post_message = require("./services/customerPostMessage");
+var get_message = require("./services/getMessage");
+var get_customer_profile = require("./services/getCustomerProfile");
+
 
 var options = {
     useNewUrlParser: true,
@@ -78,6 +87,14 @@ function handleTopicRequest(topic_name,fname){
 // Add your TOPICs here
 // first argument is topic name
 // second argument is a function that will handle this topic request
-handleTopicRequest("post_book",Books)
+handleTopicRequest("post_book",Books);
 handleTopicRequest("login",login);
 handleTopicRequest("signup",signup);
+handleTopicRequest("restaurant_post_dish",restaurant_post_dish);
+handleTopicRequest("restaurant_update_profile", restaurant_update_profile);
+handleTopicRequest("restaurant_add_event", restaurant_add_event);
+handleTopicRequest("restaurant_get_orders", restaurant_get_orders);
+handleTopicRequest("restaurant_post_message",restaurant_post_message);
+handleTopicRequest("customer_post_message",customer_post_message);
+handleTopicRequest("get_message",get_message);
+handleTopicRequest("get_customer_profile",get_customer_profile);

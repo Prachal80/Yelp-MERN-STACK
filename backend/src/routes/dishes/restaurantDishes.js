@@ -8,6 +8,7 @@ const mongoose = require('mongoose');
 const { EROFS } = require("constants");
 //const { checkCustomerAuth } = require("../../../Utils/passport");
 const { checkRestaurantAuth , auth} = require("../../../Utils/passport");
+const kafka = require("../../../kafka/client");
 auth();
 
 const storage = multer.diskStorage({
@@ -29,37 +30,34 @@ router.post(
   "/addRestaurantDishes", checkRestaurantAuth,
   upload.single("restaurantDishImage"),
   function (req, res) {
-    console.log("Inside update Restaurant Upload Dish",req.body);
     var imagepath = req.file.path;
     console.log("imagepath ", imagepath);
+    let body = {
+      dishname:req.body.dishname,
+      ingredients:req.body.ingredients,
+      image:imagepath,
+      price: req.body.price,
+      description: req.body.description,
+      category:req.body.category,
+      restaurantname: req.body.Rname,
+      restaurantid: req.body.RID,   
+    }
+    console.log("Inside Restaurant Add Dish",body);
+    
+    kafka.make_request('restaurant_post_dish', body , function (err,result){
 
-    Restaurant.findByIdAndUpdate({_id:req.body.RID},
-        {$push:
-            { 
-                dishes:{   
-                dishname:req.body.dishname,
-                ingredients:req.body.ingredients,
-                image:imagepath,
-                price: req.body.price,
-                description: req.body.description,
-                category:req.body.category,
-                restaurantname: req.body.Rname,
-                restaurantid: req.body.RID,   
-                }
-          }        
-    },{new:true}).then(dish => {
-        if(dish){
-            console.log('Dish added: ', dish.dishes);
-            res.status(200).send({success: true, dish:dish.dishes});
-                // res.redirect(
-                //     "http://" + process.env.ip + ":3000" + "/restaurant/dashboard");
-        }
-        else {
-            console.log('Error while adding dish')
-            res.status(401).end("Error while adding dish")
-        }
-    }).catch(error => {console.log('Add dish error', error)
-})
+      console.log("Add dish result", result);
+      if(result.success){
+        // console.log(result)
+        res.status(200).send({success: true, dish:result.dish});
+      }
+      else{
+        console.log('Error while adding dish')
+        res.status(401).end("Error while adding dish")
+      }
+      
+    })
+    
   }
 );
 

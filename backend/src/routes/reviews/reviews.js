@@ -7,7 +7,7 @@ const { checkRestaurantAuth } = require("../../../Utils/passport");
 auth();
 
 //Get All reviews customerside
-router.get("/getCustomerReviews",checkRestaurantAuth, (req, res) => {
+router.get("/getCustomerReviews",checkCustomerAuth, (req, res) => {
 
   Review.find({restaurantid:req.query.RID, customerid: req.query.CID})
   .then(reviews=>{

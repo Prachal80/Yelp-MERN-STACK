@@ -5,23 +5,29 @@ var path = require("path");
 const Orders = require("../../../models/orders")
 //const { checkCustomerAuth } = require("../../../Utils/passport");
 const { checkRestaurantAuth , auth} = require("../../../Utils/passport");
+const kafka = require("../../../kafka/client");
 auth();
 
 //Get All orders
 router.get("/getAllOrdersRestaurant",checkRestaurantAuth, (req, res) => {
 console.log("req data ", req.query);
 
-Orders.find({restaurantid: req.query.RID})
-.then(orders=>{
-    if(orders){
-      console.log("orders in restaurant", orders);
-      res.status(200).send({success: true, RestaurantGetOrder : orders});
-    }
-    else{
-      console.log("order make error", orders);
-      res.status(400).send({success: false, RestaurantGetOrder : orders});
-    }
-})
+var body = {
+  restaurantid: req.query.RID
+}
+kafka.make_request('restaurant_get_orders', body , function (err,result){
+
+console.log("Get Orders restaurant", result);
+  if(result.success){
+    // console.log(result)
+    res.status(200).send({success: true, RestaurantGetOrder:result.RestaurantGetOrder});
+  }
+  else{
+    console.log('Error while getting orders');
+    res.status(400).send({success:false, RestaurantGetOrder:result.RestaurantGetOrder});
+  }
+
+});
 
 });
 

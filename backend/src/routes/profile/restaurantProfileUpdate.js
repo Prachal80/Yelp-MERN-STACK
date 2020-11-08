@@ -7,6 +7,7 @@ const Restaurant = require('../../../models/restaurant');
 const Customer = require('../../../models/customer');
 //const { checkCustomerAuth } = require("../../../Utils/passport");
 const { checkRestaurantAuth , auth} = require("../../../Utils/passport");
+const kafka = require("../../../kafka/client");
 auth();
 
 const storage = multer.diskStorage({
@@ -81,40 +82,71 @@ router.get("/getRestaurantProfile", checkRestaurantAuth,(req, res) => {
     
   });
 
-router.post("/updateRestaurantProfile", checkRestaurantAuth,(req, res) => {
+router.post("/updateRestaurantProfile", checkRestaurantAuth, (req, res) => {
     console.log("update profile req data ", req.body);
 
-    Restaurant.findByIdAndUpdate({_id:req.body.RID}, 
-        {
-            name : req.body.name,
-            email: req.body.email,
-            location: req.body.location,
-            state: req.body.state,
-            country: req.body.country,
-            address: req.body.address,
-            description: req.body.description,
-            contact: req.body.contact,
-            timings: req.body.timings,
-            ratings: req.body.ratings,
-            method: req.body.method,
-            cuisine: req.body.cuisine,
+
+    let body = {
+        name : req.body.name,
+        email: req.body.email,
+        location: req.body.location,
+        state: req.body.state,
+        country: req.body.country,
+        address: req.body.address,
+        description: req.body.description,
+        contact: req.body.contact,
+        timings: req.body.timings,
+        ratings: req.body.ratings,
+        method: req.body.method,
+        cuisine: req.body.cuisine,
+        RID: req.body.RID
+    }
+    console.log("Inside Restaurant Update Profile",body);
+    kafka.make_request('restaurant_update_profile', body , function (err,result){
+
+      console.log("Update profile result", result);
+      if(result.success){
+        // console.log(result)
+        res.status(200).send({success: true, restaurantProfileData:result.restaurantProfileData});
+      }
+      else{
+        console.log('Error while updating profile');
+        res.status(401).end("Error while updating profile");
+      }
+      
+    })
+
+    // Restaurant.findByIdAndUpdate({_id:req.body.RID}, 
+    //     {
+    //         name : req.body.name,
+    //         email: req.body.email,
+    //         location: req.body.location,
+    //         state: req.body.state,
+    //         country: req.body.country,
+    //         address: req.body.address,
+    //         description: req.body.description,
+    //         contact: req.body.contact,
+    //         timings: req.body.timings,
+    //         ratings: req.body.ratings,
+    //         method: req.body.method,
+    //         cuisine: req.body.cuisine,
             
-        },{new:true})
-        .then(restaurant => {
-            if (restaurant) {
-                console.log('All the details of restaurant: ', restaurant);
-                res.status(200).send({success: true, restaurantProfileData: restaurant});
-                // res.redirect(
-                //     "http://" + process.env.ip + ":3000" + "/customer/profile");
-            }
-            else {
-                console.log('wrong restaurant id')
-                res.status(401).end("wrong restaurant id")
-            }
-        })
-        .catch(error => {
-            console.log('update customer profile error', error)
-        })
+    //     },{new:true})
+    //     .then(restaurant => {
+    //         if (restaurant) {
+    //             console.log('All the details of restaurant: ', restaurant);
+    //             res.status(200).send({success: true, restaurantProfileData: restaurant});
+    //             // res.redirect(
+    //             //     "http://" + process.env.ip + ":3000" + "/customer/profile");
+    //         }
+    //         else {
+    //             console.log('wrong restaurant id')
+    //             res.status(401).end("wrong restaurant id")
+    //         }
+    //     })
+    //     .catch(error => {
+    //         console.log('update customer profile error', error)
+    //     })
   
   }); 
 

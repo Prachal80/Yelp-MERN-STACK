@@ -17,6 +17,7 @@ var restaurantSchema = new Schema({
     method: String,
     cuisine: String,
     restaurantProfilePic: String,
+    ratings: String,
     dishes: [{  dishname : String , ingredients: String , image: String , price: String , description: String  , category: String, restaurantname: String , restaurantid: String }],
 
 },
