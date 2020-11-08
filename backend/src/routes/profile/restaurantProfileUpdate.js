@@ -68,16 +68,19 @@ router.post("/updateRestaurantProfilePic", upload.single("restaurantprofilePic")
 router.get("/getRestaurantProfile", checkRestaurantAuth,(req, res) => {
     console.log("req data for get restaurant ", req.query);
 
-    Restaurant.findById(req.query.RID)
-    .then(restaurant=>{
-        if (restaurant) {
-            console.log("Restaurant Found", restaurant);
-            res.status(200).send({success: true, restaurantProfileData: restaurant});
-        }
-        else{
-            res.status(401).send({success: false, restaurantProfileData: restaurant});
-        }
-        
+    let body = {
+      RID:req.query.RID
+    }
+    kafka.make_request('get_restaurant_profile', body , function (err,result){
+      console.log("get restaurant profile", result);
+      if(result.success){
+        // console.log(result)
+        res.status(200).send({success: true, restaurantProfileData:result.restaurantProfileData});
+      }
+      else{
+        console.log('Error while getting restaurant profile');
+        res.status(400).send({success:false, restaurantProfileData:result.restaurantProfileData});
+      }
     })
     
   });

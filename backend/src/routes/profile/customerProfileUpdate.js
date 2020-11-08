@@ -90,8 +90,7 @@ router.get("/getCustomerProfile",(req, res) => {
 router.post("/updateCustomerProfile", checkCustomerAuth,(req, res) => {
     console.log("update profile req data ", req.body);
 
-    Customer.findByIdAndUpdate({_id:req.body.CID}, 
-        {
+    let body = { 
             name : req.body.name,
             birthdate : req.body.dob,
             email: req.body.emailid,
@@ -105,23 +104,53 @@ router.post("/updateCustomerProfile", checkCustomerAuth,(req, res) => {
             yelpingSince: req.body.yelpingSince,
             findMeIn: req.body.findMeIn,
             thingsIlove: req.body.thingsIlove,
+            CID: req.body.CID,
+    }
+    kafka.make_request('update_customer_profile', body , function (err,result){
+        console.log("get customer profile", result);
+        if(result.success){
+          // console.log(result)
+          res.status(200).send({success: true, profileData:result.profileData});
+        }
+        else{
+          console.log('Error while getting customer profile');
+          res.status(400).send({success:false, profileData:result.profileData});
+        }
+      
+      })
+
+    // Customer.findByIdAndUpdate({_id:req.body.CID}, 
+    //     {
+    //         name : req.body.name,
+    //         birthdate : req.body.dob,
+    //         email: req.body.emailid,
+    //         city: req.body.city,
+    //         state: req.body.state,
+    //         country: req.body.country,
+    //         nickname: req.body.nickname,
+    //         headline: req.body.headline,
+    //         phone: req.body.phone,
+    //         blog: req.body.blog,
+    //         yelpingSince: req.body.yelpingSince,
+    //         findMeIn: req.body.findMeIn,
+    //         thingsIlove: req.body.thingsIlove,
             
-        }, {new:true})
-        .then(customer => {
-            if (customer) {
-                console.log('All the details Customer: ', customer);
-                res.status(200).send({success: true, profileData: customer});
-                // res.redirect(
-                //     "http://" + process.env.ip + ":3000" + "/customer/profile");
-            }
-            else {
-                console.log('wrong customer id')
-                res.status(401).end("wrong customer id")
-            }
-        })
-        .catch(error => {
-            console.log('update customer profile error', error)
-        })
+    //     }, {new:true})
+    //     .then(customer => {
+    //         if (customer) {
+    //             console.log('All the details Customer: ', customer);
+    //             res.status(200).send({success: true, profileData: customer});
+    //             // res.redirect(
+    //             //     "http://" + process.env.ip + ":3000" + "/customer/profile");
+    //         }
+    //         else {
+    //             console.log('wrong customer id')
+    //             res.status(401).end("wrong customer id")
+    //         }
+    //     })
+    //     .catch(error => {
+    //         console.log('update customer profile error', error)
+    //     })
   
   }); 
 

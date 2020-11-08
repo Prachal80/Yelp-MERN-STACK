@@ -6,44 +6,50 @@ const Events = require('../../../models/events');
 const Registrations = require('../../../models/registrations');
 const { checkCustomerAuth, auth } = require("../../../Utils/passport");
 //const { checkRestaurantAuth , auth} = require("../../../Utils/passport");
+const kafka = require("../../../kafka/client");
+
 auth();
 
 
 //Get all unregistered events in ascending order
 router.get("/getAllEvents/asc",checkCustomerAuth, (req, res) => {
   //console.log("req data ", req.query);
-  Events.find({}).sort({eventdate:1}) 
-  .then(events => {
-    if(events){
-        console.log("Events in ascending order: ", events)
-        res.status(200).send({success: true, customerEventsGet: events});
+
+  let body = {}
+
+  kafka.make_request('customer_get_events_asc', body , function (err,result){
+    console.log("Get Event customer in Asecnding order", result);
+    if(result.success){
+      // console.log(result)
+      res.status(200).send({success: true, customerEventsGet:result.customerEventsGet});
     }
     else{
-      res.status(401).send({success:false, customerEventsGet: events});
+      console.log('Error while getting events');
+      res.status(400).send({success:false, customerEventsGet:result.customerEventsGet});
     }
-})
-.catch(error => {
-    console.log(error);
-})
+  
+  })
  
 });
 
 //Get all unregistered events in descending order
 router.get("/getAllEvents/desc",checkCustomerAuth, (req, res) => {
   //console.log("req data ", req.query);
-  Events.find({}).sort({eventdate:-1})
-  .then(events => {
-    if(events){
-        console.log("Events in descending order ", events)
-        res.status(200).send({success: true, customerEventsGet: events});
+
+  let body = {}
+
+  kafka.make_request('customer_get_events_desc', body , function (err,result){
+    console.log("Get Event customer in Descending order", result);
+    if(result.success){
+      // console.log(result)
+      res.status(200).send({success: true, customerEventsGet:result.customerEventsGet});
     }
     else{
-      res.status(401).send({success:false, customerEventsGet: events});
+      console.log('Error while getting events');
+      res.status(400).send({success:false, customerEventsGet:result.customerEventsGet});
     }
-})
-.catch(error => {
-    console.log(error);
-})
+  
+  })
  
 });
 

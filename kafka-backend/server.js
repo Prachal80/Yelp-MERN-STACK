@@ -17,7 +17,11 @@ var restaurant_post_message = require("./services/restaurantPostMessage");
 var customer_post_message = require("./services/customerPostMessage");
 var get_message = require("./services/getMessage");
 var get_customer_profile = require("./services/getCustomerProfile");
-
+var update_customer_profile = require("./services/updateCustomerProfile");
+var get_restaurants = require("./services/getRestaurants");
+var get_restaurant_profile = require("./services/getRestaurantProfile");
+var customer_get_events_asc = require("./services/getEventsAsc");
+var customer_get_events_desc = require("./services/getEventsDesc");
 
 var options = {
     useNewUrlParser: true,
@@ -98,3 +102,8 @@ handleTopicRequest("restaurant_post_message",restaurant_post_message);
 handleTopicRequest("customer_post_message",customer_post_message);
 handleTopicRequest("get_message",get_message);
 handleTopicRequest("get_customer_profile",get_customer_profile);
+handleTopicRequest("update_customer_profile",update_customer_profile);
+handleTopicRequest("get_restaurants",get_restaurants);
+handleTopicRequest("get_restaurant_profile",get_restaurant_profile);
+handleTopicRequest("customer_get_events_asc",customer_get_events_asc);
+handleTopicRequest("customer_get_events_desc",customer_get_events_desc);

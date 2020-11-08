@@ -4,6 +4,7 @@ const router = express.Router();
 const Restaurant = require('../../../models/restaurant');
 const { checkCustomerAuth, auth } = require("../../../Utils/passport");
 //const { checkRestaurantAuth , auth} = require("../../../Utils/passport");
+const kafka = require("../../../kafka/client");
 auth();
 
 //Get All Dishes from dish table
@@ -28,22 +29,23 @@ router.get("/getAllDishes",checkCustomerAuth, (req, res) => {
 //Get All Restaurants
 router.get("/getAllRestaurants",checkCustomerAuth ,(req, res) => {
     //console.log("Get all restaurants data ", req.query);
-  
-    Restaurant.find({})
-    .then(restaurants=>{
-        if (restaurants) {
-            console.log("Restaurant Found", restaurants);
-            res.status(200).send({success: true, allRestaurants : restaurants});
-          //   res.redirect(
-          //     "http://" + process.env.ip + ":3000" + "/restaurant/dashboard");
-        }
-        else{
-            res.status(401).send({success: false, allRestaurants: restaurants});
-          //   res.redirect(
-          //     "http://" + process.env.ip + ":3000" + "/restaurant/dashboard");
-        }
-        
-    })
+
+    let body = {
+
+    }
+
+    kafka.make_request('get_restaurants', body , function (err,result){
+      console.log("get restaurants", result);
+      if(result.success){
+        // console.log(result)
+        res.status(200).send({success: true, allRestaurants:result.allRestaurants});
+      }
+      else{
+        console.log('Error while getting restaurants');
+        res.status(401).send({success:false, allRestaurants:result.allRestaurants});
+      }
+
+    });
   
   });
   
