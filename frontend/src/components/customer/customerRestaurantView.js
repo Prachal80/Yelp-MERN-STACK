@@ -12,7 +12,7 @@ import EachCustomerReview from "../individual/indivudalReview";
 import {postCustomerReview, getAllReviews} from "../../redux/actions/reviewAction";
 import { connect } from "react-redux";
 import Pagination from "../Pagination";
-
+import {getMessages, postCustomerMessage} from "../../redux/actions/messageAction";
 
 
 var dotenv = require("dotenv").config({
@@ -100,19 +100,11 @@ class customerRestaurantView extends Component {
       RID: this.state.restaurantid})
 
       //get all messages
-      axios.defaults.headers.common["authorization"] = localStorage.getItem("token");
-      axios.get( "http://" +
-      process.env.REACT_APP_IP +
-      ":3001" +
-      "/message/messages",
-    {
-      params: {CID: localStorage.getItem("CID"), RID: this.state.restaurantid },
-    }).then(response=>{
-      console.log("Message ",response);
-      this.setState({
-        messages:response.data.messages,
-      })
-    })
+      let data = {
+        CID: localStorage.getItem("CID"), 
+        RID: this.state.restaurantid
+      }
+    this.props.getMessages(data);
   }
 
    // Change page
@@ -142,7 +134,8 @@ class customerRestaurantView extends Component {
     console.log("in customer restaurant recieve posted reviews", nextProps);
     
     this.setState({
-      reviews: nextProps.reviews
+      reviews: nextProps.reviews,
+      messages: nextProps.messages
     });
   }
 
@@ -185,18 +178,11 @@ class customerRestaurantView extends Component {
       name:  localStorage.getItem("Cname"),
       message: this.state.message,
     }
+    
     if(this.state.messages.length>0){
-      axios.post("http://" +
-      process.env.REACT_APP_IP +
-      ":3001" +
-      "/message/customer", data
-   )
-   .then(response=>{
-      console.log("Message ",response);
-      this.setState({
-        messages:response.data.message.message,
-      })
-    })
+      
+      //send message
+      this.props.postCustomerMessage(data);
     }
     else{
       alert("Can not start conversation");
@@ -560,10 +546,11 @@ const mapStateToProps = (state) => {
   return {
     newReview: state.Review.newReview,
     reviews: state.Review.reviews,
+    messages:state.Message.messages,
   };
 };
 
 export default connect(mapStateToProps, {
-  postCustomerReview, getAllReviews
+  postCustomerReview, getAllReviews, getMessages, postCustomerMessage
 })(WrappedContainer,customerRestaurantView);
 

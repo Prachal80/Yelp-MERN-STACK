@@ -6,6 +6,8 @@ const Message = require("../../../models/message");
 const { checkCustomerAuth, auth } = require("../../../Utils/passport");
 const { checkRestaurantAuth } = require("../../../Utils/passport");
 auth();
+
+
 //Post message from restaurant
 router.post(
     "/restaurant",

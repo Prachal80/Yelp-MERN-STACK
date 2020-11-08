@@ -4,6 +4,8 @@ import { Redirect } from "react-router";
 import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
 import Container from "react-bootstrap/Container";
+import { connect } from "react-redux";
+import {getMessages, postRestaurantMessage} from "../../redux/actions/messageAction";
 
 class restaurantCustomerView extends Component {
   constructor(props) {
@@ -49,6 +51,7 @@ class restaurantCustomerView extends Component {
       CID: this.props.location.state._id,
     };
     console.log("########### Getting customer deatails", data);
+    axios.defaults.headers.common["authorization"] = localStorage.getItem("token");
     axios({
       url:
         "http://" +
@@ -84,24 +87,28 @@ class restaurantCustomerView extends Component {
 
 
   //get all messages
-    axios.get( "http://" +
-    process.env.REACT_APP_IP +
-    ":3001" +
-    "/message/messages",
-  {
-    params: {CID: this.props.location.state._id, RID: localStorage.getItem("RID") },
-  }).then(response=>{
-    console.log("Message ",response);
-    this.setState({
-      messages:response.data.messages,
-    })
-  })
+  let messageData = {
+    CID: this.props.location.state._id, 
+    RID: localStorage.getItem("RID")
+  }
+  console.log("Message get action", messageData);
+  this.props.getMessages(messageData);
+   
   
 }
 
+componentWillReceiveProps(nextProps){
+  console.log("in restaurant recieve props", nextProps);
+  this.setState({
+    messages: nextProps.messages,
+  
+});
+}
+
+
   //Send Message Restaurant
   sendMessage = async (e) =>{
-
+    
     e.preventDefault();
     axios.defaults.withCredentials = true;
     const data = { 
@@ -110,17 +117,8 @@ class restaurantCustomerView extends Component {
       name:  localStorage.getItem("Rname"),
       message: this.state.message,
     }
-    axios.post("http://" +
-    process.env.REACT_APP_IP +
-    ":3001" +
-    "/message/restaurant", data
- )
- .then(response=>{
-    console.log("Message ",response);
-    this.setState({
-      messages:response.data.message.message,
-    })
-  })
+    this.props.postRestaurantMessage(data);
+    
     
   } 
 
@@ -306,4 +304,15 @@ class restaurantCustomerView extends Component {
   }
 }
 
-export default restaurantCustomerView;
+
+const mapStateToProps = (state) => {
+  return {
+    messages:state.Message.messages,
+  };
+};
+
+export default connect(mapStateToProps, {
+  getMessages, postRestaurantMessage
+})(restaurantCustomerView);
+
+// export default restaurantCustomerView;

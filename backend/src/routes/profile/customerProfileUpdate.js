@@ -63,7 +63,7 @@ const storage = multer.diskStorage({
 
 
 //Get Customer Profile
-router.get("/getCustomerProfile", checkCustomerAuth,(req, res) => {
+router.get("/getCustomerProfile",(req, res) => {
     console.log("req data for get customer ", req.query);
 
     Customer.findById(req.query.CID)

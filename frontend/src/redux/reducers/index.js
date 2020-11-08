@@ -9,6 +9,7 @@ import restaurantOrderReducer from "./restaurantOrderReducer";
 import customerOrderReducer from "./customerOrderReducer";
 import reviewReducer from "./reviewReducer";
 import EventReducer from "./eventReducer";
+import messageReducer from "./messageReducer";
 
 
 const rootReducer = combineReducers({
@@ -22,6 +23,7 @@ const rootReducer = combineReducers({
   CustomerOrders: customerOrderReducer,
   Events: EventReducer,
   Review: reviewReducer,
+  Message: messageReducer,
 });
 
 export default rootReducer;
