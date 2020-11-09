@@ -9,21 +9,18 @@ This is the simulation of the website named Yelp. Here, the services offered by 
 - ***To see the demo video of the project in motion, please visit [Here](https://youtu.be/CdXqcfPJRGk).***
 
 ## Architecture diagram:
-<img width="765" alt="Screen Shot 2020-09-12 at 1 45 34 PM" src="https://user-images.githubusercontent.com/52833369/93004695-4255a100-f4fe-11ea-8abd-b176b834bf81.png">
+<img width="765" alt="Screen Shot 2020-09-12 at 1 45 34 PM" src="https://user-images.githubusercontent.com/23629478/98515979-bff90d00-2220-11eb-9c34-955e5fcaae6e.png">
 
 ## Project overview:
-
-- Student profile page:
+<br> 
+<br> 
+- Customer Dashboard page:
 <img width="1034" alt="Screen Shot 2020-09-12 at 1 34 07 PM" src="https://user-images.githubusercontent.com/52833369/93004676-00c4f600-f4fe-11ea-8dee-83398d5d789c.png">
+<br>
 
-- Jobs tab (from student side):
-<img width="1440" alt="Screen Shot 2020-09-12 at 2 09 13 PM" src="https://user-images.githubusercontent.com/52833369/93005029-e9880780-f501-11ea-805c-eb2d2bab57d8.png">
+- Restaurant Dashboard:
+<img width="1440" alt="Screen Shot 2020-09-12 at 2 09 13 PM" src="<img width="1433" alt="Screen Shot 2020-11-08 at 8 38 17 PM" src="https://user-images.githubusercontent.com/23629478/98515975-be2f4980-2220-11eb-80a0-b99c2d3f0304.png">">
 
-- Jobs tabe (from company side) showing the details of the applicants:
-<img width="1032" alt="Screen Shot 2020-09-12 at 2 46 40 PM" src="https://user-images.githubusercontent.com/52833369/93005546-d0ce2080-f506-11ea-8a01-44ffc40ee54f.png">
-
-- Student tab (from both student and company side):
-<img width="1035" alt="Screen Shot 2020-09-12 at 2 56 14 PM" src="https://user-images.githubusercontent.com/52833369/93005680-20611c00-f508-11ea-9257-75df877fa640.png">
 
 ## Application Performance comparison with/without connection pooling (using JMeter):
 <img align="left" width="450" alt="Screen Shot 2020-09-12 at 3 01 46 PM" src="https://user-images.githubusercontent.com/52833369/93005752-e47a8680-f508-11ea-8525-1d60e8affd43.png">
