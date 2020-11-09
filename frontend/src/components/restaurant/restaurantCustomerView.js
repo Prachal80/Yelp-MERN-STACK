@@ -130,7 +130,7 @@ componentWillReceiveProps(nextProps){
 
 
   let messageFuction =this.state.messages.map((message)=>{
-    return <h5 style={{marginBottom: "20px"}} ><span style={{
+    return <h5 style={{marginBottom: "20px", marginTop: "20px"}} ><span style={{
       background: "#429ef5",
       borderRadius:"5px",
       color: "#ffffff",
@@ -264,6 +264,7 @@ componentWillReceiveProps(nextProps){
                         //marginLeft: "5%",
                         overflowY: "scroll",
                         height: "250px",
+                        
                       }}
                       class="overflow-auto">{messageFuction}</div>
                       <Row xs={15}>

@@ -51,7 +51,7 @@ export const postCustomerMessage = (data) => (dispatch) => {
         messages:response.data.message.message,
     }
     return dispatch({
-        type: POST_RESTAURANT_MESSAGE,
+        type: POST_CUSTOMER_MESSAGE,
         payload: payload,
     })
   })

@@ -4,7 +4,7 @@ function handle_request(msg, callback) {
 
     console.log("message body", msg);
 
-    Restaurant.findById(req.query.RID)
+    Restaurant.findById(msg.RID)
     .then(restaurant=>{
     if (restaurant) {
         console.log("Restaurant Found", restaurant);
