@@ -15,11 +15,11 @@ This is the simulation of the website named Yelp. Here, the services offered by 
 <br> 
 <br> 
 - Customer Dashboard page:
-<img width="1034" alt="Screen Shot 2020-09-12 at 1 34 07 PM" src="https://user-images.githubusercontent.com/52833369/93004676-00c4f600-f4fe-11ea-8dee-83398d5d789c.png">
+<img width="765" alt="Screen Shot 2020-09-12 at 1 45 34 PM" src="https://user-images.githubusercontent.com/23629478/98515979-bff90d00-2220-11eb-9c34-955e5fcaae6e.png">
 <br>
 
 - Restaurant Dashboard:
-<img width="1440" alt="Screen Shot 2020-09-12 at 2 09 13 PM" src="<img width="1433" alt="Screen Shot 2020-11-08 at 8 38 17 PM" src="https://user-images.githubusercontent.com/23629478/98515975-be2f4980-2220-11eb-80a0-b99c2d3f0304.png">">
+<img width="1440" alt="Screen Shot 2020-09-12 at 2 09 13 PM" src="<img width="1433" alt="Screen Shot 2020-11-08 at 8 38 17 PM" src="https://user-images.githubusercontent.com/23629478/98515975-be2f4980-2220-11eb-80a0-b99c2d3f0304.png">
 
 
 ## Application Performance comparison with/without connection pooling (using JMeter):
@@ -116,4 +116,4 @@ To deploy this on live system go to aws.amazon.com and follow the steps to insta
 
 ## Author
 
-* **Deepen Patel**
+* **Prachal Patel**
